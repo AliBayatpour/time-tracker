@@ -1,25 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext } from "react";
+import "./App.scss";
+import Layout from "./components/Layout/Layout.component";
+import { Navigate, Route, Routes } from "react-router-dom";
+import Home from "./pages/home/home.page";
+import Stats from "./pages/stats/stats.page";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Auth from "./pages/auth/auth.page";
+import AuthContext from "./store/auth-context";
 
 function App() {
+  const authCtx = useContext(AuthContext);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout>
+      <Routes>
+        {authCtx.isLoggedIn && <Route path="/" element={<Home />} />}
+        {authCtx.isLoggedIn && <Route path="/stats" element={<Stats />} />}
+        {!authCtx.isLoggedIn && <Route path="/auth" element={<Auth />} />}
+        {authCtx.isLoggedIn && <Route path="*" element={<Navigate to="/" />} />}
+        <Route path="*" element={<Navigate to="/auth" />} />
+      </Routes>
+    </Layout>
   );
 }
 
