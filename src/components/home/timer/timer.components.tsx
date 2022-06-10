@@ -4,7 +4,7 @@ import { itemStorageInterface } from "../../../interfaces/item-storage-interface
 import classes from "./timer.module.scss";
 const Timer: React.FC = () => {
   const [date, setDate] = useState<number | null>(null);
-  const [goal, setGoal] = useState<number>(10000);
+  const [goal, setGoal] = useState<number>(360000);
   const [autoStart, setAutoStart] = useState<boolean>(false);
   const [countdownApi, setCountdownApi] = useState<CountdownApi>();
   const [isPaused, setIsPaused] = useState<boolean>(false);
