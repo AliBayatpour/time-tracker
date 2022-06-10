@@ -8,7 +8,7 @@ const Layout: React.FC<Props> = (props) => {
   return (
     <Fragment>
       <Header />
-      <main className="my-5 py-5">{props.children}</main>
+      <main className="my-5 ">{props.children}</main>
     </Fragment>
   );
 };

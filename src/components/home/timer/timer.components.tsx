@@ -15,7 +15,6 @@ const Timer: React.FC = () => {
     let item: itemStorageInterface = itemString && JSON.parse(itemString);
     if (item && item.autoStart && item.endTime && item.endTime > 0) {
       setDate(item.endTime);
-      console.log(!item.autoStart);
       setAutoStart(item.autoStart);
       setIsPaused(!item.autoStart);
       setIsStarted(item.autoStart);
@@ -43,7 +42,6 @@ const Timer: React.FC = () => {
   };
 
   const handleResetClick = (): void => {
-    console.log("reset called");
     localStorage.removeItem("item");
     setDate(Date.now() + goal);
     setAutoStart(false);
