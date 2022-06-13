@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { ItemInterface } from "../../../interfaces/item-interface";
 import ItemContext from "../../../store/item-context";
+import { stringValueGenerator } from "../../../utils/items-utils";
 
 import classes from "./todo-items.module.scss";
 
@@ -26,27 +27,29 @@ const TodoItems: React.FC = () => {
   };
   // a little function to help us with reordering the result
   const reorder = (list: any, startIndex: any, endIndex: any) => {
-    console.log(list);
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-
-    return result;
+    const result = [...itemCtx.todoItems];
+    const [targetItem] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, targetItem);
+    const newIdxItem = result.findIndex(
+      (elem) => elem.modelID === targetItem.modelID
+    );
+    if (result[newIdxItem - 1] && result[newIdxItem + 1]) {
+      targetItem.sort = stringValueGenerator(
+        result[newIdxItem - 1].sort,
+        result[newIdxItem + 1].sort
+      );
+    } else if (!result[newIdxItem - 1] && result[newIdxItem + 1]) {
+      targetItem.sort = stringValueGenerator("", result[newIdxItem + 1].sort);
+    } else if (result[newIdxItem - 1] && !result[newIdxItem + 1]) {
+      targetItem.sort = stringValueGenerator(result[newIdxItem - 1].sort, "");
+    }
+    itemCtx.updateItemAsync(targetItem);
   };
   const onDragEnd = (result: any) => {
-    console.log(result);
-    // dropped outside the list
     if (!result.destination) {
       return;
     }
-
-    const resItems = reorder(
-      itemCtx.todoItems,
-      result.source.index,
-      result.destination.index
-    );
-
-    // todo: set new order in DB
+    reorder(itemCtx.todoItems, result.source.index, result.destination.index);
   };
   return (
     <React.Fragment>

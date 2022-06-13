@@ -21,7 +21,8 @@ const ItemContext = React.createContext<ItemContextInterface>({
 });
 
 const filterTodoItems = (items: ItemInterface[]): ItemInterface[] => {
-  return items.filter((item) => !item.done);
+  let filteredItems = items.filter((item) => !item.done);
+  return filteredItems.sort((a, b) => (a.sort > b.sort ? 1 : -1));
 };
 const filterDoneItems = (items: ItemInterface[]) => {
   return items.filter((item) => item.done);
@@ -41,10 +42,12 @@ export const ItemContextProvider = (props: any): any => {
         },
       });
       const json = (await response.json()) as ItemInterface[];
-      console.log(json);
       if (json.length) {
         setTodoItems(filterTodoItems([...json]));
         setDoneItems(filterDoneItems([...json]));
+      } else {
+        setTodoItems([]);
+        setDoneItems([]);
       }
     } catch (error) {
       console.log(error);
@@ -61,8 +64,6 @@ export const ItemContextProvider = (props: any): any => {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
-      const json = (await response.json()) as ItemInterface;
-      console.log(json);
       if (response.ok) {
         getItemsAsync();
       }
@@ -81,8 +82,6 @@ export const ItemContextProvider = (props: any): any => {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
-      const json = (await response.json()) as ItemInterface;
-      console.log(json);
       if (response.ok) {
         getItemsAsync();
       }
@@ -101,8 +100,6 @@ export const ItemContextProvider = (props: any): any => {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
-      const json = (await response.json()) as ItemInterface;
-      console.log(json);
       if (response.ok) {
         getItemsAsync();
       }

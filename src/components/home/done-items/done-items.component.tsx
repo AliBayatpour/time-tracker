@@ -5,9 +5,6 @@ import classes from "./done-items.module.scss";
 
 const DoneItems: React.FC = (props) => {
   const itemCtx = useContext(ItemContext);
-  useEffect(() => {
-    console.log(itemCtx.doneItems);
-  });
   const updateItem = (event: any, index: number) => {
     event.preventDefault();
     let newItem: ItemInterface = {
