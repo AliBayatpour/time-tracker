@@ -1,44 +1,28 @@
-import React from "react";
-import { useState } from "react";
+import React, { useContext } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { ItemInterface } from "../../../interfaces/item-interface";
+import ItemContext from "../../../store/item-context";
 
 import classes from "./todo-items.module.scss";
 
 const TodoItems: React.FC = () => {
-  const [items, setItems] = useState<any>([
-    {
-      id: "item-1",
-      category: "item-1",
-      description: "item-1 description",
-      done: false,
-      goal: 3600000,
-    },
-    {
-      id: "item-2",
-      category: "item-2",
-      description: "item-2 description",
-      done: false,
-      goal: 3600000,
-    },
-    {
-      id: "item-3",
-      category: "item-3",
-      description: "item-3 description",
-      done: false,
-      goal: 3600000,
-    },
-  ]);
+  const itemCtx = useContext(ItemContext);
 
-  const handleChangeInput = (index: number, event: any) => {
-    let changedItems = [...items];
-    changedItems[index][event.target.name] = event.target.value;
-    setItems(changedItems);
+  const updateItem = (event: any, index: number) => {
+    event.preventDefault();
+    let newItem: ItemInterface = {
+      ...itemCtx.todoItems[index],
+      category: event.target.elements.category.value,
+      description: event.target.elements.description.value,
+      sort: itemCtx.todoItems[index].sort,
+      goal: itemCtx.todoItems[index].goal,
+      done: false,
+    };
+    itemCtx.updateItemAsync(newItem);
   };
 
   const handleRemovetask = (index: number) => {
-    let values = [...items];
-    values.splice(index, 1);
-    setItems([...values]);
+    itemCtx.deleteItemAsync(itemCtx.todoItems[index]);
   };
   // a little function to help us with reordering the result
   const reorder = (list: any, startIndex: any, endIndex: any) => {
@@ -57,12 +41,12 @@ const TodoItems: React.FC = () => {
     }
 
     const resItems = reorder(
-      items,
+      itemCtx.todoItems,
       result.source.index,
       result.destination.index
     );
 
-    setItems(resItems);
+    // todo: set new order in DB
   };
   return (
     <React.Fragment>
@@ -71,50 +55,66 @@ const TodoItems: React.FC = () => {
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
-              {items.map((item: any, index: number) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
+              {itemCtx.todoItems.map((item: ItemInterface, index: number) => (
+                <Draggable
+                  key={item.modelID}
+                  draggableId={item.modelID as string}
+                  index={index}
+                >
                   {(provided, snapshot) => (
-                    <div
+                    <form
+                      onSubmit={(event) => updateItem(event, index)}
                       className="row my-3 border-primary border border-secondary py-3 "
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >
-                      <div className="col-4">
+                      <div className="col-3">
                         <div className="form-group">
-                          <label htmlFor="exampleInputPassword1">
-                            Category
-                          </label>
+                          <label htmlFor="todoCategoryInput">Category</label>
                           <input
                             type="text"
                             name="category"
                             className="form-control"
-                            id="exampleInputPassword1"
+                            id="todoCategoryInput"
                             placeholder="category"
-                            value={item.category}
-                            onChange={(event) =>
-                              handleChangeInput(index, event)
-                            }
+                            defaultValue={item.category}
                           />
                         </div>
                       </div>
-                      <div className="col-7">
+                      <div className="col-6">
                         <div className="form-group">
-                          <label htmlFor="exampleInputPassword1">
+                          <label htmlFor="todoDescriptionInput">
                             Description
                           </label>
                           <input
                             type="text"
                             name="description"
                             className="form-control"
-                            id="exampleInputPassword1"
-                            placeholder="category"
-                            value={item.description}
-                            onChange={(event) =>
-                              handleChangeInput(index, event)
-                            }
+                            id="todoDescriptionInput"
+                            placeholder="Description"
+                            defaultValue={item.description}
                           />
                         </div>
+                      </div>
+                      <div className="col-1">
+                        <div className="form-group">
+                          <label htmlFor="todoGoalInput">Goal(min)</label>
+                          <input
+                            type="number"
+                            readOnly
+                            name="goal"
+                            className="form-control"
+                            id="todoGoalInput"
+                            placeholder="Goal(min)"
+                            defaultValue={item.goal}
+                          />
+                        </div>
+                      </div>
+                      <div className={`d-flex col-1 mt-4`}>
+                        <button type="submit" className={`btn btn-info`}>
+                          Update
+                        </button>
                       </div>
                       <div className={`${classes.delBtn}  d-flex col-1 mt-4`}>
                         <button
@@ -125,7 +125,7 @@ const TodoItems: React.FC = () => {
                           X
                         </button>
                       </div>
-                    </div>
+                    </form>
                   )}
                 </Draggable>
               ))}

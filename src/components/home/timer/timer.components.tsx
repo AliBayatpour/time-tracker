@@ -1,39 +1,57 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Countdown, { CountdownApi, CountdownTimeDelta } from "react-countdown";
-import { itemStorageInterface } from "../../../interfaces/item-storage-interface";
+import { TimerStorageInterface } from "../../../interfaces/item-storage-interface";
+import ItemContext from "../../../store/item-context";
 import classes from "./timer.module.scss";
 const Timer: React.FC = () => {
+  const itemCtx = useContext(ItemContext);
+
   const [date, setDate] = useState<number | null>(null);
-  const [goal, setGoal] = useState<number>(360000);
+
   const [autoStart, setAutoStart] = useState<boolean>(false);
   const [countdownApi, setCountdownApi] = useState<CountdownApi>();
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [isStarted, setIsStarted] = useState<boolean>(false);
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   useEffect(() => {
-    let itemString = localStorage.getItem("item");
-    let item: itemStorageInterface = itemString && JSON.parse(itemString);
-    if (item && item.autoStart && item.endTime && item.endTime > 0) {
-      setDate(item.endTime);
-      setAutoStart(item.autoStart);
-      setIsPaused(!item.autoStart);
-      setIsStarted(item.autoStart);
-    } else if (item && !item.autoStart && item.duration) {
-      setDate(Date.now() + item.duration);
-      setAutoStart(item.autoStart);
-      setIsPaused(!item.autoStart);
-      setIsStarted(item.autoStart);
+    let timerString = localStorage.getItem("timer");
+    let timer: TimerStorageInterface = timerString && JSON.parse(timerString);
+    if (!itemCtx.todoItems[0]) {
+      return;
+    }
+    if (
+      itemCtx.todoItems &&
+      timer?.modelID &&
+      timer?.modelID !== itemCtx.todoItems[0].modelID
+    ) {
+      localStorage.removeItem("timer");
+    }
+    if (timer && timer.autoStart && timer.endTime && timer.endTime > 0) {
+      setDate(timer.endTime);
+      setAutoStart(timer.autoStart);
+      setIsPaused(!timer.autoStart);
+      setIsStarted(timer.autoStart);
+    } else if (timer && !timer.autoStart && timer.duration) {
+      setDate(Date.now() + timer.duration);
+      setAutoStart(timer.autoStart);
+      setIsPaused(!timer.autoStart);
+      setIsStarted(timer.autoStart);
     } else {
-      localStorage.removeItem("item");
-      setDate(Date.now() + goal);
+      localStorage.removeItem("timer");
+      setDate(Date.now() + minToMilliConverter(itemCtx.todoItems[0]?.goal));
       setAutoStart(false);
       setIsPaused(true);
       setIsStarted(false);
     }
-  }, [goal]);
+  }, [itemCtx.todoItems]);
+
+  const minToMilliConverter = (min: number) => {
+    return min * 60 * 1000;
+  };
 
   const handleStartClick = (): void => {
     setCountdownApi(countdownApi);
+    setIsCompleted(false);
     countdownApi && countdownApi.start();
   };
 
@@ -42,8 +60,8 @@ const Timer: React.FC = () => {
   };
 
   const handleResetClick = (): void => {
-    localStorage.removeItem("item");
-    setDate(Date.now() + goal);
+    localStorage.removeItem("timer");
+    setDate(Date.now() + minToMilliConverter(itemCtx.todoItems[0]?.goal));
     setAutoStart(false);
     setIsPaused(true);
     setIsStarted(false);
@@ -57,34 +75,38 @@ const Timer: React.FC = () => {
   };
 
   const handleStart = (res: any) => {
-    localStorage.removeItem("item");
-    localStorage.setItem(
-      "item",
-      JSON.stringify({
-        endTime: Date.now() + res.total,
-        autoStart: true,
-      } as itemStorageInterface)
-    );
+    localStorage.removeItem("timer");
+    let itemToSet: TimerStorageInterface = {
+      modelID: itemCtx.todoItems[0].modelID as string,
+      endTime: Date.now() + res.total,
+      autoStart: true,
+    };
+
+    localStorage.setItem("timer", JSON.stringify(itemToSet));
     setIsPaused(false);
     setIsStarted(true);
   };
 
   const handlePause = (res: CountdownTimeDelta): void => {
-    localStorage.removeItem("item");
-    localStorage.setItem(
-      "item",
-      JSON.stringify({
-        autoStart: false,
-        duration: res.total,
-      } as itemStorageInterface)
-    );
+    localStorage.removeItem("timer");
+    let itemToSet: TimerStorageInterface = {
+      modelID: itemCtx.todoItems[0].modelID as string,
+      autoStart: false,
+      duration: res.total,
+    };
+    localStorage.setItem("timer", JSON.stringify(itemToSet));
     setIsPaused(true);
     setIsStarted(false);
   };
 
   const handleComplete = (res: any) => {
-    localStorage.removeItem("item");
+    localStorage.removeItem("timer");
     setIsCompleted(true);
+    itemCtx.updateItemAsync({
+      ...itemCtx.todoItems[0],
+      done: true,
+      progress: itemCtx.todoItems[0].goal,
+    });
   };
 
   return (
@@ -106,7 +128,7 @@ const Timer: React.FC = () => {
               <button
                 type="button"
                 onClick={handleStartClick}
-                disabled={isStarted || isCompleted}
+                disabled={isStarted}
               >
                 Start
               </button>
@@ -117,7 +139,11 @@ const Timer: React.FC = () => {
               >
                 Pause
               </button>
-              <button type="button" onClick={handleResetClick}>
+              <button
+                disabled={isCompleted || (!isStarted && !isPaused)}
+                type="button"
+                onClick={handleResetClick}
+              >
                 Reset
               </button>
             </div>

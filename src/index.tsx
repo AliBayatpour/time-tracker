@@ -5,13 +5,16 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "./store/auth-context";
+import { ItemContextProvider } from "./store/item-context";
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthContextProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <ItemContextProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ItemContextProvider>
     </AuthContextProvider>
   </React.StrictMode>,
   document.getElementById("root")

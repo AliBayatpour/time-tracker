@@ -1,74 +1,82 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ItemInterface } from "../../../interfaces/item-interface";
+import ItemContext from "../../../store/item-context";
 import classes from "./done-items.module.scss";
 
 const DoneItems: React.FC = (props) => {
-  const [doneItems, setDoneItems] = useState<ItemInterface[]>([
-    {
-      id: "item-done-1",
-      category: "item-1",
-      description: "item-1 description",
+  const itemCtx = useContext(ItemContext);
+  useEffect(() => {
+    console.log(itemCtx.doneItems);
+  });
+  const updateItem = (event: any, index: number) => {
+    event.preventDefault();
+    let newItem: ItemInterface = {
+      ...itemCtx.doneItems[index],
+      category: event.target.elements.category.value,
+      description: event.target.elements.description.value,
+      sort: itemCtx.doneItems[index].sort,
+      goal: Number(event.target.elements.goal.value),
       done: true,
-      goal: 3600000,
-    },
-    {
-      id: "item-done-2",
-      category: "item-2",
-      description: "item-2 description",
-      done: true,
-      goal: 3600000,
-    },
-  ]);
-  const handleChangeInput = (
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    let changedItems = [...doneItems];
-    changedItems[index][event.target.name as "description" | "category"] = event
-      .target.value as string;
-    setDoneItems(changedItems);
+    };
+    console.log(newItem);
+    itemCtx.updateItemAsync(newItem);
   };
 
   const handleRemovetask = (index: number) => {
-    let values = [...doneItems];
-    values.splice(index, 1);
-    setDoneItems([...values]);
+    itemCtx.deleteItemAsync(itemCtx.doneItems[index]);
   };
   return (
     <React.Fragment>
       <h2 className="mt-5 text-success">Done Items</h2>
-      {doneItems.map((item: ItemInterface, index: number) => (
-        <div
-          key={item.id}
+      {itemCtx.doneItems.map((item: ItemInterface, index: number) => (
+        <form
+          key={item.modelID}
+          onSubmit={(event) => updateItem(event, index)}
           className="row my-3 border-primary border border-secondary py-3 position-relative"
         >
-          <div className="col-4">
+          <div className="col-3">
             <div className="form-group">
-              <label htmlFor="exampleInputPassword1">Category</label>
+              <label htmlFor="doneCategoryInput">Category</label>
               <input
                 type="text"
                 name="category"
                 className="form-control"
-                id="exampleInputPassword1"
+                id="doneCategoryInput"
                 placeholder="category"
-                value={item.category}
-                onChange={(event) => handleChangeInput(index, event)}
+                defaultValue={item.category}
               />
             </div>
           </div>
-          <div className="col-7">
+          <div className="col-6">
             <div className="form-group">
-              <label htmlFor="exampleInputPassword1">Description</label>
+              <label htmlFor="doneDescriptionInput">Description</label>
               <input
                 type="text"
                 name="description"
                 className="form-control"
-                id="exampleInputPassword1"
+                id="doneDescriptionInput"
                 placeholder="category"
-                value={item.description}
-                onChange={(event) => handleChangeInput(index, event)}
+                defaultValue={item.description}
               />
             </div>
+          </div>
+          <div className="col-1">
+            <div className="form-group">
+              <label htmlFor="doneGoalInput">Goal(min)</label>
+              <input
+                type="number"
+                name="goal"
+                className="form-control"
+                id="doneGoalInput"
+                placeholder="Goal(min)"
+                defaultValue={item.goal}
+              />
+            </div>
+          </div>
+          <div className={`d-flex col-1 mt-4`}>
+            <button type="submit" className={`btn btn-info`}>
+              Update
+            </button>
           </div>
           <div className={`${classes.delBtn}  d-flex col-1 mt-4`}>
             <button
@@ -79,7 +87,7 @@ const DoneItems: React.FC = (props) => {
               X
             </button>
           </div>
-        </div>
+        </form>
       ))}
     </React.Fragment>
   );
