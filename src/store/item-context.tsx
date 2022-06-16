@@ -1,10 +1,12 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { useState } from "react";
 import { ItemInterface } from "../interfaces/item-interface";
+import { totalTime } from "../utils/items-utils";
 
 interface ItemContextInterface {
   todoItems: ItemInterface[];
   doneItems: ItemInterface[];
+  totalTimeToday: number;
   getItemsAsync: () => void;
   addItemAsync: (item: ItemInterface) => void;
   updateItemAsync: (item: ItemInterface) => void;
@@ -14,6 +16,7 @@ interface ItemContextInterface {
 const ItemContext = React.createContext<ItemContextInterface>({
   todoItems: [],
   doneItems: [],
+  totalTimeToday: 0,
   getItemsAsync: () => {},
   addItemAsync: (item: ItemInterface) => {},
   updateItemAsync: (item: ItemInterface) => {},
@@ -28,9 +31,13 @@ const filterDoneItems = (items: ItemInterface[]) => {
   return items.filter((item) => item.done);
 };
 
-export const ItemContextProvider = (props: any): any => {
+type Props = {
+  children: JSX.Element;
+};
+export const ItemContextProvider = (props: Props): ReactElement<any, any> => {
   const [todoItems, setTodoItems] = useState<ItemInterface[]>([]);
   const [doneItems, setDoneItems] = useState<ItemInterface[]>([]);
+  const [totalTimeToday, settotalTimeToday] = useState<number>(0);
 
   const getItemsAsync = async () => {
     try {
@@ -43,8 +50,10 @@ export const ItemContextProvider = (props: any): any => {
       });
       const json = (await response.json()) as ItemInterface[];
       if (json.length) {
+        const tempDoneItems = filterDoneItems([...json]);
         setTodoItems(filterTodoItems([...json]));
-        setDoneItems(filterDoneItems([...json]));
+        setDoneItems(tempDoneItems);
+        settotalTimeToday(totalTime(tempDoneItems));
       } else {
         setTodoItems([]);
         setDoneItems([]);
@@ -110,6 +119,7 @@ export const ItemContextProvider = (props: any): any => {
   const contextValue = {
     todoItems: todoItems,
     doneItems: doneItems,
+    totalTimeToday: totalTimeToday,
     getItemsAsync: getItemsAsync,
     addItemAsync: addItemAsync,
     updateItemAsync: updateItemAsync,

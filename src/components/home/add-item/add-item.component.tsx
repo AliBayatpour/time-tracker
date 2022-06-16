@@ -20,6 +20,7 @@ const AddItem: React.FC = () => {
       progress: 0,
       goal: Number(event.target.elements.goal.value),
       done: false,
+      finished_at: 0,
     };
     itemCtx.addItemAsync(newitem);
     event.target.reset();
@@ -50,19 +51,20 @@ const AddItem: React.FC = () => {
             name="description"
             className="form-control"
             id="addDescriptionInput"
-            placeholder="category"
+            placeholder="Description"
           />
         </div>
       </div>
       <div className="col-2">
         <div className="form-group">
-          <label htmlFor="addGoalInput">Goal(min)</label>
+          <label htmlFor="addGoalInput">Goal (min)</label>
           <input
             type="number"
             name="goal"
             className="form-control"
             id="addGoalInput"
-            placeholder="category"
+            placeholder="Goal (min)"
+            defaultValue={60}
           />
         </div>
       </div>

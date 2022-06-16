@@ -105,7 +105,7 @@ const TodoItems: React.FC = () => {
                           <label htmlFor="todoGoalInput">Goal(min)</label>
                           <input
                             type="number"
-                            readOnly
+                            readOnly={index === 0 ? true : false}
                             name="goal"
                             className="form-control"
                             id="todoGoalInput"

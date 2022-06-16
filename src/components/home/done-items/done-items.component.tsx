@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ItemInterface } from "../../../interfaces/item-interface";
 import ItemContext from "../../../store/item-context";
+import { convertMinToReadable } from "../../../utils/date-utils";
 import classes from "./done-items.module.scss";
 
 const DoneItems: React.FC = (props) => {
@@ -12,10 +13,9 @@ const DoneItems: React.FC = (props) => {
       category: event.target.elements.category.value,
       description: event.target.elements.description.value,
       sort: itemCtx.doneItems[index].sort,
-      goal: Number(event.target.elements.goal.value),
+      progress: Number(event.target.elements.progress.value),
       done: true,
     };
-    console.log(newItem);
     itemCtx.updateItemAsync(newItem);
   };
 
@@ -25,6 +25,10 @@ const DoneItems: React.FC = (props) => {
   return (
     <React.Fragment>
       <h2 className="mt-5 text-success">Done Items</h2>
+      <h5 className="text-secondary">
+        Total Time Today: (<b>{convertMinToReadable(itemCtx.totalTimeToday)}</b>
+        )
+      </h5>
       {itemCtx.doneItems.map((item: ItemInterface, index: number) => (
         <form
           key={item.modelID}
@@ -52,25 +56,32 @@ const DoneItems: React.FC = (props) => {
                 name="description"
                 className="form-control"
                 id="doneDescriptionInput"
-                placeholder="category"
+                placeholder="Description"
                 defaultValue={item.description}
               />
             </div>
           </div>
           <div className="col-1">
             <div className="form-group">
-              <label htmlFor="doneGoalInput">Goal(min)</label>
+              <label htmlFor="doneGoalInput">
+                <small>Progress(min)</small>
+              </label>
               <input
                 type="number"
-                name="goal"
+                name="progress"
                 className="form-control"
                 id="doneGoalInput"
-                placeholder="Goal(min)"
-                defaultValue={item.goal}
+                placeholder="Progress (min)"
+                defaultValue={item.progress}
               />
             </div>
           </div>
           <div className={`d-flex col-1 mt-4`}>
+            <span
+              className="glyphicon glyphicon-align-left"
+              aria-hidden="true"
+            ></span>
+
             <button type="submit" className={`btn btn-info`}>
               Update
             </button>

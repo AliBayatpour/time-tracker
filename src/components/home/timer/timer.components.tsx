@@ -10,6 +10,7 @@ const Timer: React.FC = () => {
 
   const [autoStart, setAutoStart] = useState<boolean>(false);
   const [countdownApi, setCountdownApi] = useState<CountdownApi>();
+  const [countdown, setcountdown] = useState<Countdown>();
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [isStarted, setIsStarted] = useState<boolean>(false);
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
@@ -40,7 +41,7 @@ const Timer: React.FC = () => {
       localStorage.removeItem("timer");
       setDate(Date.now() + minToMilliConverter(itemCtx.todoItems[0]?.goal));
       setAutoStart(false);
-      setIsPaused(true);
+      setIsPaused(false);
       setIsStarted(false);
     }
   }, [itemCtx.todoItems]);
@@ -70,6 +71,7 @@ const Timer: React.FC = () => {
 
   const setRef = (countdown: Countdown | null): void => {
     if (countdown) {
+      setcountdown(countdown);
       setCountdownApi(countdown.getApi());
     }
   };
@@ -99,14 +101,45 @@ const Timer: React.FC = () => {
     setIsStarted(false);
   };
 
-  const handleComplete = (res: any) => {
+  const handleComplete = (res: CountdownTimeDelta) => {
     localStorage.removeItem("timer");
     setIsCompleted(true);
     itemCtx.updateItemAsync({
       ...itemCtx.todoItems[0],
       done: true,
+      finished_at: Math.ceil(new Date().getTime() / 1000),
       progress: itemCtx.todoItems[0].goal,
     });
+  };
+
+  const handleFinishClick = () => {
+    if (!countdown?.calcTimeDelta().total) {
+      return;
+    }
+    localStorage.removeItem("timer");
+    setIsCompleted(true);
+    if (
+      Math.round(
+        itemCtx.todoItems[0].goal - countdown?.calcTimeDelta().total / 60000
+      ) !== 0
+    ) {
+      itemCtx.updateItemAsync({
+        ...itemCtx.todoItems[0],
+        done: true,
+        finished_at: Math.ceil(new Date().getTime() / 1000),
+        progress: Math.round(
+          itemCtx.todoItems[0].goal - countdown?.calcTimeDelta().total / 60000
+        ),
+      });
+    }
+
+    if (itemCtx.todoItems.length === 1) {
+      setDate(null);
+    }
+    setAutoStart(false);
+    setIsPaused(true);
+    setIsStarted(false);
+    setIsCompleted(false);
   };
 
   return (
@@ -135,7 +168,7 @@ const Timer: React.FC = () => {
               <button
                 type="button"
                 onClick={handlePauseClick}
-                disabled={isPaused || isCompleted}
+                disabled={isPaused || isCompleted || !isStarted}
               >
                 Pause
               </button>
@@ -145,6 +178,13 @@ const Timer: React.FC = () => {
                 onClick={handleResetClick}
               >
                 Reset
+              </button>
+              <button
+                disabled={isCompleted || !isStarted}
+                type="button"
+                onClick={handleFinishClick}
+              >
+                Finish
               </button>
             </div>
           </div>

@@ -7,4 +7,5 @@ export interface ItemInterface {
   progress: number;
   done: boolean;
   goal: number;
+  finished_at: number;
 }
