@@ -7,17 +7,23 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "./store/auth-context";
 import { ItemContextProvider } from "./store/item-context";
 import { StatContextProvider } from "./store/stats-context";
+import { TimerContextProvider } from "./store/timer-context";
+import { ModalContextProvider } from "./store/modal-context";
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthContextProvider>
-      <ItemContextProvider>
-        <StatContextProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </StatContextProvider>
-      </ItemContextProvider>
+      <ModalContextProvider>
+        <ItemContextProvider>
+          <StatContextProvider>
+            <TimerContextProvider>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </TimerContextProvider>
+          </StatContextProvider>
+        </ItemContextProvider>
+      </ModalContextProvider>
     </AuthContextProvider>
   </React.StrictMode>,
   document.getElementById("root")

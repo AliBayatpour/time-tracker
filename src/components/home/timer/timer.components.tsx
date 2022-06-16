@@ -1,19 +1,13 @@
-import { useContext, useEffect, useState } from "react";
-import Countdown, { CountdownApi, CountdownTimeDelta } from "react-countdown";
+import { useContext, useEffect } from "react";
+import Countdown, { CountdownTimeDelta } from "react-countdown";
 import { TimerStorageInterface } from "../../../interfaces/item-storage-interface";
 import ItemContext from "../../../store/item-context";
+import TimerContext from "../../../store/timer-context";
 import classes from "./timer.module.scss";
 const Timer: React.FC = () => {
   const itemCtx = useContext(ItemContext);
+  const timerCtx = useContext(TimerContext);
 
-  const [date, setDate] = useState<number | null>(null);
-
-  const [autoStart, setAutoStart] = useState<boolean>(false);
-  const [countdownApi, setCountdownApi] = useState<CountdownApi>();
-  const [countdown, setcountdown] = useState<Countdown>();
-  const [isPaused, setIsPaused] = useState<boolean>(false);
-  const [isStarted, setIsStarted] = useState<boolean>(false);
-  const [isCompleted, setIsCompleted] = useState<boolean>(false);
   useEffect(() => {
     let timerString = localStorage.getItem("timer");
     let timer: TimerStorageInterface = timerString && JSON.parse(timerString);
@@ -28,21 +22,23 @@ const Timer: React.FC = () => {
       localStorage.removeItem("timer");
     }
     if (timer && timer.autoStart && timer.endTime && timer.endTime > 0) {
-      setDate(timer.endTime);
-      setAutoStart(timer.autoStart);
-      setIsPaused(!timer.autoStart);
-      setIsStarted(timer.autoStart);
+      timerCtx.onSetDate(timer.endTime);
+      timerCtx.onSetAutoStart(timer.autoStart);
+      timerCtx.onSetIsPaused(false);
+      timerCtx.onSetIsStarted(true);
     } else if (timer && !timer.autoStart && timer.duration) {
-      setDate(Date.now() + timer.duration);
-      setAutoStart(timer.autoStart);
-      setIsPaused(!timer.autoStart);
-      setIsStarted(timer.autoStart);
+      timerCtx.onSetDate(Date.now() + timer.duration);
+      timerCtx.onSetAutoStart(timer.autoStart);
+      timerCtx.onSetIsPaused(true);
+      timerCtx.onSetIsStarted(false);
     } else {
       localStorage.removeItem("timer");
-      setDate(Date.now() + minToMilliConverter(itemCtx.todoItems[0]?.goal));
-      setAutoStart(false);
-      setIsPaused(false);
-      setIsStarted(false);
+      timerCtx.onSetDate(
+        Date.now() + minToMilliConverter(itemCtx.todoItems[0]?.goal)
+      );
+      timerCtx.onSetAutoStart(false);
+      timerCtx.onSetIsPaused(false);
+      timerCtx.onSetIsStarted(false);
     }
   }, [itemCtx.todoItems]);
 
@@ -51,28 +47,29 @@ const Timer: React.FC = () => {
   };
 
   const handleStartClick = (): void => {
-    setCountdownApi(countdownApi);
-    setIsCompleted(false);
-    countdownApi && countdownApi.start();
+    timerCtx.onSetIsCompleted(false);
+    timerCtx.countdownApi && timerCtx.countdownApi.start();
   };
 
   const handlePauseClick = (): void => {
-    countdownApi && countdownApi.pause();
+    timerCtx.countdownApi && timerCtx.countdownApi.pause();
   };
 
   const handleResetClick = (): void => {
     localStorage.removeItem("timer");
-    setDate(Date.now() + minToMilliConverter(itemCtx.todoItems[0]?.goal));
-    setAutoStart(false);
-    setIsPaused(true);
-    setIsStarted(false);
-    setIsCompleted(false);
+    timerCtx.onSetDate(
+      Date.now() + minToMilliConverter(itemCtx.todoItems[0]?.goal)
+    );
+    timerCtx.onSetAutoStart(false);
+    timerCtx.onSetIsPaused(false);
+    timerCtx.onSetIsStarted(false);
+    timerCtx.onSetIsCompleted(false);
   };
 
   const setRef = (countdown: Countdown | null): void => {
     if (countdown) {
-      setcountdown(countdown);
-      setCountdownApi(countdown.getApi());
+      timerCtx.onSetCountdown(countdown);
+      timerCtx.onSetCountdownApi(countdown.getApi());
     }
   };
 
@@ -85,8 +82,8 @@ const Timer: React.FC = () => {
     };
 
     localStorage.setItem("timer", JSON.stringify(itemToSet));
-    setIsPaused(false);
-    setIsStarted(true);
+    timerCtx.onSetIsPaused(false);
+    timerCtx.onSetIsStarted(true);
   };
 
   const handlePause = (res: CountdownTimeDelta): void => {
@@ -97,13 +94,13 @@ const Timer: React.FC = () => {
       duration: res.total,
     };
     localStorage.setItem("timer", JSON.stringify(itemToSet));
-    setIsPaused(true);
-    setIsStarted(false);
+    timerCtx.onSetIsPaused(true);
+    timerCtx.onSetIsStarted(false);
   };
 
   const handleComplete = (res: CountdownTimeDelta) => {
     localStorage.removeItem("timer");
-    setIsCompleted(true);
+    timerCtx.onSetIsCompleted(true);
     itemCtx.updateItemAsync({
       ...itemCtx.todoItems[0],
       done: true,
@@ -113,14 +110,15 @@ const Timer: React.FC = () => {
   };
 
   const handleFinishClick = () => {
-    if (!countdown?.calcTimeDelta().total) {
+    if (!timerCtx.countdown?.calcTimeDelta().total) {
       return;
     }
     localStorage.removeItem("timer");
-    setIsCompleted(true);
+    timerCtx.onSetIsCompleted(true);
     if (
       Math.round(
-        itemCtx.todoItems[0].goal - countdown?.calcTimeDelta().total / 60000
+        itemCtx.todoItems[0].goal -
+          timerCtx.countdown?.calcTimeDelta().total / 60000
       ) !== 0
     ) {
       itemCtx.updateItemAsync({
@@ -128,59 +126,74 @@ const Timer: React.FC = () => {
         done: true,
         finished_at: Math.ceil(new Date().getTime() / 1000),
         progress: Math.round(
-          itemCtx.todoItems[0].goal - countdown?.calcTimeDelta().total / 60000
+          itemCtx.todoItems[0].goal -
+            timerCtx.countdown?.calcTimeDelta().total / 60000
         ),
       });
     }
 
     if (itemCtx.todoItems.length === 1) {
-      setDate(null);
+      timerCtx.onSetDate(null);
     }
-    setAutoStart(false);
-    setIsPaused(true);
-    setIsStarted(false);
-    setIsCompleted(false);
+    timerCtx.onSetAutoStart(false);
+    timerCtx.onSetIsPaused(false);
+    timerCtx.onSetIsStarted(false);
+    timerCtx.onSetIsCompleted(false);
   };
 
   return (
     <div className="container-lg">
       <div className="w-100 d-flex justify-content-center">
-        {date && (
+        {timerCtx.date && (
           <div className={`${classes["timerContainer"]}`}>
             <Countdown
-              key={date}
+              key={timerCtx.date}
               ref={setRef}
-              date={date}
+              date={timerCtx.date}
               onStart={handleStart}
               onPause={handlePause}
               onComplete={handleComplete}
-              autoStart={autoStart}
+              autoStart={timerCtx.autoStart}
               className="d-flex justify-content-center"
             />
             <div className="mt-5">
               <button
                 type="button"
+                className="btn btn-secondary btn-lg"
                 onClick={handleStartClick}
-                disabled={isStarted}
+                disabled={timerCtx.isStarted}
               >
                 Start
               </button>
               <button
                 type="button"
+                className="btn btn-secondary btn-lg mx-3"
                 onClick={handlePauseClick}
-                disabled={isPaused || isCompleted || !isStarted}
+                disabled={
+                  timerCtx.isPaused ||
+                  timerCtx.isCompleted ||
+                  !timerCtx.isStarted
+                }
               >
                 Pause
               </button>
               <button
-                disabled={isCompleted || (!isStarted && !isPaused)}
+                className="btn btn-secondary btn-lg mx-3"
+                disabled={
+                  timerCtx.isCompleted ||
+                  (!timerCtx.isStarted && !timerCtx.isPaused)
+                }
                 type="button"
                 onClick={handleResetClick}
               >
                 Reset
               </button>
               <button
-                disabled={isCompleted || !isStarted}
+                className="btn btn-secondary btn-lg"
+                disabled={
+                  timerCtx.isCompleted ||
+                  (!timerCtx.isStarted && !timerCtx.isPaused)
+                }
                 type="button"
                 onClick={handleFinishClick}
               >

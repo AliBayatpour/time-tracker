@@ -2,12 +2,16 @@ import React, { useContext } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { ItemInterface } from "../../../interfaces/item-interface";
 import ItemContext from "../../../store/item-context";
+import ModalContext from "../../../store/modal-context";
+import TimerContext from "../../../store/timer-context";
 import { stringValueGenerator } from "../../../utils/items-utils";
 
 import classes from "./todo-items.module.scss";
 
 const TodoItems: React.FC = () => {
   const itemCtx = useContext(ItemContext);
+  const timerCtx = useContext(TimerContext);
+  const modalCtx = useContext(ModalContext);
 
   const updateItem = (event: any, index: number) => {
     event.preventDefault();
@@ -27,6 +31,13 @@ const TodoItems: React.FC = () => {
   };
   // a little function to help us with reordering the result
   const reorder = (list: any, startIndex: any, endIndex: any) => {
+    if (
+      (startIndex === 0 && (timerCtx.isStarted || timerCtx.isPaused)) ||
+      (endIndex === 0 && (timerCtx.isStarted || timerCtx.isPaused))
+    ) {
+      modalCtx.onSetShowModal(true);
+      return;
+    }
     const result = [...itemCtx.todoItems];
     const [targetItem] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, targetItem);
@@ -67,7 +78,7 @@ const TodoItems: React.FC = () => {
                   {(provided, snapshot) => (
                     <form
                       onSubmit={(event) => updateItem(event, index)}
-                      className="row my-3 border-primary border border-secondary py-3 "
+                      className="row my-3 border-primary border border-secondary py-3"
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
