@@ -60,15 +60,15 @@ const Stats: React.FC = () => {
         className="mb-3"
       >
         <Tab eventKey={TabsKeys.LAST_7_DAYS} title="Last 7 Days">
-          <Chart items={statCtx.last7DaysItems} />
+          <Chart items={statCtx.last7DaysItems} nDays={7} />
           <DetailStat items={statCtx.last7DaysItems} nDays={7} />
         </Tab>
         <Tab eventKey={TabsKeys.LAST_14_DAYS} title="Last 14 Days">
-          <Chart items={statCtx.last14DaysItems} />
+          <Chart items={statCtx.last14DaysItems} nDays={14} />
           <DetailStat items={statCtx.last14DaysItems} nDays={14} />
         </Tab>
         <Tab eventKey={TabsKeys.LAST_30_DAYS} title="Last 30 Days">
-          <Chart items={statCtx.last30DaysItems} />
+          <Chart items={statCtx.last30DaysItems} nDays={30} />
           <DetailStat items={statCtx.last30DaysItems} nDays={30} />
         </Tab>
       </Tabs>

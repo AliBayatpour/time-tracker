@@ -8,34 +8,63 @@ import {
   Tooltip,
   Label,
   ResponsiveContainer,
+  Legend,
 } from "recharts";
-import { StatItemInterface } from "../../../interfaces/stat-item-interface";
+import { ItemInterface } from "../../../interfaces/item-interface";
 import { convertMinToReadable } from "../../../utils/date-utils";
+import { useContext } from "react";
+import StatContext from "../../../store/stats-context";
+import { ChartCategoryInterface } from "../../../interfaces/chart-category-interface";
 
 type Props = {
-  items: StatItemInterface[];
+  items: ItemInterface[];
+  nDays: number;
 };
-const Chart: React.FC<Props> = (props) => {
+const Chart: React.FC<Props> = ({ items, nDays }) => {
+  const statCtx = useContext(StatContext);
+
   const CustomTooltip = (props: any) => {
     if (props.active) {
       return (
-        <div className="bg-secondary badge text-start p-3">
+        <div className="bg-white badge text-start p-3 text-dark">
           <p className="label">{`Date: ${props.label}`}</p>
-          <p className="label mb-2">Time:</p>
-          <b className="label mb-1">
-            {convertMinToReadable(props.payload[0].value)}
-          </b>
+          {props.payload.map((payload: any, index: number) => {
+            return (
+              <p key={`tooltip${index}`}>
+                <span style={{ color: payload.fill }}>{payload.name}</span>:{" "}
+                <span>{convertMinToReadable(payload.value)}</span>
+              </p>
+            );
+          })}
         </div>
       );
     }
-
     return null;
+  };
+
+  const customIntervalBar = (categories: ChartCategoryInterface[]) => {
+    return categories.map((category, index) => (
+      <Bar
+        key={index}
+        dataKey={category.category}
+        stackId="stack1"
+        fill={category.color}
+      />
+    ));
   };
   return (
     <div className={`${classes.mainContainer}`}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
-          data={props.items}
+          data={
+            nDays === 7
+              ? statCtx.last7DaysChartData
+              : nDays === 14
+              ? statCtx.last14DaysChartData
+              : nDays === 30
+              ? statCtx.last30DaysChartData
+              : undefined
+          }
           margin={{
             top: 5,
             right: 30,
@@ -44,24 +73,28 @@ const Chart: React.FC<Props> = (props) => {
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" style={{ fontSize: "10px" }}>
-            <Label
-              value="Date"
-              angle={0}
-              position="bottom"
-              style={{ textAnchor: "middle" }}
-            />
-          </XAxis>
+          <XAxis dataKey="date" style={{ fontSize: "10px" }} />
+
           <YAxis>
             <Label
-              value="Time"
+              value=""
               angle={270}
               position="left"
               style={{ textAnchor: "middle" }}
             />
           </YAxis>
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="progress" fill="#82ca9d" />
+          <Legend />
+
+          {customIntervalBar(
+            nDays === 7
+              ? statCtx.last7DaysCategories
+              : nDays === 14
+              ? statCtx.last14DaysCategories
+              : nDays === 30
+              ? statCtx.last30DaysCategories
+              : statCtx.last7DaysCategories
+          )}
         </BarChart>
       </ResponsiveContainer>
     </div>

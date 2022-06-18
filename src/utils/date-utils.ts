@@ -25,7 +25,7 @@ export const getLastNDays = (n: number): string[] => {
     result.push(formatDateV1(d));
   }
 
-  return result;
+  return result.reverse();
 };
 
 export const convertMinToReadable = (min: number) => {

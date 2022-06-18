@@ -21,7 +21,12 @@ const Timer: React.FC = () => {
     ) {
       localStorage.removeItem("timer");
     }
-    if (timer && timer.autoStart && timer.endTime && timer.endTime > 0) {
+    if (
+      timer &&
+      timer.autoStart &&
+      timer.endTime &&
+      timer.endTime - new Date().getTime() > 0
+    ) {
       timerCtx.onSetDate(timer.endTime);
       timerCtx.onSetAutoStart(timer.autoStart);
       timerCtx.onSetIsPaused(false);

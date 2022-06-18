@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import { useState } from "react";
 import { ItemInterface } from "../interfaces/item-interface";
-import { totalTime } from "../utils/items-utils";
+import { totalTime } from "../utils/stat-utils";
 
 interface ItemContextInterface {
   todoItems: ItemInterface[];
@@ -48,6 +48,9 @@ export const ItemContextProvider = (props: Props): ReactElement<any, any> => {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
+      if (!response.ok) {
+        throw new Error("Request failed!");
+      }
       const json = (await response.json()) as ItemInterface[];
       if (json.length) {
         const tempDoneItems = filterDoneItems([...json]);

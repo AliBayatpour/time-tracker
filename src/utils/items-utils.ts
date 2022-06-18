@@ -1,5 +1,4 @@
 import { ItemInterface } from "../interfaces/item-interface";
-import { StatItemInterface } from "../interfaces/stat-item-interface";
 import { formatDateV1 } from "./date-utils";
 
 const alphabet = [
@@ -162,48 +161,4 @@ const resultIndexCalculator = (param1: string, param2: string) => {
   return Math.floor((alphabet.indexOf(param1) + alphabet.indexOf(param2)) / 2);
 };
 
-const addProgsInArrOfObj = (arrOfObj: StatItemInterface[]): number => {
-  let progResult = 0;
-  arrOfObj?.forEach((elem) => {
-    progResult = progResult + elem.progress;
-  });
-  return progResult;
-};
 
-export const convertItemsToStatFormat = (
-  items: ItemInterface[],
-  lastNDaysItems: {
-    [x: string]: StatItemInterface[];
-  }
-): StatItemInterface[] => {
-  let tempLastNDaysObj = { ...lastNDaysItems };
-  items.forEach((itm) => {
-    let fullDateTemp = new Date(itm.finished_at * 1000);
-    let tempLastNDayElVal = [...tempLastNDaysObj[formatDateV1(fullDateTemp)]];
-    tempLastNDaysObj[formatDateV1(fullDateTemp)] = [
-      ...tempLastNDayElVal,
-      {
-        category: itm.category,
-        progress: itm.progress,
-        date: formatDateV1(fullDateTemp),
-      },
-    ];
-  });
-  let newObj: StatItemInterface[] = [];
-  Object.entries(tempLastNDaysObj).forEach((objItems) => {
-    newObj.push({
-      category: "undefined",
-      progress: addProgsInArrOfObj(objItems[1]),
-      date: objItems[0],
-    });
-  });
-  return newObj.reverse();
-};
-
-export const totalTime = (doneItems: ItemInterface[] | StatItemInterface[]) => {
-  let totalProgress = 0;
-  doneItems?.forEach((doneItem) => {
-    totalProgress = totalProgress + doneItem.progress;
-  });
-  return totalProgress;
-};
