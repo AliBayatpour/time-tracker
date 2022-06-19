@@ -2,7 +2,7 @@ import { ChartCategoryInterface } from "../interfaces/chart-category-interface";
 import { ItemInterface } from "../interfaces/item-interface";
 import { convertMinToReadable, formatDateV1, getLastNDays } from "./date-utils";
 
-export const totalTime = (doneItems: ItemInterface[] | ItemInterface[]) => {
+export const totalTime = (doneItems: ItemInterface[]) => {
   let totalProgress = 0;
   doneItems?.forEach((doneItem) => {
     totalProgress = totalProgress + doneItem.progress;

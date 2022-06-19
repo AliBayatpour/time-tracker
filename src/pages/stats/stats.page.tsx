@@ -5,6 +5,7 @@ import StatContext from "../../store/stats-context";
 import Chart from "../../components/stats/chart/chart.component";
 import { Tab, Tabs } from "react-bootstrap";
 import DetailStat from "../../components/stats/detail-stat/detail-stat.component";
+import PastItems from "../../components/stats/past-items/past-items.component";
 
 const Stats: React.FC = () => {
   enum TabsKeys {
@@ -28,21 +29,15 @@ const Stats: React.FC = () => {
     }
     switch (tabName) {
       case TabsKeys.LAST_7_DAYS:
-        if (!statCtx.last7DaysItems.length) {
-          statCtx.getLast7DaysItemsAsync();
-        }
+        statCtx.getLast7DaysItemsAsync();
         setKey(tabName);
         break;
       case TabsKeys.LAST_14_DAYS:
-        if (!statCtx.last14DaysItems.length) {
-          statCtx.getLast14DaysItemsAsync();
-        }
+        statCtx.getLast14DaysItemsAsync();
         setKey(tabName);
         break;
       case TabsKeys.LAST_30_DAYS:
-        if (!statCtx.last30DaysItems.length) {
-          statCtx.getLast30DaysItemsAsync();
-        }
+        statCtx.getLast30DaysItemsAsync();
         setKey(tabName);
         break;
 
@@ -62,14 +57,17 @@ const Stats: React.FC = () => {
         <Tab eventKey={TabsKeys.LAST_7_DAYS} title="Last 7 Days">
           <Chart items={statCtx.last7DaysItems} nDays={7} />
           <DetailStat items={statCtx.last7DaysItems} nDays={7} />
+          <PastItems nDays={7} />
         </Tab>
         <Tab eventKey={TabsKeys.LAST_14_DAYS} title="Last 14 Days">
           <Chart items={statCtx.last14DaysItems} nDays={14} />
           <DetailStat items={statCtx.last14DaysItems} nDays={14} />
+          <PastItems nDays={14} />
         </Tab>
         <Tab eventKey={TabsKeys.LAST_30_DAYS} title="Last 30 Days">
           <Chart items={statCtx.last30DaysItems} nDays={30} />
           <DetailStat items={statCtx.last30DaysItems} nDays={30} />
+          <PastItems nDays={30} />
         </Tab>
       </Tabs>
     </div>

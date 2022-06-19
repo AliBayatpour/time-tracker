@@ -1,7 +1,6 @@
 import React, { ReactElement, useState } from "react";
 import { ChartCategoryInterface } from "../interfaces/chart-category-interface";
 import { ItemInterface } from "../interfaces/item-interface";
-import { getLastNDays } from "../utils/date-utils";
 import { lastNDaysChartDataBuilder } from "../utils/stat-utils";
 
 interface StatContextInterface {

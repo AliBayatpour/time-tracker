@@ -14,15 +14,15 @@ ReactDOM.render(
   <React.StrictMode>
     <AuthContextProvider>
       <ModalContextProvider>
-        <ItemContextProvider>
-          <StatContextProvider>
+        <StatContextProvider>
+          <ItemContextProvider>
             <TimerContextProvider>
               <BrowserRouter>
                 <App />
               </BrowserRouter>
             </TimerContextProvider>
-          </StatContextProvider>
-        </ItemContextProvider>
+          </ItemContextProvider>
+        </StatContextProvider>
       </ModalContextProvider>
     </AuthContextProvider>
   </React.StrictMode>,

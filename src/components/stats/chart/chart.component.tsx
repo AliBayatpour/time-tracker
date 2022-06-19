@@ -77,7 +77,7 @@ const Chart: React.FC<Props> = ({ items, nDays }) => {
 
           <YAxis>
             <Label
-              value=""
+              value="progress (min)"
               angle={270}
               position="left"
               style={{ textAnchor: "middle" }}

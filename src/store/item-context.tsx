@@ -1,7 +1,8 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useContext } from "react";
 import { useState } from "react";
 import { ItemInterface } from "../interfaces/item-interface";
 import { totalTime } from "../utils/stat-utils";
+import StatContext from "./stats-context";
 
 interface ItemContextInterface {
   todoItems: ItemInterface[];
@@ -9,8 +10,8 @@ interface ItemContextInterface {
   totalTimeToday: number;
   getItemsAsync: () => void;
   addItemAsync: (item: ItemInterface) => void;
-  updateItemAsync: (item: ItemInterface) => void;
-  deleteItemAsync: (item: ItemInterface) => void;
+  updateItemAsync: (item: ItemInterface, nDaysStatItem?: number) => void;
+  deleteItemAsync: (item: ItemInterface, nDaysStatItem?: number) => void;
 }
 
 const ItemContext = React.createContext<ItemContextInterface>({
@@ -19,8 +20,8 @@ const ItemContext = React.createContext<ItemContextInterface>({
   totalTimeToday: 0,
   getItemsAsync: () => {},
   addItemAsync: (item: ItemInterface) => {},
-  updateItemAsync: (item: ItemInterface) => {},
-  deleteItemAsync: (item: ItemInterface) => {},
+  updateItemAsync: (item: ItemInterface, nDaysStatItem?: number) => {},
+  deleteItemAsync: (item: ItemInterface, nDaysStatItem?: number) => {},
 });
 
 const filterTodoItems = (items: ItemInterface[]): ItemInterface[] => {
@@ -38,6 +39,7 @@ export const ItemContextProvider = (props: Props): ReactElement<any, any> => {
   const [todoItems, setTodoItems] = useState<ItemInterface[]>([]);
   const [doneItems, setDoneItems] = useState<ItemInterface[]>([]);
   const [totalTimeToday, settotalTimeToday] = useState<number>(0);
+  const statCtx = useContext(StatContext);
 
   const getItemsAsync = async () => {
     try {
@@ -66,6 +68,23 @@ export const ItemContextProvider = (props: Props): ReactElement<any, any> => {
     }
   };
 
+  const updateStatItems = (nDays: number) => {
+    switch (nDays) {
+      case 7:
+        statCtx.getLast7DaysItemsAsync();
+        break;
+      case 14:
+        statCtx.getLast14DaysItemsAsync();
+        break;
+      case 30:
+        statCtx.getLast30DaysItemsAsync();
+        break;
+
+      default:
+        break;
+    }
+  };
+
   const addItemAsync = async (item: ItemInterface) => {
     try {
       const response = await fetch("http://localhost:8080/api/v1/item/", {
@@ -84,7 +103,10 @@ export const ItemContextProvider = (props: Props): ReactElement<any, any> => {
     }
   };
 
-  const updateItemAsync = async (item: ItemInterface) => {
+  const updateItemAsync = async (
+    item: ItemInterface,
+    nDaysStatItem?: number
+  ) => {
     try {
       const response = await fetch("http://localhost:8080/api/v1/item/", {
         method: "PATCH",
@@ -96,13 +118,19 @@ export const ItemContextProvider = (props: Props): ReactElement<any, any> => {
       });
       if (response.ok) {
         getItemsAsync();
+        if (nDaysStatItem && nDaysStatItem > 0) {
+          updateStatItems(nDaysStatItem);
+        }
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const deleteItemAsync = async (item: ItemInterface) => {
+  const deleteItemAsync = async (
+    item: ItemInterface,
+    nDaysStatItem?: number
+  ) => {
     try {
       const response = await fetch("http://localhost:8080/api/v1/item/", {
         method: "DELETE",
@@ -114,6 +142,9 @@ export const ItemContextProvider = (props: Props): ReactElement<any, any> => {
       });
       if (response.ok) {
         getItemsAsync();
+        if (nDaysStatItem) {
+          updateStatItems(nDaysStatItem);
+        }
       }
     } catch (error) {
       console.log(error);
