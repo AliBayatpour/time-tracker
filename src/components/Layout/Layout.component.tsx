@@ -1,15 +1,14 @@
-import { Fragment } from "react";
 import Header from "../header/Header.component";
-
+import classes from "./layout.module.scss";
 type Props = {
   children: JSX.Element;
 };
 const Layout: React.FC<Props> = (props) => {
   return (
-    <Fragment>
+    <div className={`bg-dark ${classes.mainContainer}`}>
       <Header />
-      <main className="my-5 ">{props.children}</main>
-    </Fragment>
+      <main className="py-5">{props.children}</main>
+    </div>
   );
 };
 

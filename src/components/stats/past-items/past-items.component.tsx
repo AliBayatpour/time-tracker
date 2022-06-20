@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Form } from "react-bootstrap";
 import { ItemInterface } from "../../../interfaces/item-interface";
 import ItemContext from "../../../store/item-context";
@@ -10,6 +10,9 @@ import {
 } from "../../../utils/date-utils";
 import { totalTime } from "../../../utils/stat-utils";
 import classes from "./past-items.module.scss";
+import { ReactComponent as Trash } from "../../../assets/icons/trash.svg";
+import { ReactComponent as Update } from "../../../assets/icons/update.svg";
+import { ReactComponent as PastItemsIcon } from "../../../assets/icons/past-items.svg";
 
 type Props = {
   nDays: number;
@@ -18,8 +21,9 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
   const itemCtx = useContext(ItemContext);
   const statCtx = useContext(StatContext);
   const [selectDate, setSelectDate] = useState<string>("");
+  const updateBtnsRef = useRef<HTMLButtonElement[]>([]);
 
-  const updateItem = (event: any, item: ItemInterface) => {
+  const updateItem = (event: any, item: ItemInterface, index: number) => {
     event.preventDefault();
     let newItem: ItemInterface = {
       ...item,
@@ -28,10 +32,23 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
       progress: Number(event.target.elements.progress.value),
     };
     itemCtx.updateItemAsync(newItem, nDays);
+    (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
   };
 
   const handleRemovetask = (item: ItemInterface) => {
     itemCtx.deleteItemAsync(item, nDays);
+  };
+
+  const onChangeForm = (event: any, item: ItemInterface, index: number) => {
+    if (
+      event.target.form.elements.category.value === item.category &&
+      event.target.form.elements.description.value === item.description &&
+      Number(event.target.form.elements.progress.value) === item.progress
+    ) {
+      (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
+    } else {
+      (updateBtnsRef.current[index] as HTMLButtonElement).disabled = false;
+    }
   };
 
   const fileterItems = (): ItemInterface[] => {
@@ -56,8 +73,11 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
   };
   return (
     <React.Fragment>
-      <h2 className="mt-5 text-success">Past Done Items</h2>
-      <p>Select the date to see the items and edit</p>
+      <div className="d-flex align-items-center mb-3 mt-5">
+        <PastItemsIcon width={30} />
+        <h2 className="text-light ms-3 mb-0">Past Done Items</h2>
+      </div>
+      <p className="text-light">Select the date to see the items and edit</p>
       <Form.Select
         aria-label="Select Date"
         value={selectDate}
@@ -72,14 +92,15 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
             </option>
           ))}
       </Form.Select>
-      <h5 className="text-secondary my-3">
+      <h5 className="text-light my-3">
         Total Time: (<b>{convertMinToReadable(totalTime(fileterItems()))}</b>)
       </h5>
       {fileterItems().map((item: ItemInterface, index: number) => (
         <form
           key={item.modelID}
-          onSubmit={(event) => updateItem(event, item)}
-          className="row my-3 border-primary border border-secondary py-3 position-relative"
+          onChange={(event) => onChangeForm(event, item, index)}
+          onSubmit={(event) => updateItem(event, item, index)}
+          className="row my-3 text-light border-primary border border-secondary py-3 position-relative"
         >
           <div className="col-3">
             <div className="form-group">
@@ -128,17 +149,24 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
               aria-hidden="true"
             ></span>
 
-            <button type="submit" className={`btn btn-info`}>
-              Update
+            <button
+              type="submit"
+              className={`btn btn-light`}
+              ref={(elem) =>
+                (updateBtnsRef.current[index] = elem as HTMLButtonElement)
+              }
+              disabled
+            >
+              <Update height={20} />
             </button>
           </div>
-          <div className={`${classes.delBtn}  d-flex col-1 mt-4`}>
+          <div className={`col-1 mt-4`}>
             <button
               type="button"
               onClick={() => handleRemovetask(item)}
-              className={`bg-danger text-white rounded-circle p-0 overflow-hidden my-auto`}
+              className={`btn btn-light`}
             >
-              X
+              <Trash height={20} />
             </button>
           </div>
         </form>

@@ -1,17 +1,20 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { ItemInterface } from "../../../interfaces/item-interface";
 import ItemContext from "../../../store/item-context";
 import ModalContext from "../../../store/modal-context";
 import TimerContext from "../../../store/timer-context";
 import { stringValueGenerator } from "../../../utils/items-utils";
-
-import classes from "./todo-items.module.scss";
+import { ReactComponent as Trash } from "../../../assets/icons/trash.svg";
+import { ReactComponent as Update } from "../../../assets/icons/update.svg";
+import { ReactComponent as Empty } from "../../../assets/icons/empty.svg";
+import { ReactComponent as TodoList } from "../../../assets/icons/todo-list.svg";
 
 const TodoItems: React.FC = () => {
   const itemCtx = useContext(ItemContext);
   const timerCtx = useContext(TimerContext);
   const modalCtx = useContext(ModalContext);
+  const updateBtnsRef = useRef<HTMLButtonElement[]>([]);
 
   const updateItem = (event: any, index: number) => {
     event.preventDefault();
@@ -20,10 +23,11 @@ const TodoItems: React.FC = () => {
       category: event.target.elements.category.value,
       description: event.target.elements.description.value,
       sort: itemCtx.todoItems[index].sort,
-      goal: itemCtx.todoItems[index].goal,
+      goal: Number(event.target.elements.goal.value),
       done: false,
     };
     itemCtx.updateItemAsync(newItem);
+    (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
   };
 
   const handleRemovetask = (index: number) => {
@@ -56,6 +60,18 @@ const TodoItems: React.FC = () => {
     }
     itemCtx.updateItemAsync(targetItem);
   };
+
+  const onChangeForm = (event: any, item: ItemInterface, index: number) => {
+    if (
+      event.target.form.elements.category.value === item.category &&
+      event.target.form.elements.description.value === item.description &&
+      Number(event.target.form.elements.goal.value) === item.goal
+    ) {
+      (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
+    } else {
+      (updateBtnsRef.current[index] as HTMLButtonElement).disabled = false;
+    }
+  };
   const onDragEnd = (result: any) => {
     if (!result.destination) {
       return;
@@ -64,7 +80,19 @@ const TodoItems: React.FC = () => {
   };
   return (
     <React.Fragment>
-      <h2 className="mt-5 text-warning">Todo Items</h2>
+      <div className="d-flex align-items-center mb-3 mt-5">
+        <TodoList width={30} />
+        <h2 className="text-light ms-3 mb-0">Todo Items</h2>
+      </div>
+
+      {itemCtx.todoItems.length === 0 ? (
+        <div className="d-flex justify-content-center align-items-center my-5">
+          <h6 className="text-light text-center text-uppercase mb-0 me-3">
+            Todo Empty
+          </h6>
+          <Empty width={30} />
+        </div>
+      ) : null}
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
@@ -78,7 +106,8 @@ const TodoItems: React.FC = () => {
                   {(provided, snapshot) => (
                     <form
                       onSubmit={(event) => updateItem(event, index)}
-                      className="row my-3 border-primary border border-secondary py-3"
+                      onChange={(event) => onChangeForm(event, item, index)}
+                      className="row d-flex justify-content-center align-items-center my-3 border-primary border border-secondary py-3"
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
@@ -116,7 +145,12 @@ const TodoItems: React.FC = () => {
                           <label htmlFor="todoGoalInput">Goal(min)</label>
                           <input
                             type="number"
-                            readOnly={index === 0 ? true : false}
+                            readOnly={
+                              index === 0 &&
+                              (timerCtx.isStarted || timerCtx.isPaused)
+                                ? true
+                                : false
+                            }
                             name="goal"
                             className="form-control"
                             id="todoGoalInput"
@@ -126,17 +160,25 @@ const TodoItems: React.FC = () => {
                         </div>
                       </div>
                       <div className={`d-flex col-1 mt-4`}>
-                        <button type="submit" className={`btn btn-info`}>
-                          Update
+                        <button
+                          type="submit"
+                          className={`btn btn-light`}
+                          ref={(elem) =>
+                            (updateBtnsRef.current[index] =
+                              elem as HTMLButtonElement)
+                          }
+                          disabled
+                        >
+                          <Update height={20} />
                         </button>
                       </div>
-                      <div className={`${classes.delBtn}  d-flex col-1 mt-4`}>
+                      <div className={`col-1 mt-4`}>
                         <button
                           type="button"
                           onClick={() => handleRemovetask(index)}
-                          className={`bg-danger text-white rounded-circle p-0 overflow-hidden my-auto`}
+                          className={`btn btn-light`}
                         >
-                          X
+                          <Trash height={20} />
                         </button>
                       </div>
                     </form>

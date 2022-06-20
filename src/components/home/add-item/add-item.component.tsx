@@ -1,8 +1,10 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { ItemInterface } from "../../../interfaces/item-interface";
 import ItemContext from "../../../store/item-context";
 import { stringValueGenerator } from "../../../utils/items-utils";
 import classes from "./add-item.module.scss";
+import { ReactComponent as Add } from "../../../assets/icons/add.svg";
+import { ReactComponent as AddItemIcon } from "../../../assets/icons/add-item.svg";
 
 const AddItem: React.FC = () => {
   const itemCtx = useContext(ItemContext);
@@ -26,54 +28,60 @@ const AddItem: React.FC = () => {
     event.target.reset();
   };
   return (
-    <form
-      className="row my-3 border border-secondary py-3 position-relative"
-      onSubmit={addItem}
-    >
-      <h2 className=" text-primary">Add Item</h2>
-      <div className="col-3">
-        <div className="form-group">
-          <label htmlFor="addCategoryInput">Category</label>
-          <input
-            type="text"
-            name="category"
-            className="form-control"
-            id="addCategoryInput"
-            placeholder="category"
-          />
+    <React.Fragment>
+      <div className="d-flex align-items-center">
+        <AddItemIcon width={30} />
+        <h2 className="text-light ms-3 mb-0">Add Item</h2>
+      </div>
+
+      <form
+        className="row d-flex justify-content-center align-items-center my-3 border border-secondary py-3 position-relative"
+        onSubmit={addItem}
+      >
+        <div className="col-3">
+          <div className="form-group">
+            <label htmlFor="addCategoryInput">Category</label>
+            <input
+              type="text"
+              name="category"
+              className="form-control"
+              id="addCategoryInput"
+              placeholder="category"
+            />
+          </div>
         </div>
-      </div>
-      <div className="col-6">
-        <div className="form-group">
-          <label htmlFor="addDescriptionInput">Description</label>
-          <input
-            type="text"
-            name="description"
-            className="form-control"
-            id="addDescriptionInput"
-            placeholder="Description"
-          />
+        <div className="col-6">
+          <div className="form-group">
+            <label htmlFor="addDescriptionInput">Description</label>
+            <input
+              type="text"
+              name="description"
+              className="form-control"
+              id="addDescriptionInput"
+              placeholder="Description"
+            />
+          </div>
         </div>
-      </div>
-      <div className="col-2">
-        <div className="form-group">
-          <label htmlFor="addGoalInput">Goal (min)</label>
-          <input
-            type="number"
-            name="goal"
-            className="form-control"
-            id="addGoalInput"
-            placeholder="Goal (min)"
-            defaultValue={60}
-          />
+        <div className="col-2">
+          <div className="form-group">
+            <label htmlFor="addGoalInput">Goal (min)</label>
+            <input
+              type="number"
+              name="goal"
+              className="form-control"
+              id="addGoalInput"
+              placeholder="Goal (min)"
+              defaultValue={60}
+            />
+          </div>
         </div>
-      </div>
-      <div className={`${classes.delBtn}  d-flex col-1 mt-4`}>
-        <button type="submit" className="btn btn-primary btn-lg">
-          +
-        </button>
-      </div>
-    </form>
+        <div className={`col-1 mt-4`}>
+          <button type="submit" className="btn btn-light">
+            <Add height={20} />
+          </button>
+        </div>
+      </form>
+    </React.Fragment>
   );
 };
 

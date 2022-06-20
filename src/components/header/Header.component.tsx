@@ -13,13 +13,13 @@ const Header: React.FC = () => {
   return (
     <header className={`${classes.header} pt-4`}>
       <nav className="d-flex container-lg">
-        <Link to="/" className="me-5 btn btn-outline-secondary">
+        <Link to="/" className="me-5 btn btn-outline-light">
           <div className={classes.logo}>HOME</div>
         </Link>
-        <Link to="/stats" className="me-5 btn btn-outline-secondary">
+        <Link to="/stats" className="me-5 btn btn-outline-light">
           Stats
         </Link>
-        <button className="btn btn-outline-secondary" onClick={onLogoutHandler}>
+        <button className="btn btn-outline-light" onClick={onLogoutHandler}>
           Logout
         </button>
       </nav>

@@ -12,6 +12,7 @@ const Timer: React.FC = () => {
     let timerString = localStorage.getItem("timer");
     let timer: TimerStorageInterface = timerString && JSON.parse(timerString);
     if (!itemCtx.todoItems[0]) {
+      timerCtx.onSetDate(null);
       return;
     }
     if (
@@ -148,7 +149,7 @@ const Timer: React.FC = () => {
 
   return (
     <div className="container-lg">
-      <div className="w-100 d-flex justify-content-center">
+      <div className="w-100 py-4 d-flex justify-content-center bg-dark text-white">
         {timerCtx.date && (
           <div className={`${classes["timerContainer"]}`}>
             <Countdown
@@ -161,7 +162,7 @@ const Timer: React.FC = () => {
               autoStart={timerCtx.autoStart}
               className="d-flex justify-content-center"
             />
-            <div className="mt-5">
+            <div className="mt-4">
               <button
                 type="button"
                 className="btn btn-secondary btn-lg"

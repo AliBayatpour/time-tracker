@@ -25,9 +25,14 @@ const Chart: React.FC<Props> = ({ items, nDays }) => {
 
   const CustomTooltip = (props: any) => {
     if (props.active) {
+      let sumDay = 0;
+      props.payload.forEach((payload: any) => {
+        sumDay = sumDay + payload.value;
+      });
       return (
         <div className="bg-white badge text-start p-3 text-dark">
-          <p className="label">{`Date: ${props.label}`}</p>
+          <p className="label">{`${props.label}`}</p>
+          <hr />
           {props.payload.map((payload: any, index: number) => {
             return (
               <p key={`tooltip${index}`}>
@@ -36,6 +41,10 @@ const Chart: React.FC<Props> = ({ items, nDays }) => {
               </p>
             );
           })}
+          <b>
+            <span>Total: </span>
+            <span>{convertMinToReadable(sumDay)}</span>
+          </b>
         </div>
       );
     }
@@ -72,15 +81,15 @@ const Chart: React.FC<Props> = ({ items, nDays }) => {
             bottom: 20,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" style={{ fontSize: "10px" }} />
+          <CartesianGrid strokeDasharray="3 3" style={{ fill: "#ffffff" }} />
+          <XAxis dataKey="date" style={{ fontSize: "10px", fill: "#ffffff" }} />
 
-          <YAxis>
+          <YAxis style={{ fontSize: "14px", fill: "#ffffff" }}>
             <Label
               value="progress (min)"
               angle={270}
               position="left"
-              style={{ textAnchor: "middle" }}
+              style={{ textAnchor: "middle", fill: "#ffffff" }}
             />
           </YAxis>
           <Tooltip content={<CustomTooltip />} />
