@@ -43,7 +43,7 @@ export const ItemContextProvider = (props: Props): ReactElement<any, any> => {
 
   const getItemsAsync = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/v1/item/", {
+      const response = await fetch(`${process.env.REACT_APP_BACK_END_URL}/item/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +87,7 @@ export const ItemContextProvider = (props: Props): ReactElement<any, any> => {
 
   const addItemAsync = async (item: ItemInterface) => {
     try {
-      const response = await fetch("http://localhost:8080/api/v1/item/", {
+      const response = await fetch(`${process.env.REACT_APP_BACK_END_URL}/item/`, {
         method: "POST",
         body: JSON.stringify(item),
         headers: {
@@ -108,7 +108,7 @@ export const ItemContextProvider = (props: Props): ReactElement<any, any> => {
     nDaysStatItem?: number
   ) => {
     try {
-      const response = await fetch("http://localhost:8080/api/v1/item/", {
+      const response = await fetch(`${process.env.REACT_APP_BACK_END_URL}/item/`, {
         method: "PATCH",
         body: JSON.stringify(item),
         headers: {
@@ -132,7 +132,7 @@ export const ItemContextProvider = (props: Props): ReactElement<any, any> => {
     nDaysStatItem?: number
   ) => {
     try {
-      const response = await fetch("http://localhost:8080/api/v1/item/", {
+      const response = await fetch(`${process.env.REACT_APP_BACK_END_URL}/item/`, {
         method: "DELETE",
         body: JSON.stringify(item),
         headers: {

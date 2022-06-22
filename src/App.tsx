@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import "./App.scss";
 import Layout from "./components/Layout/Layout.component";
 import { Navigate, Route, Routes } from "react-router-dom";

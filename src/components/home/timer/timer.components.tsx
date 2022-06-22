@@ -121,22 +121,16 @@ const Timer: React.FC = () => {
     }
     localStorage.removeItem("timer");
     timerCtx.onSetIsCompleted(true);
-    if (
-      Math.round(
+
+    itemCtx.updateItemAsync({
+      ...itemCtx.todoItems[0],
+      done: true,
+      finished_at: Math.ceil(new Date().getTime() / 1000),
+      progress: Math.ceil(
         itemCtx.todoItems[0].goal -
           timerCtx.countdown?.calcTimeDelta().total / 60000
-      ) !== 0
-    ) {
-      itemCtx.updateItemAsync({
-        ...itemCtx.todoItems[0],
-        done: true,
-        finished_at: Math.ceil(new Date().getTime() / 1000),
-        progress: Math.round(
-          itemCtx.todoItems[0].goal -
-            timerCtx.countdown?.calcTimeDelta().total / 60000
-        ),
-      });
-    }
+      ),
+    });
 
     if (itemCtx.todoItems.length === 1) {
       timerCtx.onSetDate(null);

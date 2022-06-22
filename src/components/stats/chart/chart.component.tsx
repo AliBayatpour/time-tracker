@@ -26,14 +26,14 @@ const Chart: React.FC<Props> = ({ items, nDays }) => {
   const CustomTooltip = (props: any) => {
     if (props.active) {
       let sumDay = 0;
-      props.payload.forEach((payload: any) => {
+      props.payload?.forEach((payload: any) => {
         sumDay = sumDay + payload.value;
       });
       return (
         <div className="bg-white badge text-start p-3 text-dark">
           <p className="label">{`${props.label}`}</p>
           <hr />
-          {props.payload.map((payload: any, index: number) => {
+          {props.payload?.map((payload: any, index: number) => {
             return (
               <p key={`tooltip${index}`}>
                 <span style={{ color: payload.fill }}>{payload.name}</span>:{" "}

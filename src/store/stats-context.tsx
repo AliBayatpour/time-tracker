@@ -64,7 +64,7 @@ export const StatContextProvider = (props: Props): ReactElement<any, any> => {
   const getLast7DaysItemsAsync = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8080/api/v1/item/last-7-days",
+        `${process.env.REACT_APP_BACK_END_URL}/item/last-7-days`,
         {
           method: "GET",
           headers: {
@@ -91,7 +91,7 @@ export const StatContextProvider = (props: Props): ReactElement<any, any> => {
   const getLast14DaysItemsAsync = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8080/api/v1/item/last-14-days",
+        `${process.env.REACT_APP_BACK_END_URL}/item/last-14-days`,
         {
           method: "GET",
           headers: {
@@ -118,7 +118,7 @@ export const StatContextProvider = (props: Props): ReactElement<any, any> => {
   const getLast30DaysItemsAsync = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8080/api/v1/item/last-30-days",
+        `${process.env.REACT_APP_BACK_END_URL}/item/last-30-days`,
         {
           method: "GET",
           headers: {

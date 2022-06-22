@@ -19,7 +19,7 @@ const Signup: React.FC = () => {
     const enteredPassword = passwordInputRef.current?.value;
 
     try {
-      const response = await fetch("http://localhost:8080/api/v1/auth/signup", {
+      const response = await fetch(`${process.env.REACT_APP_BACK_END_URL}/auth/signup`, {
         method: "POST",
         body: JSON.stringify({
           name: enteredName,
