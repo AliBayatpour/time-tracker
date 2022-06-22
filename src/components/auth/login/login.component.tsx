@@ -38,7 +38,7 @@ const Login: React.FC = () => {
     }
   };
   return (
-    <div className={classes.mainContainer}>
+    <div className={`${classes.mainContainer} text-light`}>
       <h1>Login</h1>
       <form onSubmit={login}>
         <div className="form-group mb-4">

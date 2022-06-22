@@ -19,17 +19,20 @@ const Signup: React.FC = () => {
     const enteredPassword = passwordInputRef.current?.value;
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACK_END_URL}/auth/signup`, {
-        method: "POST",
-        body: JSON.stringify({
-          name: enteredName,
-          email: enteredEmail,
-          password: enteredPassword,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACK_END_URL}/auth/signup`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            name: enteredName,
+            email: enteredEmail,
+            password: enteredPassword,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const json = (await response.json()) as authResInterface;
       if (json) {
         authCtx.login(json);
@@ -42,7 +45,7 @@ const Signup: React.FC = () => {
     }
   };
   return (
-    <div className={classes.mainContainer}>
+    <div className={`${classes.mainContainer} text-light`}>
       <h1>Signup</h1>
       <form onSubmit={signup}>
         <div className="form-group">

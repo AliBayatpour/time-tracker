@@ -4,10 +4,12 @@ import { TimerStorageInterface } from "../../../interfaces/item-storage-interfac
 import ItemContext from "../../../store/item-context";
 import TimerContext from "../../../store/timer-context";
 import classes from "./timer.module.scss";
+import ringer from "../../../assets/ringtones/win-10.mp3";
 const Timer: React.FC = () => {
   const itemCtx = useContext(ItemContext);
   const timerCtx = useContext(TimerContext);
-
+  const audio = new Audio(ringer);
+  audio.loop = false;
   useEffect(() => {
     let timerString = localStorage.getItem("timer");
     let timer: TimerStorageInterface = timerString && JSON.parse(timerString);
@@ -113,6 +115,12 @@ const Timer: React.FC = () => {
       finished_at: Math.ceil(new Date().getTime() / 1000),
       progress: itemCtx.todoItems[0].goal,
     });
+    audio.play();
+    document.title = `00:00`;
+  };
+
+  const handleTick = (res: CountdownTimeDelta) => {
+    document.title = `${res.hours}:${res.minutes}:${res.seconds}`;
   };
 
   const handleFinishClick = () => {
@@ -131,6 +139,8 @@ const Timer: React.FC = () => {
           timerCtx.countdown?.calcTimeDelta().total / 60000
       ),
     });
+    audio.play();
+    document.title = `00:00`;
 
     if (itemCtx.todoItems.length === 1) {
       timerCtx.onSetDate(null);
@@ -151,6 +161,7 @@ const Timer: React.FC = () => {
               ref={setRef}
               date={timerCtx.date}
               onStart={handleStart}
+              onTick={handleTick}
               onPause={handlePause}
               onComplete={handleComplete}
               autoStart={timerCtx.autoStart}
