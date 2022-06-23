@@ -1,0 +1,18 @@
+
+
+.moreItem {
+  .dropdown-toggle::after {
+    display: none !important;
+  }
+}
+
+.nav-tabs {
+  .nav-item {
+    .nav-link {
+      color: white !important;
+    }
+    .nav-link.active {
+      color: var(--bs-blue) !important;
+    }
+  }
+}

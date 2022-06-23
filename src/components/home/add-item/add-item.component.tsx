@@ -2,9 +2,9 @@ import React, { useContext } from "react";
 import { ItemInterface } from "../../../interfaces/item-interface";
 import ItemContext from "../../../store/item-context";
 import { stringValueGenerator } from "../../../utils/items-utils";
-import classes from "./add-item.module.scss";
 import { ReactComponent as Add } from "../../../assets/icons/add.svg";
 import { ReactComponent as AddItemIcon } from "../../../assets/icons/add-item.svg";
+import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 const AddItem: React.FC = () => {
   const itemCtx = useContext(ItemContext);
@@ -35,7 +35,7 @@ const AddItem: React.FC = () => {
       </div>
 
       <form
-        className="row d-flex justify-content-center align-items-center my-3 border border-secondary py-3 position-relative"
+        className="row text-light d-flex justify-content-center align-items-center my-3 border border-secondary py-3 position-relative"
         onSubmit={addItem}
       >
         <div className="col-3">
@@ -76,9 +76,15 @@ const AddItem: React.FC = () => {
           </div>
         </div>
         <div className={`col-1 mt-4`}>
-          <button type="submit" className="btn btn-light">
-            <Add height={20} />
-          </button>
+          <OverlayTrigger
+            placement="right"
+            delay={{ show: 250, hide: 400 }}
+            overlay={<Tooltip id="add-but-tooltip">Add Item</Tooltip>}
+          >
+            <Button type="submit" variant="primary">
+              <Add height={15} />
+            </Button>
+          </OverlayTrigger>
         </div>
       </form>
     </React.Fragment>
