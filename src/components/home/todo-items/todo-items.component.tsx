@@ -6,9 +6,14 @@ import ModalContext from "../../../store/modal-context";
 import TimerContext from "../../../store/timer-context";
 import { stringValueGenerator } from "../../../utils/items-utils";
 import { ReactComponent as Trash } from "../../../assets/icons/trash.svg";
+import { ReactComponent as Duplicate } from "../../../assets/icons/duplicate.svg";
 import { ReactComponent as Update } from "../../../assets/icons/update.svg";
 import { ReactComponent as Empty } from "../../../assets/icons/empty.svg";
 import { ReactComponent as TodoList } from "../../../assets/icons/todo-list.svg";
+import { totalTodoTime } from "../../../utils/stat-utils";
+import { convertMinToReadable } from "../../../utils/date-utils";
+import { Dropdown, OverlayTrigger, Tooltip } from "react-bootstrap";
+import classes from "./todo-items.module.scss";
 
 const TodoItems: React.FC = () => {
   const itemCtx = useContext(ItemContext);
@@ -28,6 +33,23 @@ const TodoItems: React.FC = () => {
     };
     itemCtx.updateItemAsync(newItem);
     (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
+  };
+
+  const duplicateItem = (item: ItemInterface) => {
+    const todoItemsLength = itemCtx.todoItems.length;
+    let newitem: ItemInterface = {
+      userId: localStorage.getItem("sub") as string,
+      category: item.category,
+      description: item.description,
+      sort: todoItemsLength
+        ? stringValueGenerator(itemCtx.todoItems[todoItemsLength - 1].sort)
+        : stringValueGenerator(),
+      progress: 0,
+      goal: item.goal,
+      done: false,
+      finished_at: 0,
+    };
+    itemCtx.addItemAsync(newitem);
   };
 
   const handleRemovetask = (index: number) => {
@@ -84,7 +106,9 @@ const TodoItems: React.FC = () => {
         <TodoList width={30} />
         <h2 className="text-light ms-3 mb-0">Todo Items</h2>
       </div>
-
+      <h5 className="text-light">
+        My goal Today: {convertMinToReadable(totalTodoTime(itemCtx.todoItems))}
+      </h5>
       {itemCtx.todoItems.length === 0 ? (
         <div className="d-flex justify-content-center align-items-center my-5">
           <h6 className="text-light text-center text-uppercase mb-0 me-3">
@@ -107,7 +131,7 @@ const TodoItems: React.FC = () => {
                     <form
                       onSubmit={(event) => updateItem(event, index)}
                       onChange={(event) => onChangeForm(event, item, index)}
-                      className="row d-flex justify-content-center align-items-center my-3 border-primary border border-secondary py-3"
+                      className="row text-light d-flex justify-content-center align-items-center my-3 border-primary border border-secondary py-3"
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
@@ -160,26 +184,51 @@ const TodoItems: React.FC = () => {
                         </div>
                       </div>
                       <div className={`d-flex col-1 mt-4`}>
-                        <button
-                          type="submit"
-                          className={`btn btn-light`}
-                          ref={(elem) =>
-                            (updateBtnsRef.current[index] =
-                              elem as HTMLButtonElement)
+                        <OverlayTrigger
+                          placement="right"
+                          delay={{ show: 250, hide: 400 }}
+                          overlay={
+                            <Tooltip id="add-but-tooltip">Update Item</Tooltip>
                           }
-                          disabled
                         >
-                          <Update height={20} />
-                        </button>
+                          <button
+                            type="submit"
+                            className={`btn btn-light`}
+                            ref={(elem) =>
+                              (updateBtnsRef.current[index] =
+                                elem as HTMLButtonElement)
+                            }
+                            disabled
+                          >
+                            <Update height={20} />
+                          </button>
+                        </OverlayTrigger>
                       </div>
                       <div className={`col-1 mt-4`}>
-                        <button
-                          type="button"
-                          onClick={() => handleRemovetask(index)}
-                          className={`btn btn-light`}
-                        >
-                          <Trash height={20} />
-                        </button>
+                        <Dropdown className="moreItem">
+                          <Dropdown.Toggle
+                            variant="primary"
+                            id="dropdown-basic"
+                          >
+                            ...
+                          </Dropdown.Toggle>
+
+                          <Dropdown.Menu>
+                            <Dropdown.Item
+                              onClick={() => handleRemovetask(index)}
+                              className="d-flex align-items-center"
+                            >
+                              Delete <Trash height={15} className="ms-auto" />
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              onClick={() => duplicateItem(item)}
+                              className="d-flex align-items-center"
+                            >
+                              Duplicate
+                              <Duplicate height={15} className="ms-auto" />
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
                       </div>
                     </form>
                   )}

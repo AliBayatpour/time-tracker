@@ -10,6 +10,14 @@ export const totalTime = (doneItems: ItemInterface[]) => {
   return totalProgress;
 };
 
+export const totalTodoTime = (todoItems: ItemInterface[]) => {
+  let totalTodo = 0;
+  todoItems?.forEach((todoItem) => {
+    totalTodo = totalTodo + todoItem.goal;
+  });
+  return totalTodo;
+};
+
 const randomColorGenerator = (): string => {
   return "#" + Math.floor(Math.random() * 16777215).toString(16);
 };
