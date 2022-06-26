@@ -1,58 +1,24 @@
 import { useContext, useEffect } from "react";
 import Countdown, { CountdownTimeDelta } from "react-countdown";
-import { TimerStorageInterface } from "../../../interfaces/item-storage-interface";
-import TimerContext from "../../../context/timer-context";
-import classes from "./timer.module.scss";
+import classes from "./rest.module.scss";
 import ringer from "../../../assets/ringtones/win-10.mp3";
-import { useDispatch, useSelector } from "react-redux";
-import { selectTodoItems } from "../../../store/item/item.selector";
-import { updateItemStart } from "../../../store/item/item.action";
+import RestTimerContext from "../../../context/rest-timer-context";
+
 type Props = {
   onChangeShowRestTimer: (val: boolean) => void;
 };
-const Timer: React.FC<Props> = ({ onChangeShowRestTimer }) => {
-  const timerCtx = useContext(TimerContext);
-  const todoItems = useSelector(selectTodoItems);
-  const dispatch = useDispatch();
+const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer }) => {
+  const timerCtx = useContext(RestTimerContext);
   const audio = new Audio(ringer);
   audio.loop = false;
+
   useEffect(() => {
-    let timerString = localStorage.getItem("timer");
-    let timer: TimerStorageInterface = timerString && JSON.parse(timerString);
-    if (!todoItems[0]) {
-      timerCtx.onSetDate(null);
-      return;
-    }
-    if (
-      todoItems &&
-      timer?.modelID &&
-      timer?.modelID !== todoItems[0].modelID
-    ) {
-      localStorage.removeItem("timer");
-    }
-    if (
-      timer &&
-      timer.autoStart &&
-      timer.endTime &&
-      timer.endTime - new Date().getTime() > 0
-    ) {
-      timerCtx.onSetDate(timer.endTime);
-      timerCtx.onSetAutoStart(timer.autoStart);
-      timerCtx.onSetIsPaused(false);
-      timerCtx.onSetIsStarted(true);
-    } else if (timer && !timer.autoStart && timer.duration) {
-      timerCtx.onSetDate(Date.now() + timer.duration);
-      timerCtx.onSetAutoStart(timer.autoStart);
-      timerCtx.onSetIsPaused(true);
-      timerCtx.onSetIsStarted(false);
-    } else {
-      localStorage.removeItem("timer");
-      timerCtx.onSetDate(Date.now() + minToMilliConverter(todoItems[0]?.goal));
-      timerCtx.onSetAutoStart(false);
-      timerCtx.onSetIsPaused(false);
-      timerCtx.onSetIsStarted(false);
-    }
-  }, [todoItems]);
+    localStorage.removeItem("timer");
+    timerCtx.onSetDate(Date.now() + minToMilliConverter(5));
+    timerCtx.onSetAutoStart(true);
+    timerCtx.onSetIsPaused(false);
+    timerCtx.onSetIsStarted(false);
+  }, []);
 
   const minToMilliConverter = (min: number) => {
     return min * 60 * 1000;
@@ -68,8 +34,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer }) => {
   };
 
   const handleResetClick = (): void => {
-    localStorage.removeItem("timer");
-    timerCtx.onSetDate(Date.now() + minToMilliConverter(todoItems[0]?.goal));
+    timerCtx.onSetDate(Date.now() + minToMilliConverter(5));
     timerCtx.onSetAutoStart(false);
     timerCtx.onSetIsPaused(false);
     timerCtx.onSetIsStarted(false);
@@ -84,45 +49,20 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer }) => {
   };
 
   const handleStart = (res: any) => {
-    localStorage.removeItem("timer");
-    let itemToSet: TimerStorageInterface = {
-      modelID: todoItems[0].modelID as string,
-      endTime: Date.now() + res.total,
-      autoStart: true,
-    };
-
-    localStorage.setItem("timer", JSON.stringify(itemToSet));
     timerCtx.onSetIsPaused(false);
     timerCtx.onSetIsStarted(true);
   };
 
   const handlePause = (res: CountdownTimeDelta): void => {
-    localStorage.removeItem("timer");
-    let itemToSet: TimerStorageInterface = {
-      modelID: todoItems[0].modelID as string,
-      autoStart: false,
-      duration: res.total,
-    };
-    localStorage.setItem("timer", JSON.stringify(itemToSet));
     timerCtx.onSetIsPaused(true);
     timerCtx.onSetIsStarted(false);
   };
 
   const handleComplete = (res: CountdownTimeDelta) => {
-    localStorage.removeItem("timer");
     timerCtx.onSetIsCompleted(true);
-    dispatch(
-      updateItemStart({
-        ...todoItems[0],
-        done: true,
-        finished_at: Math.ceil(new Date().getTime() / 1000),
-        progress: todoItems[0].goal,
-      })
-    );
-
     audio.play();
     document.title = `00:00`;
-    onChangeShowRestTimer(true);
+    onChangeShowRestTimer(false);
   };
 
   const handleTick = (res: CountdownTimeDelta) => {
@@ -133,38 +73,18 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer }) => {
     if (!timerCtx.countdown?.calcTimeDelta().total) {
       return;
     }
-    localStorage.removeItem("timer");
-    timerCtx.onSetIsCompleted(true);
-    dispatch(
-      updateItemStart({
-        ...todoItems[0],
-        done: true,
-        finished_at: Math.ceil(new Date().getTime() / 1000),
-        progress: Math.ceil(
-          todoItems[0].goal - timerCtx.countdown?.calcTimeDelta().total / 60000
-        ),
-      })
-    );
-
     audio.play();
     document.title = `00:00`;
-
-    if (todoItems.length === 1) {
-      timerCtx.onSetDate(null);
-    }
     timerCtx.onSetAutoStart(false);
     timerCtx.onSetIsPaused(false);
     timerCtx.onSetIsStarted(false);
     timerCtx.onSetIsCompleted(false);
-    onChangeShowRestTimer(true);
+    onChangeShowRestTimer(false);
   };
 
   return (
     <div className="container-lg">
-      <h4 className="w-100 text-center text-primary">
-        {todoItems[0]?.category}
-      </h4>
-
+      <h4 className="w-100 text-center text-warning">Rest</h4>
       <div className="w-100 py-4 d-flex justify-content-center bg-dark text-white">
         {timerCtx.date && (
           <div className={`${classes["timerContainer"]}`}>
@@ -230,4 +150,4 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer }) => {
   );
 };
 
-export default Timer;
+export default RestTimer;
