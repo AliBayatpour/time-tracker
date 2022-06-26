@@ -1,7 +1,7 @@
 import React, { useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { authResInterface } from "../../../interfaces/auth-res-interface";
-import AuthContext from "../../../store/auth-context";
+import AuthContext from "../../../context/auth-context";
 import classes from "./signup.module.scss";
 
 const Signup: React.FC = () => {

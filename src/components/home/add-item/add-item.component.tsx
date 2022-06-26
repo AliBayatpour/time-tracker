@@ -1,30 +1,33 @@
-import React, { useContext } from "react";
 import { ItemInterface } from "../../../interfaces/item-interface";
-import ItemContext from "../../../store/item-context";
 import { stringValueGenerator } from "../../../utils/items-utils";
 import { ReactComponent as Add } from "../../../assets/icons/add.svg";
 import { ReactComponent as AddItemIcon } from "../../../assets/icons/add-item.svg";
 import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { selectTodoItems } from "../../../store/item/item.selector";
+import { addItemStart } from "../../../store/item/item.action";
+import React from "react";
 
 const AddItem: React.FC = () => {
-  const itemCtx = useContext(ItemContext);
+  const todoItems = useSelector(selectTodoItems);
+  const dispatch = useDispatch();
 
   const addItem = (event: any) => {
     event.preventDefault();
-    const todoItemsLength = itemCtx.todoItems.length;
+    const todoItemsLength = todoItems.length;
     let newitem: ItemInterface = {
       userId: localStorage.getItem("sub") as string,
       category: event.target.elements.category.value,
       description: event.target.elements.description.value,
       sort: todoItemsLength
-        ? stringValueGenerator(itemCtx.todoItems[todoItemsLength - 1].sort)
+        ? stringValueGenerator(todoItems[todoItemsLength - 1].sort)
         : stringValueGenerator(),
       progress: 0,
       goal: Number(event.target.elements.goal.value),
       done: false,
       finished_at: 0,
     };
-    itemCtx.addItemAsync(newitem);
+    dispatch(addItemStart(newitem));
     event.target.reset();
   };
   return (

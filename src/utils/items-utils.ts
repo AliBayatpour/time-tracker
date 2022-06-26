@@ -1,6 +1,6 @@
 import { ItemInterface } from "../interfaces/item-interface";
-import { formatDateV1 } from "./date-utils";
 
+// SORT ALGORITHM
 const alphabet = [
   "a",
   "b",
@@ -161,4 +161,133 @@ const resultIndexCalculator = (param1: string, param2: string) => {
   return Math.floor((alphabet.indexOf(param1) + alphabet.indexOf(param2)) / 2);
 };
 
+// FETCH ITEMS
+export const getItemsAsyncReq = async (): Promise<ItemInterface[] | []> => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACK_END_URL}/item/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Request failed!");
+    }
+    const json = (await response.json()) as ItemInterface[];
+    if (json.length) {
+      return json;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    throw new Error("Index Out of Bounds");
+  }
+};
 
+// ADD
+export const addItemAsyncReq = async (
+  item: ItemInterface
+): Promise<Response> => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACK_END_URL}/item/`,
+      {
+        method: "POST",
+        body: JSON.stringify(item),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw new Error("Index Out of Bounds");
+  }
+};
+
+// UPDATE ITEM
+export const updateItemAsyncReq = async (
+  item: ItemInterface
+): Promise<Response> => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACK_END_URL}/item/`,
+      {
+        method: "PATCH",
+        body: JSON.stringify(item),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw new Error("Index Out of Bounds");
+  }
+};
+
+// DELETE
+export const deleteItemAsyncReq = async (
+  item: ItemInterface
+): Promise<Response> => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACK_END_URL}/item/`,
+      {
+        method: "DELETE",
+        body: JSON.stringify(item),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    throw new Error("Index Out of Bounds");
+  }
+};
+
+// FETCH LAST N DAYS ITEMS
+export const getLastNDaysItemsAsyncReq = async (
+  nDays: number
+): Promise<ItemInterface[] | []> => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACK_END_URL}/item/last-${nDays}-days`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Request failed!");
+    }
+    const json = (await response.json()) as ItemInterface[];
+    if (json.length) {
+      return json;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    throw new Error("Index Out of Bounds");
+  }
+};
+
+// UTIL FUNCTIONS
+export const filterTodoItems = (items: ItemInterface[]): ItemInterface[] => {
+  let filteredItems = items.filter((item) => !item.done);
+  return filteredItems.sort((a, b) => (a.sort > b.sort ? 1 : -1));
+};
+export const filterDoneItems = (items: ItemInterface[]) => {
+  return items.filter((item) => item.done);
+};

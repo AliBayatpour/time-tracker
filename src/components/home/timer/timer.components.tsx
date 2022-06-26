@@ -1,26 +1,30 @@
 import { useContext, useEffect } from "react";
 import Countdown, { CountdownTimeDelta } from "react-countdown";
 import { TimerStorageInterface } from "../../../interfaces/item-storage-interface";
-import ItemContext from "../../../store/item-context";
-import TimerContext from "../../../store/timer-context";
+import TimerContext from "../../../context/timer-context";
 import classes from "./timer.module.scss";
 import ringer from "../../../assets/ringtones/win-10.mp3";
+import { useDispatch, useSelector } from "react-redux";
+import { selectTodoItems } from "../../../store/item/item.selector";
+import { updateItemStart } from "../../../store/item/item.action";
+
 const Timer: React.FC = () => {
-  const itemCtx = useContext(ItemContext);
   const timerCtx = useContext(TimerContext);
+  const todoItems = useSelector(selectTodoItems);
+  const dispatch = useDispatch();
   const audio = new Audio(ringer);
   audio.loop = false;
   useEffect(() => {
     let timerString = localStorage.getItem("timer");
     let timer: TimerStorageInterface = timerString && JSON.parse(timerString);
-    if (!itemCtx.todoItems[0]) {
+    if (!todoItems[0]) {
       timerCtx.onSetDate(null);
       return;
     }
     if (
-      itemCtx.todoItems &&
+      todoItems &&
       timer?.modelID &&
-      timer?.modelID !== itemCtx.todoItems[0].modelID
+      timer?.modelID !== todoItems[0].modelID
     ) {
       localStorage.removeItem("timer");
     }
@@ -41,14 +45,12 @@ const Timer: React.FC = () => {
       timerCtx.onSetIsStarted(false);
     } else {
       localStorage.removeItem("timer");
-      timerCtx.onSetDate(
-        Date.now() + minToMilliConverter(itemCtx.todoItems[0]?.goal)
-      );
+      timerCtx.onSetDate(Date.now() + minToMilliConverter(todoItems[0]?.goal));
       timerCtx.onSetAutoStart(false);
       timerCtx.onSetIsPaused(false);
       timerCtx.onSetIsStarted(false);
     }
-  }, [itemCtx.todoItems]);
+  }, [todoItems]);
 
   const minToMilliConverter = (min: number) => {
     return min * 60 * 1000;
@@ -65,9 +67,7 @@ const Timer: React.FC = () => {
 
   const handleResetClick = (): void => {
     localStorage.removeItem("timer");
-    timerCtx.onSetDate(
-      Date.now() + minToMilliConverter(itemCtx.todoItems[0]?.goal)
-    );
+    timerCtx.onSetDate(Date.now() + minToMilliConverter(todoItems[0]?.goal));
     timerCtx.onSetAutoStart(false);
     timerCtx.onSetIsPaused(false);
     timerCtx.onSetIsStarted(false);
@@ -84,7 +84,7 @@ const Timer: React.FC = () => {
   const handleStart = (res: any) => {
     localStorage.removeItem("timer");
     let itemToSet: TimerStorageInterface = {
-      modelID: itemCtx.todoItems[0].modelID as string,
+      modelID: todoItems[0].modelID as string,
       endTime: Date.now() + res.total,
       autoStart: true,
     };
@@ -97,7 +97,7 @@ const Timer: React.FC = () => {
   const handlePause = (res: CountdownTimeDelta): void => {
     localStorage.removeItem("timer");
     let itemToSet: TimerStorageInterface = {
-      modelID: itemCtx.todoItems[0].modelID as string,
+      modelID: todoItems[0].modelID as string,
       autoStart: false,
       duration: res.total,
     };
@@ -109,12 +109,15 @@ const Timer: React.FC = () => {
   const handleComplete = (res: CountdownTimeDelta) => {
     localStorage.removeItem("timer");
     timerCtx.onSetIsCompleted(true);
-    itemCtx.updateItemAsync({
-      ...itemCtx.todoItems[0],
-      done: true,
-      finished_at: Math.ceil(new Date().getTime() / 1000),
-      progress: itemCtx.todoItems[0].goal,
-    });
+    dispatch(
+      updateItemStart({
+        ...todoItems[0],
+        done: true,
+        finished_at: Math.ceil(new Date().getTime() / 1000),
+        progress: todoItems[0].goal,
+      })
+    );
+
     audio.play();
     document.title = `00:00`;
   };
@@ -129,20 +132,21 @@ const Timer: React.FC = () => {
     }
     localStorage.removeItem("timer");
     timerCtx.onSetIsCompleted(true);
+    dispatch(
+      updateItemStart({
+        ...todoItems[0],
+        done: true,
+        finished_at: Math.ceil(new Date().getTime() / 1000),
+        progress: Math.ceil(
+          todoItems[0].goal - timerCtx.countdown?.calcTimeDelta().total / 60000
+        ),
+      })
+    );
 
-    itemCtx.updateItemAsync({
-      ...itemCtx.todoItems[0],
-      done: true,
-      finished_at: Math.ceil(new Date().getTime() / 1000),
-      progress: Math.ceil(
-        itemCtx.todoItems[0].goal -
-          timerCtx.countdown?.calcTimeDelta().total / 60000
-      ),
-    });
     audio.play();
     document.title = `00:00`;
 
-    if (itemCtx.todoItems.length === 1) {
+    if (todoItems.length === 1) {
       timerCtx.onSetDate(null);
     }
     timerCtx.onSetAutoStart(false);
