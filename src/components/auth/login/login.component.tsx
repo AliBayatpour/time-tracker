@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from "react";
 import { authResInterface } from "../../../interfaces/auth-res-interface";
-import AuthContext from "../../../store/auth-context";
+import AuthContext from "../../../context/auth-context";
 import classes from "./login.module.scss";
 import { useNavigate } from "react-router-dom";
 

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Button, Modal } from "react-bootstrap";
-import ModalContext from "../../../store/modal-context";
+import ModalContext from "../../../context/modal-context";
 
 const MessageModal: React.FC = () => {
   const modalCtx = useContext(ModalContext);

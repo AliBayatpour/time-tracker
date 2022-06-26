@@ -6,7 +6,7 @@ import Home from "./pages/home/home.page";
 import Stats from "./pages/stats/stats.page";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Auth from "./pages/auth/auth.page";
-import AuthContext from "./store/auth-context";
+import AuthContext from "./context/auth-context";
 
 function App() {
   const authCtx = useContext(AuthContext);

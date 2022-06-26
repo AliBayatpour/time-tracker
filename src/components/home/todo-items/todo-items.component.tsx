@@ -1,9 +1,8 @@
 import React, { useContext, useRef } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { ItemInterface } from "../../../interfaces/item-interface";
-import ItemContext from "../../../store/item-context";
-import ModalContext from "../../../store/modal-context";
-import TimerContext from "../../../store/timer-context";
+import ModalContext from "../../../context/modal-context";
+import TimerContext from "../../../context/timer-context";
 import { stringValueGenerator } from "../../../utils/items-utils";
 import { ReactComponent as Trash } from "../../../assets/icons/trash.svg";
 import { ReactComponent as Duplicate } from "../../../assets/icons/duplicate.svg";
@@ -14,9 +13,17 @@ import { totalTodoTime } from "../../../utils/stat-utils";
 import { convertMinToReadable } from "../../../utils/date-utils";
 import { Dropdown, OverlayTrigger, Tooltip } from "react-bootstrap";
 import classes from "./todo-items.module.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { selectTodoItems } from "../../../store/item/item.selector";
+import {
+  addItemStart,
+  deleteItemStart,
+  updateItemStart,
+} from "../../../store/item/item.action";
 
 const TodoItems: React.FC = () => {
-  const itemCtx = useContext(ItemContext);
+  const todoItems = useSelector(selectTodoItems);
+  const dispatch = useDispatch();
   const timerCtx = useContext(TimerContext);
   const modalCtx = useContext(ModalContext);
   const updateBtnsRef = useRef<HTMLButtonElement[]>([]);
@@ -24,36 +31,36 @@ const TodoItems: React.FC = () => {
   const updateItem = (event: any, index: number) => {
     event.preventDefault();
     let newItem: ItemInterface = {
-      ...itemCtx.todoItems[index],
+      ...todoItems[index],
       category: event.target.elements.category.value,
       description: event.target.elements.description.value,
-      sort: itemCtx.todoItems[index].sort,
+      sort: todoItems[index].sort,
       goal: Number(event.target.elements.goal.value),
       done: false,
     };
-    itemCtx.updateItemAsync(newItem);
+    dispatch(updateItemStart(newItem));
     (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
   };
 
   const duplicateItem = (item: ItemInterface) => {
-    const todoItemsLength = itemCtx.todoItems.length;
+    const todoItemsLength = todoItems.length;
     let newitem: ItemInterface = {
       userId: localStorage.getItem("sub") as string,
       category: item.category,
       description: item.description,
       sort: todoItemsLength
-        ? stringValueGenerator(itemCtx.todoItems[todoItemsLength - 1].sort)
+        ? stringValueGenerator(todoItems[todoItemsLength - 1].sort)
         : stringValueGenerator(),
       progress: 0,
       goal: item.goal,
       done: false,
       finished_at: 0,
     };
-    itemCtx.addItemAsync(newitem);
+    dispatch(addItemStart(newitem));
   };
 
   const handleRemovetask = (index: number) => {
-    itemCtx.deleteItemAsync(itemCtx.todoItems[index]);
+    dispatch(deleteItemStart(todoItems[index]));
   };
   // a little function to help us with reordering the result
   const reorder = (list: any, startIndex: any, endIndex: any) => {
@@ -64,7 +71,7 @@ const TodoItems: React.FC = () => {
       modalCtx.onSetShowModal(true);
       return;
     }
-    const result = [...itemCtx.todoItems];
+    const result = [...todoItems];
     const [targetItem] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, targetItem);
     const newIdxItem = result.findIndex(
@@ -80,7 +87,7 @@ const TodoItems: React.FC = () => {
     } else if (result[newIdxItem - 1] && !result[newIdxItem + 1]) {
       targetItem.sort = stringValueGenerator(result[newIdxItem - 1].sort, "");
     }
-    itemCtx.updateItemAsync(targetItem);
+    dispatch(updateItemStart(targetItem));
   };
 
   const onChangeForm = (event: any, item: ItemInterface, index: number) => {
@@ -98,7 +105,7 @@ const TodoItems: React.FC = () => {
     if (!result.destination) {
       return;
     }
-    reorder(itemCtx.todoItems, result.source.index, result.destination.index);
+    reorder(todoItems, result.source.index, result.destination.index);
   };
   return (
     <React.Fragment>
@@ -107,9 +114,9 @@ const TodoItems: React.FC = () => {
         <h2 className="text-light ms-3 mb-0">Todo Items</h2>
       </div>
       <h5 className="text-light">
-        My goal Today: {convertMinToReadable(totalTodoTime(itemCtx.todoItems))}
+        My goal Today: {convertMinToReadable(totalTodoTime(todoItems))}
       </h5>
-      {itemCtx.todoItems.length === 0 ? (
+      {todoItems.length === 0 ? (
         <div className="d-flex justify-content-center align-items-center my-5">
           <h6 className="text-light text-center text-uppercase mb-0 me-3">
             Todo Empty
@@ -121,7 +128,7 @@ const TodoItems: React.FC = () => {
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
-              {itemCtx.todoItems.map((item: ItemInterface, index: number) => (
+              {todoItems.map((item: ItemInterface, index: number) => (
                 <Draggable
                   key={item.modelID}
                   draggableId={item.modelID as string}
@@ -208,7 +215,7 @@ const TodoItems: React.FC = () => {
                         <Dropdown className="moreItem">
                           <Dropdown.Toggle
                             variant="primary"
-                            id="dropdown-basic"
+                            id="dropdown-todo-item"
                           >
                             ...
                           </Dropdown.Toggle>
