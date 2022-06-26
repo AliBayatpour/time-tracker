@@ -3,29 +3,28 @@ import ReactDOM from "react-dom";
 import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { AuthContextProvider } from "./store/auth-context";
-import { ItemContextProvider } from "./store/item-context";
-import { StatContextProvider } from "./store/stats-context";
-import { TimerContextProvider } from "./store/timer-context";
-import { ModalContextProvider } from "./store/modal-context";
+import { AuthContextProvider } from "./context/auth-context";
+import { TimerContextProvider } from "./context/timer-context";
+import { ModalContextProvider } from "./context/modal-context";
+import { store } from "./store/store";
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthContextProvider>
-      <ModalContextProvider>
-        <StatContextProvider>
-          <ItemContextProvider>
-            <TimerContextProvider>
-              <BrowserRouter>
-                <App />
-              </BrowserRouter>
-            </TimerContextProvider>
-          </ItemContextProvider>
-        </StatContextProvider>
-      </ModalContextProvider>
-    </AuthContextProvider>
+    <Provider store={store}>
+      <AuthContextProvider>
+        <ModalContextProvider>
+          <TimerContextProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </TimerContextProvider>
+        </ModalContextProvider>
+      </AuthContextProvider>
+    </Provider>
   </React.StrictMode>,
+
   document.getElementById("root")
 );
 

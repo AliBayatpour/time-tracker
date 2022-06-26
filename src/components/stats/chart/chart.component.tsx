@@ -12,17 +12,17 @@ import {
 } from "recharts";
 import { ItemInterface } from "../../../interfaces/item-interface";
 import { convertMinToReadable } from "../../../utils/date-utils";
-import { useContext } from "react";
-import StatContext from "../../../store/stats-context";
 import { ChartCategoryInterface } from "../../../interfaces/chart-category-interface";
 
 type Props = {
-  items: ItemInterface[];
-  nDays: number;
+  statData: {
+    lastNDaysChartResult: {
+      [key: string]: any;
+    }[];
+    itemCategories: ChartCategoryInterface[];
+  };
 };
-const Chart: React.FC<Props> = ({ items, nDays }) => {
-  const statCtx = useContext(StatContext);
-
+const Chart: React.FC<Props> = ({ statData }) => {
   const CustomTooltip = (props: any) => {
     if (props.active) {
       let sumDay = 0;
@@ -65,15 +65,7 @@ const Chart: React.FC<Props> = ({ items, nDays }) => {
     <div className={`${classes.mainContainer}`}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
-          data={
-            nDays === 7
-              ? statCtx.last7DaysChartData
-              : nDays === 14
-              ? statCtx.last14DaysChartData
-              : nDays === 30
-              ? statCtx.last30DaysChartData
-              : undefined
-          }
+          data={statData.lastNDaysChartResult}
           margin={{
             top: 5,
             right: 30,
@@ -95,15 +87,7 @@ const Chart: React.FC<Props> = ({ items, nDays }) => {
           <Tooltip content={<CustomTooltip />} />
           <Legend />
 
-          {customIntervalBar(
-            nDays === 7
-              ? statCtx.last7DaysCategories
-              : nDays === 14
-              ? statCtx.last14DaysCategories
-              : nDays === 30
-              ? statCtx.last30DaysCategories
-              : statCtx.last7DaysCategories
-          )}
+          {customIntervalBar(statData.itemCategories)}
         </BarChart>
       </ResponsiveContainer>
     </div>

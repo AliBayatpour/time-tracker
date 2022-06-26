@@ -1,27 +1,35 @@
-import React, { useContext, useRef } from "react";
+import React, { useRef } from "react";
 import { ItemInterface } from "../../../interfaces/item-interface";
-import ItemContext from "../../../store/item-context";
 import { convertMinToReadable } from "../../../utils/date-utils";
 import classes from "./done-items.module.scss";
 import { ReactComponent as Trash } from "../../../assets/icons/trash.svg";
 import { ReactComponent as Update } from "../../../assets/icons/update.svg";
 import { ReactComponent as DoneList } from "../../../assets/icons/done-list.svg";
+import { selectDoneItems } from "../../../store/item/item.selector";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deleteItemStart,
+  updateItemStart,
+} from "../../../store/item/item.action";
+import { totalTime } from "../../../utils/stat-utils";
+import { Dropdown } from "react-bootstrap";
 
-const DoneItems: React.FC = (props) => {
-  const itemCtx = useContext(ItemContext);
+const DoneItems: React.FC = () => {
+  const doneItems = useSelector(selectDoneItems);
+  const dispatch = useDispatch();
   const updateBtnsRef = useRef<HTMLButtonElement[]>([]);
 
   const updateItem = (event: any, index: number) => {
     event.preventDefault();
     let newItem: ItemInterface = {
-      ...itemCtx.doneItems[index],
+      ...doneItems[index],
       category: event.target.elements.category.value,
       description: event.target.elements.description.value,
-      sort: itemCtx.doneItems[index].sort,
+      sort: doneItems[index].sort,
       progress: Number(event.target.elements.progress.value),
       done: true,
     };
-    itemCtx.updateItemAsync(newItem);
+    dispatch(updateItemStart(newItem));
     (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
   };
 
@@ -38,7 +46,7 @@ const DoneItems: React.FC = (props) => {
   };
 
   const handleRemovetask = (index: number) => {
-    itemCtx.deleteItemAsync(itemCtx.doneItems[index]);
+    dispatch(deleteItemStart(doneItems[index]));
   };
   return (
     <React.Fragment>
@@ -48,10 +56,9 @@ const DoneItems: React.FC = (props) => {
       </div>
 
       <h5 className="text-light">
-        Total Time Today: (<b>{convertMinToReadable(itemCtx.totalTimeToday)}</b>
-        )
+        Total Time Today: (<b>{convertMinToReadable(totalTime(doneItems))}</b>)
       </h5>
-      {itemCtx.doneItems.map((item: ItemInterface, index: number) => (
+      {doneItems.map((item: ItemInterface, index: number) => (
         <form
           key={item.modelID}
           onChange={(event) => onChangeForm(event, item, index)}
@@ -117,13 +124,20 @@ const DoneItems: React.FC = (props) => {
             </button>
           </div>
           <div className={`col-1 mt-4`}>
-            <button
-              type="button"
-              onClick={() => handleRemovetask(index)}
-              className={`btn btn-light`}
-            >
-              <Trash height={20} />
-            </button>
+            <Dropdown className="moreItem">
+              <Dropdown.Toggle variant="primary" id="dropdown-done-item">
+                ...
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  onClick={() => handleRemovetask(index)}
+                  className="d-flex align-items-center"
+                >
+                  Delete <Trash height={15} className="ms-auto" />
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           </div>
         </form>
       ))}

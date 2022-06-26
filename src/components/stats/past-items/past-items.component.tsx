@@ -1,8 +1,6 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Form } from "react-bootstrap";
 import { ItemInterface } from "../../../interfaces/item-interface";
-import ItemContext from "../../../store/item-context";
-import StatContext from "../../../store/stats-context";
 import {
   convertMinToReadable,
   formatDateV1,
@@ -13,13 +11,26 @@ import classes from "./past-items.module.scss";
 import { ReactComponent as Trash } from "../../../assets/icons/trash.svg";
 import { ReactComponent as Update } from "../../../assets/icons/update.svg";
 import { ReactComponent as PastItemsIcon } from "../../../assets/icons/past-items.svg";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deleteItemStart,
+  updateItemStart,
+} from "../../../store/item/item.action";
+import {
+  selectLast14DaysItems,
+  selectLast30DaysItems,
+  selectLast7DaysItems,
+} from "../../../store/item/item.selector";
 
 type Props = {
   nDays: number;
 };
 const PastItems: React.FC<Props> = ({ nDays }) => {
-  const itemCtx = useContext(ItemContext);
-  const statCtx = useContext(StatContext);
+  const dispatch = useDispatch();
+  const last7DaysItems = useSelector(selectLast7DaysItems);
+  const last14DaysItems = useSelector(selectLast14DaysItems);
+  const last30DaysItems = useSelector(selectLast30DaysItems);
+
   const [selectDate, setSelectDate] = useState<string>("");
   const updateBtnsRef = useRef<HTMLButtonElement[]>([]);
 
@@ -31,12 +42,12 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
       description: event.target.elements.description.value,
       progress: Number(event.target.elements.progress.value),
     };
-    itemCtx.updateItemAsync(newItem, nDays);
+    dispatch(updateItemStart(newItem));
     (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
   };
 
   const handleRemovetask = (item: ItemInterface) => {
-    itemCtx.deleteItemAsync(item, nDays);
+    dispatch(deleteItemStart(item));
   };
 
   const onChangeForm = (event: any, item: ItemInterface, index: number) => {
@@ -55,13 +66,13 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
     let items: ItemInterface[] = [];
     switch (nDays) {
       case 7:
-        items = statCtx.last7DaysItems;
+        items = last7DaysItems;
         break;
       case 14:
-        items = statCtx.last14DaysItems;
+        items = last14DaysItems;
         break;
       case 30:
-        items = statCtx.last30DaysItems;
+        items = last30DaysItems;
         break;
 
       default:

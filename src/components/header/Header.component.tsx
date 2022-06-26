@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import AuthContext from "../../store/auth-context";
+import AuthContext from "../../context/auth-context";
 import classes from "./Header.module.scss";
 
 const Header: React.FC = () => {
