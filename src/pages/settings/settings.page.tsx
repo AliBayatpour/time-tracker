@@ -20,7 +20,7 @@ const Settings: React.FC = () => {
                 className="form-control"
                 id="restInput"
                 placeholder="Rest Time (min)"
-                defaultValue={10}
+                defaultValue={5}
               />
             </div>
           </div>
