@@ -216,6 +216,7 @@ const TodoItems: React.FC = () => {
                           <Dropdown.Toggle
                             variant="primary"
                             id="dropdown-todo-item"
+                            className="text-light"
                           >
                             ...
                           </Dropdown.Toggle>

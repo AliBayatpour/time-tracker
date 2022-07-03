@@ -32,10 +32,10 @@ export const selectLast14DaysItems = createSelector(
   (item) => item.last14Days
 );
 
-// LAST 30 DAYS ITEMS
-export const selectLast30DaysItems = createSelector(
+// LAST 28 DAYS ITEMS
+export const selectLast28DaysItems = createSelector(
   [selectItemsReducer],
-  (item) => item.last30Days
+  (item) => item.last28Days
 );
 
 // LAST 180 DAYS ITEMS
@@ -74,13 +74,13 @@ export const selectLast14DaysStatData = createSelector(
   }
 );
 
-// LAST 30 DAYS STAT DATA
-export const selectLast30DaysStatData = createSelector(
-  [selectLast30DaysItems],
-  (last30DaysItems) => {
+// LAST 28 DAYS STAT DATA
+export const selectLast28DaysStatData = createSelector(
+  [selectLast28DaysItems],
+  (last28DaysItems) => {
     let { lastNDaysChartResult, itemCategories } = lastNDaysChartDataBuilder(
-      last30DaysItems,
-      30
+      last28DaysItems,
+      28
     );
     return { lastNDaysChartResult, itemCategories };
   }

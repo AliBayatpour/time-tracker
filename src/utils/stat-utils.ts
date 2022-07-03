@@ -2,6 +2,29 @@ import { ChartCategoryInterface } from "../interfaces/chart-category-interface";
 import { ItemInterface } from "../interfaces/item-interface";
 import { convertMinToReadable, formatDateV1, getLastNDays } from "./date-utils";
 
+let colorList = [
+  "#E3D954",
+  "#E33D6D",
+  "#27B7E3",
+  "#399925",
+  "#E33DC2",
+  "#46E327",
+  "#3DE3D1",
+  "#E38954",
+  "#463DE3",
+  "#9C967D",
+  "#961A7D",
+  "#E3CA54",
+  "#27E3DC",
+  "#219692",
+  "#201A96",
+  "#46E327",
+  "#961A3E",
+  "#1A9689",
+  "#E6B1E2",
+  "#E3BD27",
+  "#418499",
+];
 export const totalTime = (doneItems: ItemInterface[]) => {
   let totalProgress = 0;
   doneItems?.forEach((doneItem) => {
@@ -29,29 +52,6 @@ export const lastNDaysChartDataBuilder = (
   lastNDaysChartResult: { [key: string]: any }[];
   itemCategories: ChartCategoryInterface[];
 } => {
-  let colorList = [
-    "#E3D954",
-    "#E33D6D",
-    "#27B7E3",
-    "#399925",
-    "#E33DC2",
-    "#46E327",
-    "#3DE3D1",
-    "#E38954",
-    "#463DE3",
-    "#9C967D",
-    "#961A7D",
-    "#E3CA54",
-    "#27E3DC",
-    "#219692",
-    "#201A96",
-    "#46E327",
-    "#961A3E",
-    "#1A9689",
-    "#E6B1E2",
-    "#E3BD27",
-    "#418499",
-  ];
   let lastNDaysChartResult: any = [];
   let itemCategoriesNames: string[] = [];
   let itemCategories: ChartCategoryInterface[] = [];
@@ -80,8 +80,22 @@ export const lastNDaysChartDataBuilder = (
         lastNDaysChartResult[indexOfItem][item.category] + item.progress;
     }
   });
+  // if (nDays === 28) {
+  //   return subCategoryGenerator(itemCategories, lastNDaysChartResult);
+  // } else {
+  // }
   return { lastNDaysChartResult, itemCategories };
 };
+
+// const subCategoryGenerator = (
+//   itemCategories: ChartCategoryInterface[],
+//   lastNDaysChartResult: {
+//     [key: string]: any;
+//   }[]
+// ): {
+//   lastNDaysChartResult: { [key: string]: any }[];
+//   itemCategories: ChartCategoryInterface[];
+// } => {};
 
 export const calculateTotalForCategory = (
   chartCategory: string,
@@ -96,4 +110,42 @@ export const calculateTotalForCategory = (
     }
   });
   return convertMinToReadable(sum);
+};
+const chunkify = (
+  a: {
+    [key: string]: any;
+  }[],
+  n: number,
+  balanced: boolean
+): {
+  [key: string]: any;
+}[][] => {
+  if (n < 2) return [a];
+
+  var len = a.length,
+    out = [],
+    i = 0,
+    size;
+
+  if (len % n === 0) {
+    size = Math.floor(len / n);
+    while (i < len) {
+      out.push(a.slice(i, (i += size)));
+    }
+  } else if (balanced) {
+    while (i < len) {
+      size = Math.ceil((len - i) / n--);
+      out.push(a.slice(i, (i += size)));
+    }
+  } else {
+    n--;
+    size = Math.floor(len / n);
+    if (len % size === 0) size--;
+    while (i < size * n) {
+      out.push(a.slice(i, (i += size)));
+    }
+    out.push(a.slice(size * n));
+  }
+
+  return out;
 };

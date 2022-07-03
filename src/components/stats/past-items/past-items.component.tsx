@@ -18,7 +18,7 @@ import {
 } from "../../../store/item/item.action";
 import {
   selectLast14DaysItems,
-  selectLast30DaysItems,
+  selectLast28DaysItems,
   selectLast7DaysItems,
 } from "../../../store/item/item.selector";
 
@@ -29,7 +29,7 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
   const dispatch = useDispatch();
   const last7DaysItems = useSelector(selectLast7DaysItems);
   const last14DaysItems = useSelector(selectLast14DaysItems);
-  const last30DaysItems = useSelector(selectLast30DaysItems);
+  const last28DaysItems = useSelector(selectLast28DaysItems);
 
   const [selectDate, setSelectDate] = useState<string>("");
   const updateBtnsRef = useRef<HTMLButtonElement[]>([]);
@@ -71,8 +71,8 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
       case 14:
         items = last14DaysItems;
         break;
-      case 30:
-        items = last30DaysItems;
+      case 28:
+        items = last28DaysItems;
         break;
 
       default:
@@ -85,7 +85,7 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
   return (
     <React.Fragment>
       <div className="d-flex align-items-center mb-3 mt-5">
-        <PastItemsIcon width={30} />
+        <PastItemsIcon width={28} />
         <h2 className="text-light ms-3 mb-0">Past Done Items</h2>
       </div>
       <p className="text-light">Select the date to see the items and edit</p>

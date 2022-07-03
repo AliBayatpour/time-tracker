@@ -3,7 +3,6 @@ import { Button } from "react-bootstrap";
 const Settings: React.FC = () => {
   const onSetRestTime = (event: any) => {
     event.preventDefault();
-    console.log(event.target.elements.rest.value);
     localStorage.setItem("restTime", event.target.elements.rest.value);
   };
   return (
@@ -20,12 +19,16 @@ const Settings: React.FC = () => {
                 className="form-control"
                 id="restInput"
                 placeholder="Rest Time (min)"
-                defaultValue={5}
+                defaultValue={
+                  localStorage.getItem("restTime")
+                    ? Number(localStorage.getItem("restTime"))
+                    : 5
+                }
               />
             </div>
           </div>
           <div className="col-12">
-            <Button type="submit" variant="primary" className="mt-3">
+            <Button type="submit" variant="primary" className="mt-3 text-white">
               Change rest time
             </Button>
           </div>

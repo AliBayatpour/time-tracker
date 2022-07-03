@@ -12,8 +12,8 @@ import {
   selectLast14DaysStatData,
   selectLast180DaysItems,
   selectLast180DaysStatData,
-  selectLast30DaysItems,
-  selectLast30DaysStatData,
+  selectLast28DaysItems,
+  selectLast28DaysStatData,
   selectLast360DaysItems,
   selectLast360DaysStatData,
   selectLast7DaysItems,
@@ -23,7 +23,7 @@ import {
 enum TabsKeys {
   LAST_7_DAYS = "last7Days",
   LAST_14_DAYS = "last14Days",
-  LAST_30_DAYS = "last30Days",
+  LAST_28_DAYS = "last28Days",
   LAST_180_DAYS = "last180Days",
   LAST_360_DAYS = "last360Days",
 }
@@ -32,13 +32,13 @@ const Stats: React.FC = () => {
   const dispatch = useDispatch();
   const last7DaysStatData = useSelector(selectLast7DaysStatData);
   const last14DaysStatData = useSelector(selectLast14DaysStatData);
-  const last30DaysStatData = useSelector(selectLast30DaysStatData);
+  const last28DaysStatData = useSelector(selectLast28DaysStatData);
   const last180DaysStatData = useSelector(selectLast180DaysStatData);
   const last360DaysStatData = useSelector(selectLast360DaysStatData);
 
   const last7DaysItems = useSelector(selectLast7DaysItems);
   const last14DaysItems = useSelector(selectLast14DaysItems);
-  const last30DaysItems = useSelector(selectLast30DaysItems);
+  const last28DaysItems = useSelector(selectLast28DaysItems);
   const last180DaysItems = useSelector(selectLast180DaysItems);
   const last360DaysItems = useSelector(selectLast360DaysItems);
 
@@ -61,8 +61,8 @@ const Stats: React.FC = () => {
         dispatch(fetchLastNDaysItemsStart(14));
         setKey(tabName);
         break;
-      case TabsKeys.LAST_30_DAYS:
-        dispatch(fetchLastNDaysItemsStart(30));
+      case TabsKeys.LAST_28_DAYS:
+        dispatch(fetchLastNDaysItemsStart(28));
         setKey(tabName);
         break;
       case TabsKeys.LAST_180_DAYS:
@@ -105,14 +105,14 @@ const Stats: React.FC = () => {
           />
           <PastItems nDays={14} />
         </Tab>
-        <Tab eventKey={TabsKeys.LAST_30_DAYS} title="Last 30 Days">
-          <Chart statData={last30DaysStatData} />
+        <Tab eventKey={TabsKeys.LAST_28_DAYS} title="Last 28 Days">
+          <Chart statData={last28DaysStatData} />
           <DetailStat
-            nDays={30}
-            items={last30DaysItems}
-            statData={last30DaysStatData}
+            nDays={28}
+            items={last28DaysItems}
+            statData={last28DaysStatData}
           />
-          <PastItems nDays={30} />
+          <PastItems nDays={28} />
         </Tab>
         <Tab eventKey={TabsKeys.LAST_180_DAYS} title="Last 180 Days">
           <Chart statData={last180DaysStatData} />

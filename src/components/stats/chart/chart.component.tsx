@@ -13,6 +13,7 @@ import {
 import { ItemInterface } from "../../../interfaces/item-interface";
 import { convertMinToReadable, getWeekDay } from "../../../utils/date-utils";
 import { ChartCategoryInterface } from "../../../interfaces/chart-category-interface";
+import { useEffect } from "react";
 
 type Props = {
   statData: {

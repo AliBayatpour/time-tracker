@@ -4,7 +4,7 @@ export interface ItemsReducerState {
   items: ItemInterface[];
   last7Days: ItemInterface[];
   last14Days: ItemInterface[];
-  last30Days: ItemInterface[];
+  last28Days: ItemInterface[];
   last180Days: ItemInterface[];
   last360Days: ItemInterface[];
   isLoading: boolean;

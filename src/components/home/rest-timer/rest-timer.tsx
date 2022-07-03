@@ -77,11 +77,10 @@ const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
             <div className="mt-4 w-100 d-flex justify-content-center">
               <button
                 className="btn btn-secondary btn-lg"
-                disabled={timerCtx.isCompleted}
                 type="button"
                 onClick={handleFinishClick}
               >
-                Finish
+                Skip
               </button>
             </div>
           </div>

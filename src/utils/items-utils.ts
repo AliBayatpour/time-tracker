@@ -289,5 +289,6 @@ export const filterTodoItems = (items: ItemInterface[]): ItemInterface[] => {
   return filteredItems.sort((a, b) => (a.sort > b.sort ? 1 : -1));
 };
 export const filterDoneItems = (items: ItemInterface[]) => {
-  return items.filter((item) => item.done);
+  let filteredItems = items.filter((item) => item.done);
+  return filteredItems.sort((a, b) => (a.finished_at > b.finished_at ? 1 : -1));
 };
