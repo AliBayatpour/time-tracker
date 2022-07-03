@@ -4,7 +4,6 @@ import Layout from "./components/Layout/Layout.component";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "./pages/home/home.page";
 import Stats from "./pages/stats/stats.page";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Auth from "./pages/auth/auth.page";
 import AuthContext from "./context/auth-context";
 import Settings from "./pages/settings/settings.page";

@@ -1,10 +1,9 @@
-import { useState } from "react";
 import { Button } from "react-bootstrap";
-import classes from "./settings.module.scss";
 
 const Settings: React.FC = () => {
   const onSetRestTime = (event: any) => {
     event.preventDefault();
+    console.log(event.target.elements.rest.value);
     localStorage.setItem("restTime", event.target.elements.rest.value);
   };
   return (

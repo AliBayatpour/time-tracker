@@ -11,7 +11,7 @@ import {
   Legend,
 } from "recharts";
 import { ItemInterface } from "../../../interfaces/item-interface";
-import { convertMinToReadable } from "../../../utils/date-utils";
+import { convertMinToReadable, getWeekDay } from "../../../utils/date-utils";
 import { ChartCategoryInterface } from "../../../interfaces/chart-category-interface";
 
 type Props = {
@@ -31,7 +31,9 @@ const Chart: React.FC<Props> = ({ statData }) => {
       });
       return (
         <div className="bg-white badge text-start p-3 text-dark">
-          <p className="label">{`${props.label}`}</p>
+          <p className="label">{`${props.label}, ${getWeekDay(
+            new Date(props.label).getDay()
+          )}`}</p>
           <hr />
           {props.payload?.map((payload: any, index: number) => {
             return (

@@ -12,6 +12,7 @@ const monthNames = [
   "Nov",
   "Dec",
 ];
+const weekday = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export const formatDateV1 = (d: Date) => {
   return `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
@@ -32,4 +33,17 @@ export const convertMinToReadable = (min: number) => {
   const floorMin = Math.floor(min);
   const floorHour = Math.floor(floorMin / 60);
   return `${floorHour} h and ${floorMin % 60} min`;
+};
+
+export const convertMinToMilliSec = (min: number): number => {
+  return min * 60 * 1000;
+};
+
+export const getWeekDay = (dayNum: number) => {
+  return weekday[dayNum];
+};
+
+export const convertDateNumToTime = (sec: number): string => {
+  const dateFormat = new Date(sec * 1000);
+  return dateFormat.toLocaleTimeString();
 };

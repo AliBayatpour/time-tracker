@@ -3,19 +3,19 @@ import Countdown, { CountdownTimeDelta } from "react-countdown";
 import { TimerStorageInterface } from "../../../interfaces/item-storage-interface";
 import TimerContext from "../../../context/timer-context";
 import classes from "./timer.module.scss";
-import ringer from "../../../assets/ringtones/win-10.mp3";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
 import { updateItemStart } from "../../../store/item/item.action";
+import { convertMinToMilliSec } from "../../../utils/date-utils";
 type Props = {
   onChangeShowRestTimer: (val: boolean) => void;
+  onPlayAudio: () => void;
 };
-const Timer: React.FC<Props> = ({ onChangeShowRestTimer }) => {
+const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
   const timerCtx = useContext(TimerContext);
   const todoItems = useSelector(selectTodoItems);
   const dispatch = useDispatch();
-  const audio = new Audio(ringer);
-  audio.loop = false;
+
   useEffect(() => {
     let timerString = localStorage.getItem("timer");
     let timer: TimerStorageInterface = timerString && JSON.parse(timerString);
@@ -47,16 +47,12 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer }) => {
       timerCtx.onSetIsStarted(false);
     } else {
       localStorage.removeItem("timer");
-      timerCtx.onSetDate(Date.now() + minToMilliConverter(todoItems[0]?.goal));
+      timerCtx.onSetDate(Date.now() + convertMinToMilliSec(todoItems[0]?.goal));
       timerCtx.onSetAutoStart(false);
       timerCtx.onSetIsPaused(false);
       timerCtx.onSetIsStarted(false);
     }
   }, [todoItems]);
-
-  const minToMilliConverter = (min: number) => {
-    return min * 60 * 1000;
-  };
 
   const handleStartClick = (): void => {
     timerCtx.onSetIsCompleted(false);
@@ -69,7 +65,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer }) => {
 
   const handleResetClick = (): void => {
     localStorage.removeItem("timer");
-    timerCtx.onSetDate(Date.now() + minToMilliConverter(todoItems[0]?.goal));
+    timerCtx.onSetDate(Date.now() + convertMinToMilliSec(todoItems[0]?.goal));
     timerCtx.onSetAutoStart(false);
     timerCtx.onSetIsPaused(false);
     timerCtx.onSetIsStarted(false);
@@ -120,7 +116,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer }) => {
       })
     );
 
-    audio.play();
+    onPlayAudio();
     document.title = `00:00`;
     onChangeShowRestTimer(true);
   };
@@ -146,7 +142,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer }) => {
       })
     );
 
-    audio.play();
+    onPlayAudio();
     document.title = `00:00`;
 
     if (todoItems.length === 1) {
@@ -179,7 +175,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer }) => {
               autoStart={timerCtx.autoStart}
               className="d-flex justify-content-center"
             />
-            <div className="mt-4">
+            <div className="mt-4 w-100 d-flex justify-content-center">
               <button
                 type="button"
                 className="btn btn-secondary btn-lg"
