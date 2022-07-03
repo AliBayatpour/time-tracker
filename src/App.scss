@@ -1,4 +1,15 @@
+$theme-colors: (
+  "primary": #0096ff,
+  "secondary": #6c757d,
+  "success": #20c997,
+  "info": #0dcaf0,
+  "warning": #ffc107,
+  "danger": #d70040,
+  "light": #f8f9fa,
+  "dark": #212529,
+);
 
+@import "~bootstrap/scss/bootstrap";
 
 .moreItem {
   .dropdown-toggle::after {

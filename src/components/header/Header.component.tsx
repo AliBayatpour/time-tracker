@@ -14,10 +14,13 @@ const Header: React.FC = () => {
     <header className={`${classes.header} pt-4`}>
       <nav className="d-flex container-lg">
         <Link to="/" className="me-5 btn btn-outline-light">
-          <div className={classes.logo}>HOME</div>
+          Home
         </Link>
         <Link to="/stats" className="me-5 btn btn-outline-light">
           Stats
+        </Link>
+        <Link to="/settings" className="me-5 btn btn-outline-light">
+          Settings
         </Link>
         <button className="btn btn-outline-light" onClick={onLogoutHandler}>
           Logout

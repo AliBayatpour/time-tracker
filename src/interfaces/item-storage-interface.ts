@@ -1,5 +1,5 @@
 export interface TimerStorageInterface {
-  modelID: string;
+  modelID?: string;
   endTime?: number;
   autoStart: boolean;
   duration?: number;

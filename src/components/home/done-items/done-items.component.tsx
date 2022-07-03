@@ -1,6 +1,9 @@
 import React, { useRef } from "react";
 import { ItemInterface } from "../../../interfaces/item-interface";
-import { convertMinToReadable } from "../../../utils/date-utils";
+import {
+  convertDateNumToTime,
+  convertMinToReadable,
+} from "../../../utils/date-utils";
 import classes from "./done-items.module.scss";
 import { ReactComponent as Trash } from "../../../assets/icons/trash.svg";
 import { ReactComponent as Update } from "../../../assets/icons/update.svg";
@@ -50,9 +53,9 @@ const DoneItems: React.FC = () => {
   };
   return (
     <React.Fragment>
-      <div className="d-flex align-items-center mb-3">
+      <div className="d-flex align-items-center mb-3 mt-5">
         <DoneList width={30} />
-        <h2 className="text-light ms-3 mb-0">Done Items</h2>
+        <h2 className="ms-3 mb-0 text-success">Done Items</h2>
       </div>
 
       <h5 className="text-light">
@@ -63,8 +66,16 @@ const DoneItems: React.FC = () => {
           key={item.modelID}
           onChange={(event) => onChangeForm(event, item, index)}
           onSubmit={(event) => updateItem(event, index)}
-          className="row d-flex justify-content-center align-items-center my-3 border-primary border border-secondary py-3 position-relative"
+          className="row d-flex justify-content-center align-items-center my-3 border border-success py-3 position-relative text-light"
         >
+          <div className="col-12">
+            <p>
+              Finished at:{" "}
+              <b className="text-light">
+                {convertDateNumToTime(item.finished_at)}
+              </b>
+            </p>
+          </div>
           <div className="col-3">
             <div className="form-group">
               <label htmlFor="doneCategoryInput">Category</label>
@@ -125,7 +136,7 @@ const DoneItems: React.FC = () => {
           </div>
           <div className={`col-1 mt-4`}>
             <Dropdown className="moreItem">
-              <Dropdown.Toggle variant="primary" id="dropdown-done-item">
+              <Dropdown.Toggle variant="success" id="dropdown-done-item">
                 ...
               </Dropdown.Toggle>
 

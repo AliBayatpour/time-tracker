@@ -111,7 +111,7 @@ const TodoItems: React.FC = () => {
     <React.Fragment>
       <div className="d-flex align-items-center mb-3 mt-5">
         <TodoList width={30} />
-        <h2 className="text-light ms-3 mb-0">Todo Items</h2>
+        <h2 className="text-primary ms-3 mb-0">Todo Items</h2>
       </div>
       <h5 className="text-light">
         My goal Today: {convertMinToReadable(totalTodoTime(todoItems))}
@@ -138,7 +138,7 @@ const TodoItems: React.FC = () => {
                     <form
                       onSubmit={(event) => updateItem(event, index)}
                       onChange={(event) => onChangeForm(event, item, index)}
-                      className="row text-light d-flex justify-content-center align-items-center my-3 border-primary border border-secondary py-3"
+                      className="row text-light d-flex justify-content-center align-items-center my-3 border border-primary py-3"
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}

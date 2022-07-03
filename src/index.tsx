@@ -9,17 +9,20 @@ import { AuthContextProvider } from "./context/auth-context";
 import { TimerContextProvider } from "./context/timer-context";
 import { ModalContextProvider } from "./context/modal-context";
 import { store } from "./store/store";
+import { RestTimerContextProvider } from "./context/rest-timer-context";
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <AuthContextProvider>
         <ModalContextProvider>
-          <TimerContextProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </TimerContextProvider>
+          <RestTimerContextProvider>
+            <TimerContextProvider>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </TimerContextProvider>
+          </RestTimerContextProvider>
         </ModalContextProvider>
       </AuthContextProvider>
     </Provider>
