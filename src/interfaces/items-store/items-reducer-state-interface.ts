@@ -5,6 +5,8 @@ export interface ItemsReducerState {
   last7Days: ItemInterface[];
   last14Days: ItemInterface[];
   last30Days: ItemInterface[];
+  last180Days: ItemInterface[];
+  last360Days: ItemInterface[];
   isLoading: boolean;
   error: null | Error["message"];
 }
