@@ -38,6 +38,18 @@ export const selectLast30DaysItems = createSelector(
   (item) => item.last30Days
 );
 
+// LAST 180 DAYS ITEMS
+export const selectLast180DaysItems = createSelector(
+  [selectItemsReducer],
+  (item) => item.last180Days
+);
+
+// LAST 360 DAYS ITEMS
+export const selectLast360DaysItems = createSelector(
+  [selectItemsReducer],
+  (item) => item.last360Days
+);
+
 // LAST 7 DAYS STAT DATA
 export const selectLast7DaysStatData = createSelector(
   [selectLast7DaysItems],
@@ -69,6 +81,30 @@ export const selectLast30DaysStatData = createSelector(
     let { lastNDaysChartResult, itemCategories } = lastNDaysChartDataBuilder(
       last30DaysItems,
       30
+    );
+    return { lastNDaysChartResult, itemCategories };
+  }
+);
+
+// LAST 180 DAYS STAT DATA
+export const selectLast180DaysStatData = createSelector(
+  [selectLast180DaysItems],
+  (last180DaysItems) => {
+    let { lastNDaysChartResult, itemCategories } = lastNDaysChartDataBuilder(
+      last180DaysItems,
+      180
+    );
+    return { lastNDaysChartResult, itemCategories };
+  }
+);
+
+// LAST 360 DAYS STAT DATA
+export const selectLast360DaysStatData = createSelector(
+  [selectLast360DaysItems],
+  (last360DaysItems) => {
+    let { lastNDaysChartResult, itemCategories } = lastNDaysChartDataBuilder(
+      last360DaysItems,
+      360
     );
     return { lastNDaysChartResult, itemCategories };
   }

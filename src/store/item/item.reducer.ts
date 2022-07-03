@@ -6,6 +6,8 @@ const ITEMS_INITIAL_STATE: ItemsReducerState = {
   last7Days: [],
   last14Days: [],
   last30Days: [],
+  last180Days: [],
+  last360Days: [],
   isLoading: false,
   error: null,
 };
@@ -73,6 +75,20 @@ export const itemReducer = (
             ...state,
             isLoading: false,
             last30Days: payload.lastNDaysItems,
+            error: null,
+          };
+        case 180:
+          return {
+            ...state,
+            isLoading: false,
+            last180Days: payload.lastNDaysItems,
+            error: null,
+          };
+        case 360:
+          return {
+            ...state,
+            isLoading: false,
+            last360Days: payload.lastNDaysItems,
             error: null,
           };
 
