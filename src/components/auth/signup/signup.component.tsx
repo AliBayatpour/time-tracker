@@ -20,7 +20,7 @@ const Signup: React.FC = () => {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_BACK_END_URL}/auth/signup`,
+        `${process.env.REACT_APP_BACK_END_URL}/auth/signup/`,
         {
           method: "POST",
           body: JSON.stringify({

@@ -16,7 +16,7 @@ const Login: React.FC = () => {
     const enteredEmail = emailInputRef.current?.value;
     const enteredPassword = passwordInputRef.current?.value;
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACK_END_URL}/auth/login`, {
+      const response = await fetch(`${process.env.REACT_APP_BACK_END_URL}/auth/login/`, {
         method: "POST",
         body: JSON.stringify({
           email: enteredEmail,
