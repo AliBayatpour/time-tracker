@@ -7,7 +7,6 @@ import {
   getLastNDays,
 } from "../../../utils/date-utils";
 import { totalTime } from "../../../utils/stat-utils";
-import classes from "./past-items.module.scss";
 import { ReactComponent as Trash } from "../../../assets/icons/trash.svg";
 import { ReactComponent as Update } from "../../../assets/icons/update.svg";
 import { ReactComponent as PastItemsIcon } from "../../../assets/icons/past-items.svg";

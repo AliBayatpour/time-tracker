@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import classes from "./stats.module.scss";
 
 import Chart from "../../components/stats/chart/chart.component";
 import { Tab, Tabs } from "react-bootstrap";

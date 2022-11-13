@@ -26,7 +26,6 @@ const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
       timerCtx.onSetDate(timer.endTime);
     } else {
       localStorage.removeItem("timer");
-      console.log(timerCtx.restTime);
       timerCtx.onSetDate(Date.now() + convertMinToMilliSec(timerCtx.restTime));
     }
   }, []);

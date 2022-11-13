@@ -4,7 +4,6 @@ import {
   convertDateNumToTime,
   convertMinToReadable,
 } from "../../../utils/date-utils";
-import classes from "./done-items.module.scss";
 import { ReactComponent as Trash } from "../../../assets/icons/trash.svg";
 import { ReactComponent as Update } from "../../../assets/icons/update.svg";
 import { ReactComponent as DoneList } from "../../../assets/icons/done-list.svg";

@@ -16,16 +16,19 @@ const Login: React.FC = () => {
     const enteredEmail = emailInputRef.current?.value;
     const enteredPassword = passwordInputRef.current?.value;
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACK_END_URL}/auth/login/`, {
-        method: "POST",
-        body: JSON.stringify({
-          email: enteredEmail,
-          password: enteredPassword,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BACK_END_URL}/auth/login`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: enteredEmail,
+            password: enteredPassword,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       const json = (await response.json()) as authResInterface;
       if (json.access_token) {
         authCtx.login(json);

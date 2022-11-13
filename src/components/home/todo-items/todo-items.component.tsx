@@ -12,7 +12,6 @@ import { ReactComponent as TodoList } from "../../../assets/icons/todo-list.svg"
 import { totalTodoTime } from "../../../utils/stat-utils";
 import { convertMinToReadable } from "../../../utils/date-utils";
 import { Dropdown, OverlayTrigger, Tooltip } from "react-bootstrap";
-import classes from "./todo-items.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
 import {

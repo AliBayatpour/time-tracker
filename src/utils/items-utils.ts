@@ -260,7 +260,7 @@ export const getLastNDaysItemsAsyncReq = async (
 ): Promise<ItemInterface[] | []> => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACK_END_URL}/item/last-n-days/${nDays}/`,
+      `${process.env.REACT_APP_BACK_END_URL}/item/last-n-days/${nDays}`,
       {
         method: "GET",
         headers: {

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import Items from "../../components/home/items/items.component";
 import RestTimer from "../../components/home/rest-timer/rest-timer";
 import Timer from "../../components/home/timer/timer.components";
@@ -6,7 +6,6 @@ import MessageModal from "../../components/shared/message-modal/message-modal.co
 import RestTimerContext from "../../context/rest-timer-context";
 import { TimerStorageInterface } from "../../interfaces/item-storage-interface";
 import { convertMinToMilliSec } from "../../utils/date-utils";
-import classes from "./home.module.scss";
 import ringer from "../../assets/ringtones/win-10.mp3";
 
 const Home: React.FC = () => {
@@ -15,11 +14,9 @@ const Home: React.FC = () => {
   const timerCtx = useContext(RestTimerContext);
   const [restTimer, setRestTimer] = useState(false);
 
-  useEffect(() => {
-    if (localStorage.getItem("rest") && !restTimer) {
-      setRestTimer(true);
-    }
-  });
+  if (localStorage.getItem("rest") && !restTimer) {
+    setRestTimer(true);
+  }
 
   const onChangeShowRestTimer = (val: boolean) => {
     let restSet: TimerStorageInterface;
