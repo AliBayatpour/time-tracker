@@ -5,7 +5,6 @@ import { Tab, Tabs } from "react-bootstrap";
 import DetailStat from "../../components/stats/detail-stat/detail-stat.component";
 import PastItems from "../../components/stats/past-items/past-items.component";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLastNDaysItemsStart } from "../../store/item/item.action";
 import {
   selectLast14DaysItems,
   selectLast14DaysStatData,
@@ -18,6 +17,7 @@ import {
   selectLast7DaysItems,
   selectLast7DaysStatData,
 } from "../../store/item/item.selector";
+import { itemActions } from "../../store/item/item.slice";
 
 enum TabsKeys {
   LAST_7_DAYS = "last7Days",
@@ -44,7 +44,7 @@ const Stats: React.FC = () => {
   const [key, setKey] = useState<string>(TabsKeys.LAST_7_DAYS);
 
   useEffect(() => {
-    dispatch(fetchLastNDaysItemsStart(7));
+    dispatch(itemActions.fetchLastNDaysStart(7));
   }, []);
 
   const onSelectTab = (tabName: string | null) => {
@@ -53,23 +53,23 @@ const Stats: React.FC = () => {
     }
     switch (tabName) {
       case TabsKeys.LAST_7_DAYS:
-        dispatch(fetchLastNDaysItemsStart(7));
+        dispatch(itemActions.fetchLastNDaysStart(7));
         setKey(tabName);
         break;
       case TabsKeys.LAST_14_DAYS:
-        dispatch(fetchLastNDaysItemsStart(14));
+        dispatch(itemActions.fetchLastNDaysStart(14));
         setKey(tabName);
         break;
       case TabsKeys.LAST_28_DAYS:
-        dispatch(fetchLastNDaysItemsStart(28));
+        dispatch(itemActions.fetchLastNDaysStart(28));
         setKey(tabName);
         break;
       case TabsKeys.LAST_180_DAYS:
-        dispatch(fetchLastNDaysItemsStart(180));
+        dispatch(itemActions.fetchLastNDaysStart(180));
         setKey(tabName);
         break;
       case TabsKeys.LAST_360_DAYS:
-        dispatch(fetchLastNDaysItemsStart(360));
+        dispatch(itemActions.fetchLastNDaysStart(360));
         setKey(tabName);
         break;
 

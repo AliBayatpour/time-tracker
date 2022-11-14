@@ -14,11 +14,7 @@ import { convertMinToReadable } from "../../../utils/date-utils";
 import { Dropdown, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
-import {
-  addItemStart,
-  deleteItemStart,
-  updateItemStart,
-} from "../../../store/item/item.action";
+import { itemActions } from "../../../store/item/item.slice";
 
 const TodoItems: React.FC = () => {
   const todoItems = useSelector(selectTodoItems);
@@ -37,7 +33,7 @@ const TodoItems: React.FC = () => {
       goal: Number(event.target.elements.goal.value),
       done: false,
     };
-    dispatch(updateItemStart(newItem));
+    dispatch(itemActions.updateItemStart(newItem));
     (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
   };
 
@@ -55,11 +51,11 @@ const TodoItems: React.FC = () => {
       done: false,
       finished_at: 0,
     };
-    dispatch(addItemStart(newitem));
+    dispatch(itemActions.addItemStart(newitem));
   };
 
   const handleRemovetask = (index: number) => {
-    dispatch(deleteItemStart(todoItems[index]));
+    dispatch(itemActions.deleteItemStart(todoItems[index]));
   };
   // a little function to help us with reordering the result
   const reorder = (list: any, startIndex: any, endIndex: any) => {
@@ -86,7 +82,7 @@ const TodoItems: React.FC = () => {
     } else if (result[newIdxItem - 1] && !result[newIdxItem + 1]) {
       targetItem.sort = stringValueGenerator(result[newIdxItem - 1].sort, "");
     }
-    dispatch(updateItemStart(targetItem));
+    dispatch(itemActions.updateItemStart(targetItem));
   };
 
   const onChangeForm = (event: any, item: ItemInterface, index: number) => {

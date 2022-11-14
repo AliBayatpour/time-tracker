@@ -5,8 +5,8 @@ import { ReactComponent as AddItemIcon } from "../../../assets/icons/add-item.sv
 import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
-import { addItemStart } from "../../../store/item/item.action";
 import React from "react";
+import { itemActions } from "../../../store/item/item.slice";
 
 const AddItem: React.FC = () => {
   const todoItems = useSelector(selectTodoItems);
@@ -27,7 +27,7 @@ const AddItem: React.FC = () => {
       done: false,
       finished_at: 0,
     };
-    dispatch(addItemStart(newitem));
+    dispatch(itemActions.addItemStart(newitem));
     event.target.reset();
   };
   return (

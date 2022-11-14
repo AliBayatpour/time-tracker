@@ -5,8 +5,8 @@ import TimerContext from "../../../context/timer-context";
 import classes from "./timer.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
-import { updateItemStart } from "../../../store/item/item.action";
 import { convertMinToMilliSec } from "../../../utils/date-utils";
+import { itemActions } from "../../../store/item/item.slice";
 type Props = {
   onChangeShowRestTimer: (val: boolean) => void;
   onPlayAudio: () => void;
@@ -108,7 +108,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
     localStorage.removeItem("timer");
     timerCtx.onSetIsCompleted(true);
     dispatch(
-      updateItemStart({
+      itemActions.updateItemStart({
         ...todoItems[0],
         done: true,
         finished_at: Math.ceil(new Date().getTime() / 1000),
@@ -132,7 +132,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
     localStorage.removeItem("timer");
     timerCtx.onSetIsCompleted(true);
     dispatch(
-      updateItemStart({
+      itemActions.updateItemStart({
         ...todoItems[0],
         done: true,
         finished_at: Math.ceil(new Date().getTime() / 1000),

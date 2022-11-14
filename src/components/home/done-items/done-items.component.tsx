@@ -9,12 +9,9 @@ import { ReactComponent as Update } from "../../../assets/icons/update.svg";
 import { ReactComponent as DoneList } from "../../../assets/icons/done-list.svg";
 import { selectDoneItems } from "../../../store/item/item.selector";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteItemStart,
-  updateItemStart,
-} from "../../../store/item/item.action";
 import { totalTime } from "../../../utils/stat-utils";
 import { Dropdown } from "react-bootstrap";
+import { itemActions } from "../../../store/item/item.slice";
 
 const DoneItems: React.FC = () => {
   const doneItems = useSelector(selectDoneItems);
@@ -31,7 +28,7 @@ const DoneItems: React.FC = () => {
       progress: Number(event.target.elements.progress.value),
       done: true,
     };
-    dispatch(updateItemStart(newItem));
+    dispatch(itemActions.updateItemStart(newItem));
     (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
   };
 
@@ -48,7 +45,7 @@ const DoneItems: React.FC = () => {
   };
 
   const handleRemovetask = (index: number) => {
-    dispatch(deleteItemStart(doneItems[index]));
+    dispatch(itemActions.deleteItemStart(doneItems[index]));
   };
   return (
     <React.Fragment>

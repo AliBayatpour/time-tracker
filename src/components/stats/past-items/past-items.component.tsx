@@ -12,14 +12,11 @@ import { ReactComponent as Update } from "../../../assets/icons/update.svg";
 import { ReactComponent as PastItemsIcon } from "../../../assets/icons/past-items.svg";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  deleteItemStart,
-  updateItemStart,
-} from "../../../store/item/item.action";
-import {
   selectLast14DaysItems,
   selectLast28DaysItems,
   selectLast7DaysItems,
 } from "../../../store/item/item.selector";
+import { itemActions } from "../../../store/item/item.slice";
 
 type Props = {
   nDays: number;
@@ -41,12 +38,12 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
       description: event.target.elements.description.value,
       progress: Number(event.target.elements.progress.value),
     };
-    dispatch(updateItemStart(newItem));
+    dispatch(itemActions.updateItemStart(newItem));
     (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
   };
 
   const handleRemovetask = (item: ItemInterface) => {
-    dispatch(deleteItemStart(item));
+    dispatch(itemActions.deleteItemStart(item));
   };
 
   const onChangeForm = (event: any, item: ItemInterface, index: number) => {
