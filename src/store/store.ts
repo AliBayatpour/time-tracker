@@ -6,9 +6,12 @@ import { rootSaga } from "./root-saga";
 
 const sagaMiddleware = createSagaMiddleware();
 const middleWares = [logger, sagaMiddleware];
+
 export const store = configureStore({
   reducer: { item: itemReducer },
   middleware: middleWares,
 });
-export type RootState = ReturnType<typeof store.getState>
+
 sagaMiddleware.run(rootSaga);
+
+

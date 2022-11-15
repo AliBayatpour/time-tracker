@@ -1,6 +1,6 @@
 import { ItemInterface } from "../item-interface";
 
-export interface ItemsReducerState {
+export type ItemsReducerState = {
   items: ItemInterface[];
   last7Days: ItemInterface[];
   last14Days: ItemInterface[];
@@ -9,4 +9,4 @@ export interface ItemsReducerState {
   last360Days: ItemInterface[];
   isLoading: boolean;
   error: null | Error["message"];
-}
+};

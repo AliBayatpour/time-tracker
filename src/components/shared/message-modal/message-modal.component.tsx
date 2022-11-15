@@ -1,15 +1,13 @@
-import { useContext } from "react";
 import { Button, Modal } from "react-bootstrap";
-import ModalContext from "../../../context/modal-context";
 
-const MessageModal: React.FC = () => {
-  const modalCtx = useContext(ModalContext);
+type Props = {
+  onSetShowModal: (val: boolean) => void;
+  showModal: boolean;
+};
 
+const MessageModal: React.FC<Props> = ({ onSetShowModal, showModal }) => {
   return (
-    <Modal
-      show={modalCtx.showModal}
-      onHide={() => modalCtx.onSetShowModal(false)}
-    >
+    <Modal show={showModal} onHide={() => onSetShowModal(false)}>
       <Modal.Header closeButton>
         <Modal.Title>Timer in progress!</Modal.Title>
       </Modal.Header>
@@ -17,10 +15,7 @@ const MessageModal: React.FC = () => {
         If you want to start a new Item please Finish in progress item first
       </Modal.Body>
       <Modal.Footer>
-        <Button
-          variant="secondary"
-          onClick={() => modalCtx.onSetShowModal(false)}
-        >
+        <Button variant="secondary" onClick={() => onSetShowModal(false)}>
           Close
         </Button>
       </Modal.Footer>

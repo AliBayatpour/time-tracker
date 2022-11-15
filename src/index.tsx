@@ -7,7 +7,6 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "./context/auth-context";
 import { TimerContextProvider } from "./context/timer-context";
-import { ModalContextProvider } from "./context/modal-context";
 import { store } from "./store/store";
 import { RestTimerContextProvider } from "./context/rest-timer-context";
 
@@ -18,15 +17,13 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <AuthContextProvider>
-        <ModalContextProvider>
-          <RestTimerContextProvider>
-            <TimerContextProvider>
-              <BrowserRouter>
-                <App />
-              </BrowserRouter>
-            </TimerContextProvider>
-          </RestTimerContextProvider>
-        </ModalContextProvider>
+        <RestTimerContextProvider>
+          <TimerContextProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </TimerContextProvider>
+        </RestTimerContextProvider>
       </AuthContextProvider>
     </Provider>
   </React.StrictMode>

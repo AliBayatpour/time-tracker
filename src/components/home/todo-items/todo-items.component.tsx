@@ -1,7 +1,6 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { ItemInterface } from "../../../interfaces/item-interface";
-import ModalContext from "../../../context/modal-context";
 import TimerContext from "../../../context/timer-context";
 import { stringValueGenerator } from "../../../utils/items-utils";
 import { ReactComponent as Trash } from "../../../assets/icons/trash.svg";
@@ -15,13 +14,19 @@ import { Dropdown, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
 import { itemActions } from "../../../store/item/item.slice";
+import MessageModal from "../../shared/message-modal/message-modal.component";
 
 const TodoItems: React.FC = () => {
+  const [showModal, setShowModal] = useState<boolean>(false);
+
   const todoItems = useSelector(selectTodoItems);
   const dispatch = useDispatch();
   const timerCtx = useContext(TimerContext);
-  const modalCtx = useContext(ModalContext);
   const updateBtnsRef = useRef<HTMLButtonElement[]>([]);
+
+  const onSetShowModal = (val: boolean) => {
+    setShowModal(val);
+  };
 
   const updateItem = (event: any, index: number) => {
     event.preventDefault();
@@ -63,7 +68,7 @@ const TodoItems: React.FC = () => {
       (startIndex === 0 && (timerCtx.isStarted || timerCtx.isPaused)) ||
       (endIndex === 0 && (timerCtx.isStarted || timerCtx.isPaused))
     ) {
-      modalCtx.onSetShowModal(true);
+      onSetShowModal(true);
       return;
     }
     const result = [...todoItems];
@@ -104,6 +109,8 @@ const TodoItems: React.FC = () => {
   };
   return (
     <React.Fragment>
+      <MessageModal showModal={showModal} onSetShowModal={onSetShowModal} />
+
       <div className="d-flex align-items-center mb-3 mt-5">
         <TodoList width={30} />
         <h2 className="text-primary ms-3 mb-0">Todo Items</h2>

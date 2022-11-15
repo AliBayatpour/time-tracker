@@ -1,7 +1,7 @@
 import { createSelector } from "reselect";
+import { RootState } from "../../interfaces/root-state-interface";
 import { filterDoneItems, filterTodoItems } from "../../utils/items-utils";
 import { lastNDaysChartDataBuilder } from "../../utils/stat-utils";
-import { RootState } from "../store";
 
 const selectItemsReducer = (state: RootState) => state.item;
 

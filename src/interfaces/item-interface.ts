@@ -1,4 +1,4 @@
-export interface ItemInterface {
+export type ItemInterface = {
   modelID?: string;
   userId: string;
   category: string;
@@ -8,4 +8,4 @@ export interface ItemInterface {
   done: boolean;
   goal: number;
   finished_at: number;
-}
+};

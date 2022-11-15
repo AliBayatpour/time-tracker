@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import Items from "../../components/home/items/items.component";
 import RestTimer from "../../components/home/rest-timer/rest-timer";
 import Timer from "../../components/home/timer/timer.components";
-import MessageModal from "../../components/shared/message-modal/message-modal.component";
 import RestTimerContext from "../../context/rest-timer-context";
 import { TimerStorageInterface } from "../../interfaces/item-storage-interface";
 import { convertMinToMilliSec } from "../../utils/date-utils";
@@ -50,7 +49,6 @@ const Home: React.FC = () => {
         />
       )}
       <Items />
-      <MessageModal />
     </React.Fragment>
   );
 };

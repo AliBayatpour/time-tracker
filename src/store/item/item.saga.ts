@@ -16,8 +16,7 @@ import {
   updateItemAsyncReq,
 } from "../../utils/items-utils";
 import { itemActions, itemCaseReducers, itemSliceName } from "./item.slice";
-import type { Action } from '@reduxjs/toolkit'
-
+import type { Action } from "@reduxjs/toolkit";
 
 // GET ITEMS
 export function* fetchItemsAsync(): Generator<
@@ -29,11 +28,7 @@ export function* fetchItemsAsync(): Generator<
     const response = yield call(getItemsAsyncReq);
     yield put(itemActions.fetchItemsSuccess(response));
   } catch (err) {
-    if (err instanceof Error) {
-      yield put(itemActions.fetchItemsFailed(err.message));
-    } else {
-      yield put(itemActions.fetchItemsFailed("unexpected error happened"));
-    }
+    yield put(itemActions.fetchItemsFailed("fetching items failed"));
   }
 }
 
@@ -58,16 +53,15 @@ export function* addItemsAsync(props: {
       yield put(itemActions.addItemFailed("add item failed"));
     }
   } catch (err) {
-    if (err instanceof Error) {
-      yield put(itemActions.fetchItemsFailed(err.message));
-    } else {
-      yield put(itemActions.fetchItemsFailed("unexpected error happened"));
-    }
+    yield put(itemActions.addItemFailed("add item failed"));
   }
 }
 
 export function* onAddItem() {
-  yield takeLatest(`${itemSliceName}/${itemCaseReducers.addItemStart.name}`, addItemsAsync);
+  yield takeLatest(
+    `${itemSliceName}/${itemCaseReducers.addItemStart.name}`,
+    addItemsAsync
+  );
 }
 
 // UPDATE ITEMS
@@ -84,16 +78,15 @@ export function* updateItemsAsync(props: {
       yield put(itemActions.updateItemFailed("updating item failed"));
     }
   } catch (err) {
-    if (err instanceof Error) {
-      yield put(itemActions.fetchItemsFailed(err.message));
-    } else {
-      yield put(itemActions.fetchItemsFailed("unexpected error happened"));
-    }
+    yield put(itemActions.updateItemFailed("updating item failed"));
   }
 }
 
 export function* onUpdateItem() {
-  yield takeLatest(`${itemSliceName}/${itemCaseReducers.updateItemStart.name}`, updateItemsAsync);
+  yield takeLatest(
+    `${itemSliceName}/${itemCaseReducers.updateItemStart.name}`,
+    updateItemsAsync
+  );
 }
 
 // DELETE ITEMS
@@ -110,16 +103,15 @@ export function* deleteItemsAsync(props: {
       yield put(itemActions.updateItemFailed("delete item failed"));
     }
   } catch (err) {
-    if (err instanceof Error) {
-      yield put(itemActions.fetchItemsFailed(err.message));
-    } else {
-      yield put(itemActions.fetchItemsFailed("unexpected error happened"));
-    }
+    yield put(itemActions.updateItemFailed("delete item failed"));
   }
 }
 
 export function* onDeleteItem() {
-  yield takeLatest(`${itemSliceName}/${itemCaseReducers.deleteItemStart.name}`, deleteItemsAsync);
+  yield takeLatest(
+    `${itemSliceName}/${itemCaseReducers.deleteItemStart.name}`,
+    deleteItemsAsync
+  );
 }
 
 // GET LAST N ITEMS
@@ -136,11 +128,7 @@ export function* fetchLastNDaysItemsAsync(props: {
     const successPayload = { nDays: props.payload, lastNDaysItems: response };
     yield put(itemActions.fetchLastNDaysSuccess(successPayload));
   } catch (err) {
-    if (err instanceof Error) {
-      yield put(itemActions.fetchLastNDaysFailed(err.message));
-    } else {
-      yield put(itemActions.fetchLastNDaysFailed("unexpected error happened"));
-    }
+    yield put(itemActions.fetchLastNDaysFailed("unexpected error happened"));
   }
 }
 export function* onFetchLastNDaysItems() {

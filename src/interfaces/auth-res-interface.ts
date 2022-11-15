@@ -1,4 +1,4 @@
-export interface authResInterface {
+export type authResInterface = {
   access_token: string;
   standardClaims: {
     exp: number;
@@ -6,4 +6,4 @@ export interface authResInterface {
     iat: number;
     sub: string;
   };
-}
+};
