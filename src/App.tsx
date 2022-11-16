@@ -13,8 +13,8 @@ import { authActions } from "./store/auth/auth.slice";
 
 function App() {
   let logoutTimer: ReturnType<typeof setTimeout> | undefined;
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const navigate = useNavigate();
 

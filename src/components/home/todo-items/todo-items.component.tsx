@@ -30,6 +30,14 @@ const TodoItems: React.FC = () => {
 
   const updateItem = (event: any, index: number) => {
     event.preventDefault();
+
+    let updateBtnDisabledProp = (
+      updateBtnsRef.current[index] as HTMLButtonElement
+    ).disabled;
+
+    if (updateBtnDisabledProp === true) {
+      return;
+    }
     let newItem: Item = {
       ...todoItems[index],
       category: event.target.elements.category.value,
@@ -39,7 +47,7 @@ const TodoItems: React.FC = () => {
       done: false,
     };
     dispatch(itemActions.updateItemStart(newItem));
-    (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
+    updateBtnDisabledProp = true;
   };
 
   const duplicateItem = (item: Item) => {

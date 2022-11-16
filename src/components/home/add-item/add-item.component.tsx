@@ -14,10 +14,14 @@ const AddItem: React.FC = () => {
 
   const addItem = (event: any) => {
     event.preventDefault();
+    const categoryVal = event.target.elements.category.value;
+    if (!categoryVal.trim()) {
+      return;
+    }
     const todoItemsLength = todoItems.length;
     let newitem: Item = {
       userId: localStorage.getItem("sub") as string,
-      category: event.target.elements.category.value,
+      category: categoryVal,
       description: event.target.elements.description.value,
       sort: todoItemsLength
         ? stringValueGenerator(todoItems[todoItemsLength - 1].sort)
@@ -49,6 +53,7 @@ const AddItem: React.FC = () => {
               name="category"
               className="form-control"
               id="addCategoryInput"
+              required
               placeholder="category"
             />
           </div>
