@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { ItemInterface } from "../../../interfaces/item-interface";
+import { Item } from "../../../interfaces/item-interface";
 import TimerContext from "../../../context/timer-context";
 import { stringValueGenerator } from "../../../utils/items-utils";
 import { ReactComponent as Trash } from "../../../assets/icons/trash.svg";
@@ -30,7 +30,7 @@ const TodoItems: React.FC = () => {
 
   const updateItem = (event: any, index: number) => {
     event.preventDefault();
-    let newItem: ItemInterface = {
+    let newItem: Item = {
       ...todoItems[index],
       category: event.target.elements.category.value,
       description: event.target.elements.description.value,
@@ -42,9 +42,9 @@ const TodoItems: React.FC = () => {
     (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
   };
 
-  const duplicateItem = (item: ItemInterface) => {
+  const duplicateItem = (item: Item) => {
     const todoItemsLength = todoItems.length;
-    let newitem: ItemInterface = {
+    let newitem: Item = {
       userId: localStorage.getItem("sub") as string,
       category: item.category,
       description: item.description,
@@ -90,7 +90,7 @@ const TodoItems: React.FC = () => {
     dispatch(itemActions.updateItemStart(targetItem));
   };
 
-  const onChangeForm = (event: any, item: ItemInterface, index: number) => {
+  const onChangeForm = (event: any, item: Item, index: number) => {
     if (
       event.target.form.elements.category.value === item.category &&
       event.target.form.elements.description.value === item.description &&
@@ -130,7 +130,7 @@ const TodoItems: React.FC = () => {
         <Droppable droppableId="droppable">
           {(provided, snapshot) => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
-              {todoItems.map((item: ItemInterface, index: number) => (
+              {todoItems.map((item: Item, index: number) => (
                 <Draggable
                   key={item.modelID}
                   draggableId={item.modelID as string}

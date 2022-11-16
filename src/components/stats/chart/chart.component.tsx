@@ -11,14 +11,14 @@ import {
   Legend,
 } from "recharts";
 import { convertMinToReadable, getWeekDay } from "../../../utils/date-utils";
-import { ChartCategoryInterface } from "../../../interfaces/chart-category-interface";
+import { ChartCategory } from "../../../interfaces/chart-category-interface";
 
 type Props = {
   statData: {
     lastNDaysChartResult: {
       [key: string]: any;
     }[];
-    itemCategories: ChartCategoryInterface[];
+    itemCategories: ChartCategory[];
   };
 };
 const Chart: React.FC<Props> = ({ statData }) => {
@@ -52,7 +52,7 @@ const Chart: React.FC<Props> = ({ statData }) => {
     return null;
   };
 
-  const customIntervalBar = (categories: ChartCategoryInterface[]) => {
+  const customIntervalBar = (categories: ChartCategory[]) => {
     return categories.map((category, index) => (
       <Bar
         key={index}

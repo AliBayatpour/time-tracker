@@ -5,7 +5,6 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { AuthContextProvider } from "./context/auth-context";
 import { TimerContextProvider } from "./context/timer-context";
 import { store } from "./store/store";
 import { RestTimerContextProvider } from "./context/rest-timer-context";
@@ -16,15 +15,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <AuthContextProvider>
-        <RestTimerContextProvider>
-          <TimerContextProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </TimerContextProvider>
-        </RestTimerContextProvider>
-      </AuthContextProvider>
+      <RestTimerContextProvider>
+        <TimerContextProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </TimerContextProvider>
+      </RestTimerContextProvider>
     </Provider>
   </React.StrictMode>
 );

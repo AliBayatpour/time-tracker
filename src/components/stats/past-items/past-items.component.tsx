@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Form } from "react-bootstrap";
-import { ItemInterface } from "../../../interfaces/item-interface";
+import { Item } from "../../../interfaces/item-interface";
 import {
   convertMinToReadable,
   formatDateV1,
@@ -30,9 +30,9 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
   const [selectDate, setSelectDate] = useState<string>("");
   const updateBtnsRef = useRef<HTMLButtonElement[]>([]);
 
-  const updateItem = (event: any, item: ItemInterface, index: number) => {
+  const updateItem = (event: any, item: Item, index: number) => {
     event.preventDefault();
-    let newItem: ItemInterface = {
+    let newItem: Item = {
       ...item,
       category: event.target.elements.category.value,
       description: event.target.elements.description.value,
@@ -42,11 +42,11 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
     (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
   };
 
-  const handleRemovetask = (item: ItemInterface) => {
+  const handleRemovetask = (item: Item) => {
     dispatch(itemActions.deleteItemStart(item));
   };
 
-  const onChangeForm = (event: any, item: ItemInterface, index: number) => {
+  const onChangeForm = (event: any, item: Item, index: number) => {
     if (
       event.target.form.elements.category.value === item.category &&
       event.target.form.elements.description.value === item.description &&
@@ -58,8 +58,8 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
     }
   };
 
-  const fileterItems = (): ItemInterface[] => {
-    let items: ItemInterface[] = [];
+  const fileterItems = (): Item[] => {
+    let items: Item[] = [];
     switch (nDays) {
       case 7:
         items = last7DaysItems;
@@ -102,7 +102,7 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
       <h5 className="text-light my-3">
         Total Time: (<b>{convertMinToReadable(totalTime(fileterItems()))}</b>)
       </h5>
-      {fileterItems().map((item: ItemInterface, index: number) => (
+      {fileterItems().map((item: Item, index: number) => (
         <form
           key={item.modelID}
           onChange={(event) => onChangeForm(event, item, index)}

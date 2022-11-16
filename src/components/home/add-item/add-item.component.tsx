@@ -1,4 +1,4 @@
-import { ItemInterface } from "../../../interfaces/item-interface";
+import { Item } from "../../../interfaces/item-interface";
 import { stringValueGenerator } from "../../../utils/items-utils";
 import { ReactComponent as Add } from "../../../assets/icons/add.svg";
 import { ReactComponent as AddItemIcon } from "../../../assets/icons/add-item.svg";
@@ -15,7 +15,7 @@ const AddItem: React.FC = () => {
   const addItem = (event: any) => {
     event.preventDefault();
     const todoItemsLength = todoItems.length;
-    let newitem: ItemInterface = {
+    let newitem: Item = {
       userId: localStorage.getItem("sub") as string,
       category: event.target.elements.category.value,
       description: event.target.elements.description.value,

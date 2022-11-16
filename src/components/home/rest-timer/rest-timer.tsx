@@ -3,7 +3,7 @@ import Countdown, { CountdownTimeDelta } from "react-countdown";
 import classes from "./rest.module.scss";
 import RestTimerContext from "../../../context/rest-timer-context";
 import { convertMinToMilliSec } from "../../../utils/date-utils";
-import { TimerStorageInterface } from "../../../interfaces/item-storage-interface";
+import { TimerStorage } from "../../../interfaces/item-storage-interface";
 
 type Props = {
   onChangeShowRestTimer: (val: boolean) => void;
@@ -15,7 +15,7 @@ const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
   useEffect(() => {
     localStorage.removeItem("timer");
     let timerString = localStorage.getItem("rest");
-    let timer: TimerStorageInterface = timerString && JSON.parse(timerString);
+    let timer: TimerStorage = timerString && JSON.parse(timerString);
     if (
       timer &&
       timer.autoStart &&

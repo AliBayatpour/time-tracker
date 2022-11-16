@@ -1,4 +1,3 @@
-import { ActionType } from "@redux-saga/types";
 import {
   takeLatest,
   all,
@@ -7,7 +6,7 @@ import {
   CallEffect,
   PutEffect,
 } from "redux-saga/effects";
-import { ItemInterface } from "../../interfaces/item-interface";
+import { Item } from "../../interfaces/item-interface";
 import {
   addItemAsyncReq,
   deleteItemAsyncReq,
@@ -20,9 +19,9 @@ import type { Action } from "@reduxjs/toolkit";
 
 // GET ITEMS
 export function* fetchItemsAsync(): Generator<
-  CallEffect<ItemInterface[]> | PutEffect<Action>,
+  CallEffect<Item[]> | PutEffect<Action>,
   void,
-  ItemInterface[] | []
+  Item[] | []
 > {
   try {
     const response = yield call(getItemsAsyncReq);
@@ -41,8 +40,8 @@ export function* onFetchItems() {
 
 // ADD ITEMS
 export function* addItemsAsync(props: {
-  type: ActionType;
-  payload: ItemInterface;
+  type: Action;
+  payload: Item;
 }): Generator<CallEffect<Response> | PutEffect<Action>, any, Response> {
   try {
     const response = yield call(addItemAsyncReq, props.payload);
@@ -66,8 +65,8 @@ export function* onAddItem() {
 
 // UPDATE ITEMS
 export function* updateItemsAsync(props: {
-  type: ActionType;
-  payload: ItemInterface;
+  type: Action;
+  payload: Item;
 }): Generator<CallEffect<Response> | PutEffect<Action>, any, Response> {
   try {
     const response = yield call(updateItemAsyncReq, props.payload);
@@ -91,8 +90,8 @@ export function* onUpdateItem() {
 
 // DELETE ITEMS
 export function* deleteItemsAsync(props: {
-  type: ActionType;
-  payload: ItemInterface;
+  type: Action;
+  payload: Item;
 }): Generator<CallEffect<Response> | PutEffect<Action>, any, Response> {
   try {
     const response = yield call(deleteItemAsyncReq, props.payload);
@@ -116,13 +115,9 @@ export function* onDeleteItem() {
 
 // GET LAST N ITEMS
 export function* fetchLastNDaysItemsAsync(props: {
-  type: ActionType;
+  type: Action;
   payload: number;
-}): Generator<
-  CallEffect<ItemInterface[]> | PutEffect<Action>,
-  void,
-  ItemInterface[] | []
-> {
+}): Generator<CallEffect<Item[]> | PutEffect<Action>, void, Item[] | []> {
   try {
     const response = yield call(getLastNDaysItemsAsyncReq, props.payload);
     const successPayload = { nDays: props.payload, lastNDaysItems: response };

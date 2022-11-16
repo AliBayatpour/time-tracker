@@ -1,44 +1,18 @@
-import React, { useContext, useRef } from "react";
-import { authResInterface } from "../../../interfaces/auth-res-interface";
-import AuthContext from "../../../context/auth-context";
+import React, { useRef } from "react";
 import classes from "./login.module.scss";
-import { useNavigate } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
+import { authActions } from "../../../store/auth/auth.slice";
 const Login: React.FC = () => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const emailInputRef = useRef<HTMLInputElement | null>(null);
   const passwordInputRef = useRef<HTMLInputElement | null>(null);
 
-  const authCtx = useContext(AuthContext);
-
   const login = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const enteredEmail = emailInputRef.current?.value;
-    const enteredPassword = passwordInputRef.current?.value;
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACK_END_URL}/auth/login`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            email: enteredEmail,
-            password: enteredPassword,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const json = (await response.json()) as authResInterface;
-      if (json.access_token) {
-        authCtx.login(json);
-        navigate("/", { replace: true });
-      } else {
-        authCtx.logout();
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    const email = emailInputRef.current?.value;
+    const password = passwordInputRef.current?.value;
+    dispatch(authActions.loginStart({ email, password }));
   };
   return (
     <div className={`${classes.mainContainer} text-light`}>

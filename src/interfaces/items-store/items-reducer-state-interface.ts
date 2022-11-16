@@ -1,12 +1,12 @@
-import { ItemInterface } from "../item-interface";
+import { Item } from "../item-interface";
 
 export type ItemsReducerState = {
-  items: ItemInterface[];
-  last7Days: ItemInterface[];
-  last14Days: ItemInterface[];
-  last28Days: ItemInterface[];
-  last180Days: ItemInterface[];
-  last360Days: ItemInterface[];
+  items: Item[];
+  last7Days: Item[];
+  last14Days: Item[];
+  last28Days: Item[];
+  last180Days: Item[];
+  last360Days: Item[];
   isLoading: boolean;
   error: null | Error["message"];
 };

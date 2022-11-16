@@ -1,4 +1,4 @@
-import { ItemInterface } from "../interfaces/item-interface";
+import { Item } from "../interfaces/item-interface";
 
 // SORT ALGORITHM
 const alphabet = [
@@ -162,7 +162,7 @@ const resultIndexCalculator = (param1: string, param2: string) => {
 };
 
 // FETCH ITEMS
-export const getItemsAsyncReq = async (): Promise<ItemInterface[] | []> => {
+export const getItemsAsyncReq = async (): Promise<Item[] | []> => {
   try {
     const response = await fetch(
       `${process.env.REACT_APP_BACK_END_URL}/item/`,
@@ -177,7 +177,7 @@ export const getItemsAsyncReq = async (): Promise<ItemInterface[] | []> => {
     if (!response.ok) {
       throw new Error("Request failed!");
     }
-    const json = (await response.json()) as ItemInterface[];
+    const json = (await response.json()) as Item[];
     if (json.length) {
       return json;
     } else {
@@ -189,9 +189,7 @@ export const getItemsAsyncReq = async (): Promise<ItemInterface[] | []> => {
 };
 
 // ADD
-export const addItemAsyncReq = async (
-  item: ItemInterface
-): Promise<Response> => {
+export const addItemAsyncReq = async (item: Item): Promise<Response> => {
   try {
     const response = await fetch(
       `${process.env.REACT_APP_BACK_END_URL}/item/`,
@@ -211,9 +209,7 @@ export const addItemAsyncReq = async (
 };
 
 // UPDATE ITEM
-export const updateItemAsyncReq = async (
-  item: ItemInterface
-): Promise<Response> => {
+export const updateItemAsyncReq = async (item: Item): Promise<Response> => {
   try {
     const response = await fetch(
       `${process.env.REACT_APP_BACK_END_URL}/item/`,
@@ -233,9 +229,7 @@ export const updateItemAsyncReq = async (
 };
 
 // DELETE
-export const deleteItemAsyncReq = async (
-  item: ItemInterface
-): Promise<Response> => {
+export const deleteItemAsyncReq = async (item: Item): Promise<Response> => {
   try {
     const response = await fetch(
       `${process.env.REACT_APP_BACK_END_URL}/item/`,
@@ -257,7 +251,7 @@ export const deleteItemAsyncReq = async (
 // FETCH LAST N DAYS ITEMS
 export const getLastNDaysItemsAsyncReq = async (
   nDays: number
-): Promise<ItemInterface[] | []> => {
+): Promise<Item[] | []> => {
   try {
     const response = await fetch(
       `${process.env.REACT_APP_BACK_END_URL}/item/last-n-days/${nDays}`,
@@ -272,7 +266,7 @@ export const getLastNDaysItemsAsyncReq = async (
     if (!response.ok) {
       throw new Error("Request failed!");
     }
-    const json = (await response.json()) as ItemInterface[];
+    const json = (await response.json()) as Item[];
     if (json.length) {
       return json;
     } else {
@@ -284,11 +278,11 @@ export const getLastNDaysItemsAsyncReq = async (
 };
 
 // UTIL FUNCTIONS
-export const filterTodoItems = (items: ItemInterface[]): ItemInterface[] => {
+export const filterTodoItems = (items: Item[]): Item[] => {
   let filteredItems = items.filter((item) => !item.done);
   return filteredItems.sort((a, b) => (a.sort > b.sort ? 1 : -1));
 };
-export const filterDoneItems = (items: ItemInterface[]) => {
+export const filterDoneItems = (items: Item[]) => {
   let filteredItems = items.filter((item) => item.done);
   return filteredItems.sort((a, b) => (a.finished_at > b.finished_at ? 1 : -1));
 };

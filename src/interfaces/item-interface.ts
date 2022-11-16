@@ -1,4 +1,4 @@
-export type ItemInterface = {
+export type Item = {
   modelID?: string;
   userId: string;
   category: string;

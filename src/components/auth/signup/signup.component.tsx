@@ -1,48 +1,22 @@
-import React, { useContext, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { authResInterface } from "../../../interfaces/auth-res-interface";
-import AuthContext from "../../../context/auth-context";
+import React, { useRef } from "react";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../../store/auth/auth.slice";
 import classes from "./signup.module.scss";
 
 const Signup: React.FC = () => {
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const nameInputRef = useRef<HTMLInputElement | null>(null);
   const emailInputRef = useRef<HTMLInputElement | null>(null);
   const passwordInputRef = useRef<HTMLInputElement | null>(null);
 
-  const authCtx = useContext(AuthContext);
-
   const signup = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const enteredName = nameInputRef.current?.value;
-    const enteredEmail = emailInputRef.current?.value;
-    const enteredPassword = passwordInputRef.current?.value;
+    const name = nameInputRef.current?.value;
+    const email = emailInputRef.current?.value;
+    const password = passwordInputRef.current?.value;
 
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACK_END_URL}/auth/signup`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            name: enteredName,
-            email: enteredEmail,
-            password: enteredPassword,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const json = (await response.json()) as authResInterface;
-      if (json) {
-        authCtx.login(json);
-        navigate("/", { replace: true });
-      } else {
-        authCtx.logout();
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(authActions.signupStart({ name, email, password }));
   };
   return (
     <div className={`${classes.mainContainer} text-light`}>

@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { ItemInterface } from "../../../interfaces/item-interface";
+import { Item } from "../../../interfaces/item-interface";
 import {
   convertDateNumToTime,
   convertMinToReadable,
@@ -20,7 +20,7 @@ const DoneItems: React.FC = () => {
 
   const updateItem = (event: any, index: number) => {
     event.preventDefault();
-    let newItem: ItemInterface = {
+    let newItem: Item = {
       ...doneItems[index],
       category: event.target.elements.category.value,
       description: event.target.elements.description.value,
@@ -32,7 +32,7 @@ const DoneItems: React.FC = () => {
     (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
   };
 
-  const onChangeForm = (event: any, item: ItemInterface, index: number) => {
+  const onChangeForm = (event: any, item: Item, index: number) => {
     if (
       event.target.form.elements.category.value === item.category &&
       event.target.form.elements.description.value === item.description &&
@@ -57,7 +57,7 @@ const DoneItems: React.FC = () => {
       <h5 className="text-light">
         Total Time Today: (<b>{convertMinToReadable(totalTime(doneItems))}</b>)
       </h5>
-      {doneItems.map((item: ItemInterface, index: number) => (
+      {doneItems.map((item: Item, index: number) => (
         <form
           key={item.modelID}
           onChange={(event) => onChangeForm(event, item, index)}

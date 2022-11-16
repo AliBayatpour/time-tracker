@@ -1,4 +1,4 @@
-export type authResInterface = {
+export type UserRes = {
   access_token: string;
   standardClaims: {
     exp: number;

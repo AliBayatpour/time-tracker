@@ -1,13 +1,13 @@
-import { useContext } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import AuthContext from "../../context/auth-context";
+import { authActions } from "../../store/auth/auth.slice";
 import classes from "./Header.module.scss";
 
 const Header: React.FC = () => {
-  const authCtx = useContext(AuthContext);
+  const dispatch = useDispatch();
 
   const onLogoutHandler = () => {
-    authCtx.logout();
+    dispatch(authActions.logout());
   };
 
   return (

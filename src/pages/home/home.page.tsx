@@ -3,7 +3,7 @@ import Items from "../../components/home/items/items.component";
 import RestTimer from "../../components/home/rest-timer/rest-timer";
 import Timer from "../../components/home/timer/timer.components";
 import RestTimerContext from "../../context/rest-timer-context";
-import { TimerStorageInterface } from "../../interfaces/item-storage-interface";
+import { TimerStorage } from "../../interfaces/item-storage-interface";
 import { convertMinToMilliSec } from "../../utils/date-utils";
 import ringer from "../../assets/ringtones/win-10.mp3";
 
@@ -18,7 +18,7 @@ const Home: React.FC = () => {
   }
 
   const onChangeShowRestTimer = (val: boolean) => {
-    let restSet: TimerStorageInterface;
+    let restSet: TimerStorage;
     if (val) {
       restSet = {
         endTime: Date.now() + convertMinToMilliSec(timerCtx.restTime),

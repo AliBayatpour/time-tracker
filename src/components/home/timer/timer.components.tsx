@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import Countdown, { CountdownTimeDelta } from "react-countdown";
-import { TimerStorageInterface } from "../../../interfaces/item-storage-interface";
+import { TimerStorage } from "../../../interfaces/item-storage-interface";
 import TimerContext from "../../../context/timer-context";
 import classes from "./timer.module.scss";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +18,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
 
   useEffect(() => {
     let timerString = localStorage.getItem("timer");
-    let timer: TimerStorageInterface = timerString && JSON.parse(timerString);
+    let timer: TimerStorage = timerString && JSON.parse(timerString);
     if (!todoItems[0]) {
       timerCtx.onSetDate(null);
       return;
@@ -81,7 +81,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
 
   const handleStart = (res: any) => {
     localStorage.removeItem("timer");
-    let itemToSet: TimerStorageInterface = {
+    let itemToSet: TimerStorage = {
       modelID: todoItems[0].modelID as string,
       endTime: Date.now() + res.total,
       autoStart: true,
@@ -94,7 +94,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
 
   const handlePause = (res: CountdownTimeDelta): void => {
     localStorage.removeItem("timer");
-    let itemToSet: TimerStorageInterface = {
+    let itemToSet: TimerStorage = {
       modelID: todoItems[0].modelID as string,
       autoStart: false,
       duration: res.total,

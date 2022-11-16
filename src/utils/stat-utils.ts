@@ -1,5 +1,5 @@
-import { ChartCategoryInterface } from "../interfaces/chart-category-interface";
-import { ItemInterface } from "../interfaces/item-interface";
+import { ChartCategory } from "../interfaces/chart-category-interface";
+import { Item } from "../interfaces/item-interface";
 import { convertMinToReadable, formatDateV1, getLastNDays } from "./date-utils";
 
 let colorList = [
@@ -25,7 +25,7 @@ let colorList = [
   "#E3BD27",
   "#418499",
 ];
-export const totalTime = (doneItems: ItemInterface[]) => {
+export const totalTime = (doneItems: Item[]) => {
   let totalProgress = 0;
   doneItems?.forEach((doneItem) => {
     totalProgress = totalProgress + doneItem.progress;
@@ -33,7 +33,7 @@ export const totalTime = (doneItems: ItemInterface[]) => {
   return totalProgress;
 };
 
-export const totalTodoTime = (todoItems: ItemInterface[]) => {
+export const totalTodoTime = (todoItems: Item[]) => {
   let totalTodo = 0;
   todoItems?.forEach((todoItem) => {
     totalTodo = totalTodo + todoItem.goal;
@@ -46,15 +46,15 @@ const randomColorGenerator = (): string => {
 };
 
 export const lastNDaysChartDataBuilder = (
-  items: ItemInterface[],
+  items: Item[],
   nDays: number
 ): {
   lastNDaysChartResult: { [key: string]: any }[];
-  itemCategories: ChartCategoryInterface[];
+  itemCategories: ChartCategory[];
 } => {
   let lastNDaysChartResult: any = [];
   let itemCategoriesNames: string[] = [];
-  let itemCategories: ChartCategoryInterface[] = [];
+  let itemCategories: ChartCategory[] = [];
   let lastNDaysArr = getLastNDays(nDays);
   lastNDaysArr.forEach((date) => {
     lastNDaysChartResult.push({ date });

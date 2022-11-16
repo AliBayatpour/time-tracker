@@ -1,5 +1,5 @@
-import { ChartCategoryInterface } from "../../../interfaces/chart-category-interface";
-import { ItemInterface } from "../../../interfaces/item-interface";
+import { ChartCategory } from "../../../interfaces/chart-category-interface";
+import { Item } from "../../../interfaces/item-interface";
 import { convertMinToReadable } from "../../../utils/date-utils";
 
 import {
@@ -8,18 +8,18 @@ import {
 } from "../../../utils/stat-utils";
 
 type Props = {
-  items: ItemInterface[];
+  items: Item[];
   nDays: number;
   statData: {
     lastNDaysChartResult: {
       [key: string]: any;
     }[];
-    itemCategories: ChartCategoryInterface[];
+    itemCategories: ChartCategory[];
   };
 };
 const DetailStat: React.FC<Props> = ({ items, nDays, statData }) => {
   const calculateDetailCategoryStat = () => {
-    let categories: ChartCategoryInterface[] = [];
+    let categories: ChartCategory[] = [];
     let chartData: {
       [key: string]: any;
     }[] = [];
