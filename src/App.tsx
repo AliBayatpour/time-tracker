@@ -40,7 +40,7 @@ function App() {
     const remainingTime = getAuthData()?.remainingTime;
     handleClearTimeout();
     if (remainingTime && remainingTime > 0) {
-      dispatch(authActions.loginSuccess())
+      dispatch(authActions.loginSuccess());
       logoutTimer = setTimeout(logoutHandler, remainingTime);
       navigate("/", { replace: true });
     }
