@@ -11,6 +11,11 @@ $theme-colors: (
 
 @import "~bootstrap/scss/bootstrap";
 
+:root {
+  --color-danger-100: #ff8d8d;
+  --color-danger-500: #ff0000;
+}
+
 .moreItem {
   .dropdown-toggle::after {
     display: none !important;

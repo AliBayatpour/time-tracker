@@ -1,17 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import Items from "../../components/home/items/items.component";
 import RestTimer from "../../components/home/rest-timer/rest-timer";
 import Timer from "../../components/home/timer/timer.components";
-import RestTimerContext from "../../context/rest-timer-context";
 import { TimerStorage } from "../../interfaces/item-storage-interface";
 import { convertMinToMilliSec } from "../../utils/date-utils";
 import ringer from "../../assets/ringtones/win-10.mp3";
+import { selectRestTime } from "../../store/rest-timer/rest-timer.selector";
+import { useSelector } from "react-redux";
 
 const Home: React.FC = () => {
   const audio = new Audio(ringer);
   audio.loop = false;
-  const timerCtx = useContext(RestTimerContext);
   const [restTimer, setRestTimer] = useState(false);
+
+  const restTime = useSelector(selectRestTime);
 
   if (localStorage.getItem("rest") && !restTimer) {
     setRestTimer(true);
@@ -21,7 +23,7 @@ const Home: React.FC = () => {
     let restSet: TimerStorage;
     if (val) {
       restSet = {
-        endTime: Date.now() + convertMinToMilliSec(timerCtx.restTime),
+        endTime: Date.now() + convertMinToMilliSec(restTime),
         autoStart: true,
       };
       localStorage.setItem("rest", JSON.stringify(restSet));

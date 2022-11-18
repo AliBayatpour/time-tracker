@@ -4,9 +4,9 @@ import {
   convertDateNumToTime,
   convertMinToReadable,
 } from "../../../utils/date-utils";
-import { ReactComponent as Trash } from "../../../assets/icons/trash.svg";
-import { ReactComponent as Update } from "../../../assets/icons/update.svg";
-import { ReactComponent as DoneList } from "../../../assets/icons/done-list.svg";
+import trashIcon from "../../../assets/icons/trash.svg";
+import updateIcon from "../../../assets/icons/update.svg";
+import doneList from "../../../assets/icons/done-list.svg";
 import { selectDoneItems } from "../../../store/item/item.selector";
 import { useDispatch, useSelector } from "react-redux";
 import { totalTime } from "../../../utils/stat-utils";
@@ -50,7 +50,7 @@ const DoneItems: React.FC = () => {
   return (
     <React.Fragment>
       <div className="d-flex align-items-center mb-3 mt-5">
-        <DoneList width={30} />
+        <img src={doneList} width={30} />
         <h2 className="ms-3 mb-0 text-success">Done Items</h2>
       </div>
 
@@ -127,7 +127,7 @@ const DoneItems: React.FC = () => {
               }
               disabled
             >
-              <Update height={20} />
+              <img src={updateIcon} height={20} />
             </button>
           </div>
           <div className={`col-1 mt-4`}>
@@ -141,7 +141,13 @@ const DoneItems: React.FC = () => {
                   onClick={() => handleRemovetask(index)}
                   className="d-flex align-items-center"
                 >
-                  Delete <Trash height={15} className="ms-auto" />
+                  Delete{" "}
+                  <img
+                    src={trashIcon}
+                    height={15}
+                    className="ms-auto"
+                    alt="trash"
+                  />
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>

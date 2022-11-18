@@ -1,47 +1,70 @@
-import React, { useRef } from "react";
+import React from "react";
 import classes from "./login.module.scss";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../../store/auth/auth.slice";
+import useInput from "../../../hooks/use-input";
+import Input from "../../shared/input/input";
+import { isEmail, isPassword } from "../../../utils/input-validators-utils";
 const Login: React.FC = () => {
   const dispatch = useDispatch();
 
-  const emailInputRef = useRef<HTMLInputElement | null>(null);
-  const passwordInputRef = useRef<HTMLInputElement | null>(null);
+  const {
+    value: enteredEmail,
+    isValid: enteredEmailIsValid,
+    hasError: emailHasError,
+    valueChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+  } = useInput(isEmail);
+
+  const {
+    value: enteredpassword,
+    isValid: enteredPasswordIsValid,
+    hasError: passwordHasError,
+    valueChangeHandler: passwordChangeHandler,
+    inputBlurHandler: passwordBlurHandler,
+  } = useInput(isPassword);
+
+  let formIsValid = false;
+  if (enteredPasswordIsValid && enteredEmailIsValid) {
+    formIsValid = true;
+  }
 
   const login = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const email = emailInputRef.current?.value;
-    const password = passwordInputRef.current?.value;
-    dispatch(authActions.loginStart({ email, password }));
+    if (!enteredEmailIsValid || !enteredPasswordIsValid) {
+      return;
+    }
+    dispatch(
+      authActions.loginStart({ email: enteredEmail, password: enteredpassword })
+    );
   };
   return (
     <div className={`${classes.mainContainer} text-light`}>
       <h1>Login</h1>
       <form onSubmit={login}>
-        <div className="form-group mb-4">
-          <label htmlFor="loginEmail">Email address</label>
-          <input
-            type="email"
-            ref={emailInputRef}
-            className="form-control"
-            id="loginEmail"
-            placeholder="Enter email"
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="loginPassword">Password</label>
-          <input
-            type="password"
-            minLength={6}
-            ref={passwordInputRef}
-            className="form-control"
-            id="loginPassword"
-            placeholder="Password"
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary my-3">
+        <Input
+          type="text"
+          id="email"
+          name="Email"
+          value={enteredEmail}
+          onBlur={emailBlurHandler}
+          onChange={emailChangeHandler}
+          hasError={emailHasError}
+        />
+        <Input
+          type="password"
+          id="password"
+          name="password"
+          value={enteredpassword}
+          onBlur={passwordBlurHandler}
+          onChange={passwordChangeHandler}
+          hasError={passwordHasError}
+        />
+        <button
+          type="submit"
+          className="btn btn-primary my-3"
+          disabled={!formIsValid}
+        >
           Submit
         </button>
       </form>

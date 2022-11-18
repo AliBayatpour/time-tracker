@@ -1,13 +1,12 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Item } from "../../../interfaces/item-interface";
-import TimerContext from "../../../context/timer-context";
 import { stringValueGenerator } from "../../../utils/items-utils";
-import { ReactComponent as Trash } from "../../../assets/icons/trash.svg";
-import { ReactComponent as Duplicate } from "../../../assets/icons/duplicate.svg";
-import { ReactComponent as Update } from "../../../assets/icons/update.svg";
-import { ReactComponent as Empty } from "../../../assets/icons/empty.svg";
-import { ReactComponent as TodoList } from "../../../assets/icons/todo-list.svg";
+import trashIcon from "../../../assets/icons/trash.svg";
+import duplicateIcon from "../../../assets/icons/duplicate.svg";
+import updateIcon from "../../../assets/icons/update.svg";
+import emptyIcon from "../../../assets/icons/empty.svg";
+import todoListIcon from "../../../assets/icons/todo-list.svg";
 import { totalTodoTime } from "../../../utils/stat-utils";
 import { convertMinToReadable } from "../../../utils/date-utils";
 import { Dropdown, OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -15,13 +14,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
 import { itemActions } from "../../../store/item/item.slice";
 import MessageModal from "../../shared/message-modal/message-modal.component";
+import {
+  selectIsPaused,
+  selectIsStarted,
+} from "../../../store/timer/timer.selector";
 
 const TodoItems: React.FC = () => {
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   const todoItems = useSelector(selectTodoItems);
-  const dispatch = useDispatch();
-  const timerCtx = useContext(TimerContext);
+  const isPaused = useSelector(selectIsPaused);
+  const isStarted = useSelector(selectIsStarted);
+
+  const [showModal, setShowModal] = useState<boolean>(false);
+
   const updateBtnsRef = useRef<HTMLButtonElement[]>([]);
 
   const onSetShowModal = (val: boolean) => {
@@ -73,8 +79,8 @@ const TodoItems: React.FC = () => {
   // a little function to help us with reordering the result
   const reorder = (list: any, startIndex: any, endIndex: any) => {
     if (
-      (startIndex === 0 && (timerCtx.isStarted || timerCtx.isPaused)) ||
-      (endIndex === 0 && (timerCtx.isStarted || timerCtx.isPaused))
+      (startIndex === 0 && (isStarted || isPaused)) ||
+      (endIndex === 0 && (isStarted || isPaused))
     ) {
       onSetShowModal(true);
       return;
@@ -120,7 +126,7 @@ const TodoItems: React.FC = () => {
       <MessageModal showModal={showModal} onSetShowModal={onSetShowModal} />
 
       <div className="d-flex align-items-center mb-3 mt-5">
-        <TodoList width={30} />
+        <img src={todoListIcon} width={30} alt="todo list" />
         <h2 className="text-primary ms-3 mb-0">Todo Items</h2>
       </div>
       <h5 className="text-light">
@@ -131,7 +137,7 @@ const TodoItems: React.FC = () => {
           <h6 className="text-light text-center text-uppercase mb-0 me-3">
             Todo Empty
           </h6>
-          <Empty width={30} />
+          <img src={emptyIcon} width={30} alt="empty" />
         </div>
       ) : null}
       <DragDropContext onDragEnd={onDragEnd}>
@@ -187,8 +193,7 @@ const TodoItems: React.FC = () => {
                           <input
                             type="number"
                             readOnly={
-                              index === 0 &&
-                              (timerCtx.isStarted || timerCtx.isPaused)
+                              index === 0 && (isStarted || isPaused)
                                 ? true
                                 : false
                             }
@@ -217,7 +222,7 @@ const TodoItems: React.FC = () => {
                             }
                             disabled
                           >
-                            <Update height={20} />
+                            <img src={updateIcon} height={20} alt="update" />
                           </button>
                         </OverlayTrigger>
                       </div>
@@ -236,14 +241,25 @@ const TodoItems: React.FC = () => {
                               onClick={() => handleRemovetask(index)}
                               className="d-flex align-items-center"
                             >
-                              Delete <Trash height={15} className="ms-auto" />
+                              Delete{" "}
+                              <img
+                                src={trashIcon}
+                                alt="trash"
+                                height={15}
+                                className="ms-auto"
+                              />
                             </Dropdown.Item>
                             <Dropdown.Item
                               onClick={() => duplicateItem(item)}
                               className="d-flex align-items-center"
                             >
                               Duplicate
-                              <Duplicate height={15} className="ms-auto" />
+                              <img
+                                src={duplicateIcon}
+                                alt="duplicate"
+                                height={15}
+                                className="ms-auto"
+                              />
                             </Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>

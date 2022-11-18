@@ -1,62 +1,100 @@
-import React, { useRef } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
+import useInput from "../../../hooks/use-input";
 import { authActions } from "../../../store/auth/auth.slice";
+import {
+  isEmail,
+  isNotEmpty,
+  isPassword,
+} from "../../../utils/input-validators-utils";
+import Input from "../../shared/input/input";
 import classes from "./signup.module.scss";
 
 const Signup: React.FC = () => {
   const dispatch = useDispatch();
 
-  const nameInputRef = useRef<HTMLInputElement | null>(null);
-  const emailInputRef = useRef<HTMLInputElement | null>(null);
-  const passwordInputRef = useRef<HTMLInputElement | null>(null);
+  const {
+    value: enteredName,
+    isValid: enteredNameIsValid,
+    hasError: nameHasError,
+    valueChangeHandler: nameChangeHandler,
+    inputBlurHandler: nameBlurHandler,
+  } = useInput(isNotEmpty);
+
+  const {
+    value: enteredEmail,
+    isValid: enteredEmailIsValid,
+    hasError: emailHasError,
+    valueChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+  } = useInput(isEmail);
+
+  const {
+    value: enteredpassword,
+    isValid: enteredPasswordIsValid,
+    hasError: passwordHasError,
+    valueChangeHandler: passwordChangeHandler,
+    inputBlurHandler: passwordBlurHandler,
+  } = useInput(isPassword);
+
+  let formIsValid = false;
+  if (enteredNameIsValid && enteredPasswordIsValid && enteredEmailIsValid) {
+    formIsValid = true;
+  }
 
   const signup = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const name = nameInputRef.current?.value;
-    const email = emailInputRef.current?.value;
-    const password = passwordInputRef.current?.value;
-
-    dispatch(authActions.signupStart({ name, email, password }));
+    if (
+      !enteredNameIsValid ||
+      !enteredEmailIsValid ||
+      !enteredPasswordIsValid
+    ) {
+      return;
+    }
+    dispatch(
+      authActions.signupStart({
+        name: enteredName,
+        email: enteredEmail,
+        password: enteredpassword,
+      })
+    );
   };
   return (
     <div className={`${classes.mainContainer} text-light`}>
       <h1>Signup</h1>
       <form onSubmit={signup}>
-        <div className="form-group">
-          <label htmlFor="signupName">Name</label>
-          <input
-            type="text"
-            ref={nameInputRef}
-            className="form-control"
-            id="signupName"
-            placeholder="Your name"
-            required
-          />
-        </div>
-        <div className="form-group my-4">
-          <label htmlFor="signupEmail">Email address</label>
-          <input
-            type="email"
-            ref={emailInputRef}
-            className="form-control"
-            id="signupEmail"
-            placeholder="Enter email"
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="signupPass">Password</label>
-          <input
-            type="password"
-            minLength={6}
-            ref={passwordInputRef}
-            className="form-control"
-            id="signupPass"
-            placeholder="Password"
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary my-3">
+        <Input
+          type="text"
+          id="name"
+          name="Name"
+          value={enteredName}
+          onBlur={nameBlurHandler}
+          onChange={nameChangeHandler}
+          hasError={nameHasError}
+        />
+        <Input
+          type="email"
+          id="email"
+          name="Email"
+          value={enteredEmail}
+          onBlur={emailBlurHandler}
+          onChange={emailChangeHandler}
+          hasError={emailHasError}
+        />
+        <Input
+          type="password"
+          id="password"
+          name="password"
+          value={enteredpassword}
+          onBlur={passwordBlurHandler}
+          onChange={passwordChangeHandler}
+          hasError={passwordHasError}
+        />
+        <button
+          type="submit"
+          className="btn btn-primary my-3"
+          disabled={!formIsValid}
+        >
           Submit
         </button>
       </form>

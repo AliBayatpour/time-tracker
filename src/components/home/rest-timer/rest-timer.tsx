@@ -1,16 +1,20 @@
-import { useContext, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Countdown, { CountdownTimeDelta } from "react-countdown";
 import classes from "./rest.module.scss";
-import RestTimerContext from "../../../context/rest-timer-context";
 import { convertMinToMilliSec } from "../../../utils/date-utils";
 import { TimerStorage } from "../../../interfaces/item-storage-interface";
+import { useSelector } from "react-redux";
+import { selectRestTime } from "../../../store/rest-timer/rest-timer.selector";
 
 type Props = {
   onChangeShowRestTimer: (val: boolean) => void;
   onPlayAudio: () => void;
 };
 const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
-  const timerCtx = useContext(RestTimerContext);
+  const [date, setDate] = useState<number | null>(null);
+  const [countdown, setCountdown] = useState<Countdown | null>(null);
+
+  const restTime = useSelector(selectRestTime);
 
   useEffect(() => {
     localStorage.removeItem("timer");
@@ -22,23 +26,20 @@ const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
       timer.endTime &&
       timer.endTime - new Date().getTime() > 0
     ) {
-      console.log(timerCtx.restTime);
-      timerCtx.onSetDate(timer.endTime);
+      setDate(timer.endTime);
     } else {
       localStorage.removeItem("timer");
-      timerCtx.onSetDate(Date.now() + convertMinToMilliSec(timerCtx.restTime));
+      setDate(Date.now() + convertMinToMilliSec(restTime));
     }
   }, []);
 
   const setRef = (countdown: Countdown | null): void => {
     if (countdown) {
-      timerCtx.onSetCountdown(countdown);
-      timerCtx.onSetCountdownApi(countdown.getApi());
+      setCountdown(countdown);
     }
   };
 
   const handleComplete = (res: CountdownTimeDelta) => {
-    timerCtx.onSetIsCompleted(true);
     onPlayAudio();
     document.title = `00:00`;
     onChangeShowRestTimer(false);
@@ -49,12 +50,11 @@ const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
   };
 
   const handleFinishClick = () => {
-    if (!timerCtx.countdown?.calcTimeDelta().total) {
+    if (!countdown?.calcTimeDelta().total) {
       return;
     }
     onPlayAudio();
     document.title = `00:00`;
-    timerCtx.onSetIsCompleted(false);
     onChangeShowRestTimer(false);
   };
 
@@ -62,12 +62,12 @@ const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
     <div className="container-lg">
       <h4 className="w-100 text-center text-warning">Rest</h4>
       <div className="w-100 py-4 d-flex justify-content-center bg-dark text-white">
-        {timerCtx.date && (
+        {date && (
           <div className={`${classes["timerContainer"]}`}>
             <Countdown
-              key={timerCtx.date}
+              key={date}
               ref={setRef}
-              date={timerCtx.date}
+              date={date}
               onTick={handleTick}
               onComplete={handleComplete}
               autoStart={true}

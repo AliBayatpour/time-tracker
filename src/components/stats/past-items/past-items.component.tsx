@@ -7,9 +7,9 @@ import {
   getLastNDays,
 } from "../../../utils/date-utils";
 import { totalTime } from "../../../utils/stat-utils";
-import { ReactComponent as Trash } from "../../../assets/icons/trash.svg";
-import { ReactComponent as Update } from "../../../assets/icons/update.svg";
-import { ReactComponent as PastItemsIcon } from "../../../assets/icons/past-items.svg";
+import trashIcon from "../../../assets/icons/trash.svg";
+import updateIcon from "../../../assets/icons/update.svg";
+import pastItemsIcon from "../../../assets/icons/past-items.svg";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectLast14DaysItems,
@@ -81,7 +81,7 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
   return (
     <React.Fragment>
       <div className="d-flex align-items-center mb-3 mt-5">
-        <PastItemsIcon width={28} />
+        <img src={pastItemsIcon} width={28} alt="past items" />
         <h2 className="text-light ms-3 mb-0">Past Done Items</h2>
       </div>
       <p className="text-light">Select the date to see the items and edit</p>
@@ -164,7 +164,7 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
               }
               disabled
             >
-              <Update height={20} />
+              <img src={updateIcon} height={20} alt="update" />
             </button>
           </div>
           <div className={`col-1 mt-4`}>
@@ -173,7 +173,7 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
               onClick={() => handleRemovetask(item)}
               className={`btn btn-light`}
             >
-              <Trash height={20} />
+              <img src={trashIcon} height={20} alt="trash" />
             </button>
           </div>
         </form>
