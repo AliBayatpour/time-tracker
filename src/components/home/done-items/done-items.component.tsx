@@ -12,31 +12,68 @@ import { useDispatch, useSelector } from "react-redux";
 import { totalTime } from "../../../utils/stat-utils";
 import { Dropdown } from "react-bootstrap";
 import { itemActions } from "../../../store/item/item.slice";
+import useInput from "../../../hooks/use-input";
+import {
+  isNotEmpty,
+  isNumWithLimit,
+} from "../../../utils/input-validators-utils";
+import Input from "../../shared/input/input";
 
 const DoneItems: React.FC = () => {
   const doneItems = useSelector(selectDoneItems);
   const dispatch = useDispatch();
   const updateBtnsRef = useRef<HTMLButtonElement[]>([]);
 
+  const {
+    value: enteredCategory,
+    isValid: enteredCategoryIsValid,
+    hasError: categoryHasError,
+    valueChangeHandler: categoryChangeHandler,
+    inputBlurHandler: categoryBlurHandler,
+  } = useInput(isNotEmpty);
+
+  const {
+    value: enteredDescription,
+    isValid: enteredDescriptionIsValid,
+    hasError: descriptionHasError,
+    valueChangeHandler: descriptionChangeHandler,
+    inputBlurHandler: descriptionBlurHandler,
+  } = useInput(isNotEmpty);
+
+  const {
+    value: enteredProgress,
+    isValid: enteredProgressIsValid,
+    hasError: progressHasError,
+    valueChangeHandler: progressChangeHandler,
+    inputBlurHandler: progressBlurHandler,
+  } = useInput(isNumWithLimit);
+
   const updateItem = (event: any, index: number) => {
     event.preventDefault();
+    if (
+      !enteredCategoryIsValid ||
+      !enteredDescriptionIsValid ||
+      !enteredProgressIsValid
+    ) {
+      return;
+    }
     let newItem: Item = {
       ...doneItems[index],
-      category: event.target.elements.category.value,
-      description: event.target.elements.description.value,
+      category: enteredCategory,
+      description: enteredDescription,
       sort: doneItems[index].sort,
-      progress: Number(event.target.elements.progress.value),
+      progress: Number(enteredProgress),
       done: true,
     };
     dispatch(itemActions.updateItemStart(newItem));
     (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
   };
 
-  const onChangeForm = (event: any, item: Item, index: number) => {
+  const onChangeForm = ( item: Item, index: number) => {
     if (
-      event.target.form.elements.category.value === item.category &&
-      event.target.form.elements.description.value === item.description &&
-      Number(event.target.form.elements.progress.value) === item.progress
+      enteredCategory === item.category &&
+      enteredDescription === item.description &&
+      Number(enteredProgress) === item.progress
     ) {
       (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
     } else {
@@ -50,7 +87,7 @@ const DoneItems: React.FC = () => {
   return (
     <React.Fragment>
       <div className="d-flex align-items-center mb-3 mt-5">
-        <img src={doneList} width={30} />
+        <img alt="done" src={doneList} width={30} />
         <h2 className="ms-3 mb-0 text-success">Done Items</h2>
       </div>
 
@@ -60,7 +97,7 @@ const DoneItems: React.FC = () => {
       {doneItems.map((item: Item, index: number) => (
         <form
           key={item.modelID}
-          onChange={(event) => onChangeForm(event, item, index)}
+          onChange={() => onChangeForm(item, index)}
           onSubmit={(event) => updateItem(event, index)}
           className="row d-flex justify-content-center align-items-center my-3 border border-success py-3 position-relative text-light"
         >
@@ -73,45 +110,37 @@ const DoneItems: React.FC = () => {
             </p>
           </div>
           <div className="col-3">
-            <div className="form-group">
-              <label htmlFor="doneCategoryInput">Category</label>
-              <input
-                type="text"
-                name="category"
-                className="form-control"
-                id="doneCategoryInput"
-                placeholder="category"
-                defaultValue={item.category}
-              />
-            </div>
+            <Input
+              type="text"
+              id="category"
+              name="category"
+              value={enteredCategory}
+              onBlur={categoryBlurHandler}
+              onChange={categoryChangeHandler}
+              hasError={categoryHasError}
+            />
           </div>
           <div className="col-6">
-            <div className="form-group">
-              <label htmlFor="doneDescriptionInput">Description</label>
-              <input
-                type="text"
-                name="description"
-                className="form-control"
-                id="doneDescriptionInput"
-                placeholder="Description"
-                defaultValue={item.description}
-              />
-            </div>
+            <Input
+              type="text"
+              id="description"
+              name="description"
+              value={enteredDescription}
+              onBlur={descriptionBlurHandler}
+              onChange={descriptionChangeHandler}
+              hasError={descriptionHasError}
+            />
           </div>
           <div className="col-1">
-            <div className="form-group">
-              <label htmlFor="doneGoalInput">
-                <small>Progress(min)</small>
-              </label>
-              <input
-                type="number"
-                name="progress"
-                className="form-control"
-                id="doneGoalInput"
-                placeholder="Progress (min)"
-                defaultValue={item.progress}
-              />
-            </div>
+            <Input
+              type="number"
+              id="progress"
+              name="progress"
+              value={enteredProgress}
+              onBlur={progressBlurHandler}
+              onChange={progressChangeHandler}
+              hasError={progressHasError}
+            />
           </div>
           <div className={`d-flex col-1 mt-4`}>
             <span
@@ -127,7 +156,7 @@ const DoneItems: React.FC = () => {
               }
               disabled
             >
-              <img src={updateIcon} height={20} />
+              <img src={updateIcon} alt="update" height={20} />
             </button>
           </div>
           <div className={`col-1 mt-4`}>

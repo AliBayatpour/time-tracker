@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Item } from "../../../interfaces/item-interface";
-import { stringValueGenerator } from "../../../utils/items-utils";
 import trashIcon from "../../../assets/icons/trash.svg";
 import duplicateIcon from "../../../assets/icons/duplicate.svg";
 import updateIcon from "../../../assets/icons/update.svg";
@@ -18,6 +17,13 @@ import {
   selectIsPaused,
   selectIsStarted,
 } from "../../../store/timer/timer.selector";
+import { stringValueGenerator } from "../../../utils/string-value-generator-utils";
+import useInput from "../../../hooks/use-input";
+import {
+  isNotEmpty,
+  isNumWithLimit,
+} from "../../../utils/input-validators-utils";
+import Input from "../../shared/input/input";
 
 const TodoItems: React.FC = () => {
   const dispatch = useDispatch();
@@ -28,7 +34,38 @@ const TodoItems: React.FC = () => {
 
   const [showModal, setShowModal] = useState<boolean>(false);
 
+  const {
+    value: enteredCategory,
+    isValid: enteredCategoryIsValid,
+    hasError: categoryHasError,
+    valueChangeHandler: categoryChangeHandler,
+    inputBlurHandler: categoryBlurHandler,
+  } = useInput(isNotEmpty);
+
+  const {
+    value: enteredDescription,
+    isValid: enteredDescriptionIsValid,
+    hasError: descriptionHasError,
+    valueChangeHandler: descriptionChangeHandler,
+    inputBlurHandler: descriptionBlurHandler,
+  } = useInput(isNotEmpty);
+
+  const {
+    value: enteredGoal,
+    isValid: enteredGoalIsValid,
+    hasError: goalHasError,
+    valueChangeHandler: goalChangeHandler,
+    inputBlurHandler: goalBlurHandler,
+  } = useInput(isNumWithLimit);
+
   const updateBtnsRef = useRef<HTMLButtonElement[]>([]);
+
+  const generateSortValue = (): string => {
+    const todoItemsLength = todoItems.length;
+    return todoItemsLength
+      ? stringValueGenerator(todoItems[todoItemsLength - 1].sort)
+      : stringValueGenerator();
+  };
 
   const onSetShowModal = (val: boolean) => {
     setShowModal(val);
@@ -36,6 +73,13 @@ const TodoItems: React.FC = () => {
 
   const updateItem = (event: any, index: number) => {
     event.preventDefault();
+    if (
+      !enteredCategoryIsValid ||
+      !enteredDescriptionIsValid ||
+      !enteredGoalIsValid
+    ) {
+      return;
+    }
 
     let updateBtnDisabledProp = (
       updateBtnsRef.current[index] as HTMLButtonElement
@@ -46,10 +90,10 @@ const TodoItems: React.FC = () => {
     }
     let newItem: Item = {
       ...todoItems[index],
-      category: event.target.elements.category.value,
-      description: event.target.elements.description.value,
+      category: enteredCategory,
+      description: enteredDescription,
       sort: todoItems[index].sort,
-      goal: Number(event.target.elements.goal.value),
+      goal: Number(enteredGoal),
       done: false,
     };
     dispatch(itemActions.updateItemStart(newItem));
@@ -57,14 +101,11 @@ const TodoItems: React.FC = () => {
   };
 
   const duplicateItem = (item: Item) => {
-    const todoItemsLength = todoItems.length;
     let newitem: Item = {
       userId: localStorage.getItem("sub") as string,
       category: item.category,
       description: item.description,
-      sort: todoItemsLength
-        ? stringValueGenerator(todoItems[todoItemsLength - 1].sort)
-        : stringValueGenerator(),
+      sort: generateSortValue(),
       progress: 0,
       goal: item.goal,
       done: false,
@@ -77,7 +118,7 @@ const TodoItems: React.FC = () => {
     dispatch(itemActions.deleteItemStart(todoItems[index]));
   };
   // a little function to help us with reordering the result
-  const reorder = (list: any, startIndex: any, endIndex: any) => {
+  const reorder = (startIndex: any, endIndex: any) => {
     if (
       (startIndex === 0 && (isStarted || isPaused)) ||
       (endIndex === 0 && (isStarted || isPaused))
@@ -104,11 +145,11 @@ const TodoItems: React.FC = () => {
     dispatch(itemActions.updateItemStart(targetItem));
   };
 
-  const onChangeForm = (event: any, item: Item, index: number) => {
+  const onChangeForm = (item: Item, index: number) => {
     if (
-      event.target.form.elements.category.value === item.category &&
-      event.target.form.elements.description.value === item.description &&
-      Number(event.target.form.elements.goal.value) === item.goal
+      enteredCategory === item.category &&
+      enteredDescription === item.description &&
+      Number(enteredGoal) === item.goal
     ) {
       (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
     } else {
@@ -119,7 +160,7 @@ const TodoItems: React.FC = () => {
     if (!result.destination) {
       return;
     }
-    reorder(todoItems, result.source.index, result.destination.index);
+    reorder(result.source.index, result.destination.index);
   };
   return (
     <React.Fragment>
@@ -153,57 +194,49 @@ const TodoItems: React.FC = () => {
                   {(provided, snapshot) => (
                     <form
                       onSubmit={(event) => updateItem(event, index)}
-                      onChange={(event) => onChangeForm(event, item, index)}
+                      onChange={() => onChangeForm(item, index)}
                       className="row text-light d-flex justify-content-center align-items-center my-3 border border-primary py-3"
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >
                       <div className="col-3">
-                        <div className="form-group">
-                          <label htmlFor="todoCategoryInput">Category</label>
-                          <input
-                            type="text"
-                            name="category"
-                            className="form-control"
-                            id="todoCategoryInput"
-                            placeholder="category"
-                            defaultValue={item.category}
-                          />
-                        </div>
+                        <Input
+                          type="text"
+                          id="category"
+                          name="category"
+                          value={enteredCategory}
+                          onBlur={categoryBlurHandler}
+                          onChange={categoryChangeHandler}
+                          hasError={categoryHasError}
+                        />
                       </div>
                       <div className="col-6">
-                        <div className="form-group">
-                          <label htmlFor="todoDescriptionInput">
-                            Description
-                          </label>
-                          <input
-                            type="text"
-                            name="description"
-                            className="form-control"
-                            id="todoDescriptionInput"
-                            placeholder="Description"
-                            defaultValue={item.description}
-                          />
-                        </div>
+                        <Input
+                          type="text"
+                          id="description"
+                          name="description"
+                          value={enteredDescription}
+                          onBlur={descriptionBlurHandler}
+                          onChange={descriptionChangeHandler}
+                          hasError={descriptionHasError}
+                        />
                       </div>
                       <div className="col-1">
-                        <div className="form-group">
-                          <label htmlFor="todoGoalInput">Goal(min)</label>
-                          <input
-                            type="number"
-                            readOnly={
-                              index === 0 && (isStarted || isPaused)
-                                ? true
-                                : false
-                            }
-                            name="goal"
-                            className="form-control"
-                            id="todoGoalInput"
-                            placeholder="Goal(min)"
-                            defaultValue={item.goal}
-                          />
-                        </div>
+                        <Input
+                          type="number"
+                          readonly={
+                            index === 0 && (isStarted || isPaused)
+                              ? true
+                              : false
+                          }
+                          id="goal"
+                          name="goal"
+                          value={enteredGoal}
+                          onBlur={goalBlurHandler}
+                          onChange={goalChangeHandler}
+                          hasError={goalHasError}
+                        />
                       </div>
                       <div className={`d-flex col-1 mt-4`}>
                         <OverlayTrigger

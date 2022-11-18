@@ -17,6 +17,12 @@ import {
   selectLast7DaysItems,
 } from "../../../store/item/item.selector";
 import { itemActions } from "../../../store/item/item.slice";
+import {
+  isNotEmpty,
+  isNumWithLimit,
+} from "../../../utils/input-validators-utils";
+import useInput from "../../../hooks/use-input";
+import Input from "../../shared/input/input";
 
 type Props = {
   nDays: number;
@@ -28,15 +34,47 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
   const last28DaysItems = useSelector(selectLast28DaysItems);
 
   const [selectDate, setSelectDate] = useState<string>("");
+
+  const {
+    value: enteredCategory,
+    isValid: enteredCategoryIsValid,
+    hasError: categoryHasError,
+    valueChangeHandler: categoryChangeHandler,
+    inputBlurHandler: categoryBlurHandler,
+  } = useInput(isNotEmpty);
+
+  const {
+    value: enteredDescription,
+    isValid: enteredDescriptionIsValid,
+    hasError: descriptionHasError,
+    valueChangeHandler: descriptionChangeHandler,
+    inputBlurHandler: descriptionBlurHandler,
+  } = useInput(isNotEmpty);
+
+  const {
+    value: enteredProgress,
+    isValid: enteredProgressIsValid,
+    hasError: progressHasError,
+    valueChangeHandler: progressChangeHandler,
+    inputBlurHandler: progressBlurHandler,
+  } = useInput(isNumWithLimit);
+
   const updateBtnsRef = useRef<HTMLButtonElement[]>([]);
 
   const updateItem = (event: any, item: Item, index: number) => {
     event.preventDefault();
+    if (
+      !enteredCategoryIsValid ||
+      !enteredDescriptionIsValid ||
+      !enteredProgressIsValid
+    ) {
+      return;
+    }
     let newItem: Item = {
       ...item,
-      category: event.target.elements.category.value,
-      description: event.target.elements.description.value,
-      progress: Number(event.target.elements.progress.value),
+      category: enteredCategory,
+      description: enteredDescription,
+      progress: Number(enteredProgress),
     };
     dispatch(itemActions.updateItemStart(newItem));
     (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
@@ -46,11 +84,11 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
     dispatch(itemActions.deleteItemStart(item));
   };
 
-  const onChangeForm = (event: any, item: Item, index: number) => {
+  const onChangeForm = (item: Item, index: number) => {
     if (
-      event.target.form.elements.category.value === item.category &&
-      event.target.form.elements.description.value === item.description &&
-      Number(event.target.form.elements.progress.value) === item.progress
+      enteredCategory === item.category &&
+      enteredDescription === item.description &&
+      Number(enteredProgress) === item.progress
     ) {
       (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
     } else {
@@ -105,50 +143,42 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
       {fileterItems().map((item: Item, index: number) => (
         <form
           key={item.modelID}
-          onChange={(event) => onChangeForm(event, item, index)}
+          onChange={(event) => onChangeForm(item, index)}
           onSubmit={(event) => updateItem(event, item, index)}
           className="row my-3 text-light border-primary border border-secondary py-3 position-relative"
         >
           <div className="col-3">
-            <div className="form-group">
-              <label htmlFor="doneCategoryInput">Category</label>
-              <input
-                type="text"
-                name="category"
-                className="form-control"
-                id="doneCategoryInput"
-                placeholder="category"
-                defaultValue={item.category}
-              />
-            </div>
+            <Input
+              type="text"
+              id="category"
+              name="category"
+              value={enteredCategory}
+              onBlur={categoryBlurHandler}
+              onChange={categoryChangeHandler}
+              hasError={categoryHasError}
+            />
           </div>
           <div className="col-6">
-            <div className="form-group">
-              <label htmlFor="doneDescriptionInput">Description</label>
-              <input
-                type="text"
-                name="description"
-                className="form-control"
-                id="doneDescriptionInput"
-                placeholder="Description"
-                defaultValue={item.description}
-              />
-            </div>
+            <Input
+              type="text"
+              id="description"
+              name="description"
+              value={enteredDescription}
+              onBlur={descriptionBlurHandler}
+              onChange={descriptionChangeHandler}
+              hasError={descriptionHasError}
+            />
           </div>
           <div className="col-1">
-            <div className="form-group">
-              <label htmlFor="doneGoalInput">
-                <small>Progress(min)</small>
-              </label>
-              <input
-                type="number"
-                name="progress"
-                className="form-control"
-                id="doneGoalInput"
-                placeholder="Progress (min)"
-                defaultValue={item.progress}
-              />
-            </div>
+            <Input
+              type="number"
+              id="progress"
+              name="progress"
+              value={enteredProgress}
+              onBlur={progressBlurHandler}
+              onChange={progressChangeHandler}
+              hasError={progressHasError}
+            />
           </div>
           <div className={`d-flex col-1 mt-4`}>
             <span

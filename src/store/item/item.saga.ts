@@ -7,15 +7,16 @@ import {
   PutEffect,
 } from "redux-saga/effects";
 import { Item } from "../../interfaces/item-interface";
+
+import { itemActions, itemCaseReducers, itemSliceName } from "./item.slice";
+import type { Action } from "@reduxjs/toolkit";
 import {
   addItemAsyncReq,
   deleteItemAsyncReq,
   getItemsAsyncReq,
   getLastNDaysItemsAsyncReq,
   updateItemAsyncReq,
-} from "../../utils/items-utils";
-import { itemActions, itemCaseReducers, itemSliceName } from "./item.slice";
-import type { Action } from "@reduxjs/toolkit";
+} from "../utils/item-req-utils";
 
 // GET ITEMS
 export function* fetchItemsAsync(): Generator<

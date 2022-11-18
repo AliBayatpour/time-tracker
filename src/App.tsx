@@ -8,7 +8,7 @@ import Settings from "./pages/settings/settings.page";
 import { selectIsLoggedIn } from "./store/auth/auth.selector";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { clearAuthData, getAuthData } from "./utils/auth-utils";
+import { clearAuthData, getAuthData } from "./utils/token-utils";
 import { authActions } from "./store/auth/auth.slice";
 
 function App() {

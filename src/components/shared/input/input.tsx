@@ -5,11 +5,13 @@ import styles from "./input.module.scss";
 interface Props {
   type: string;
   id: string;
-  value: string;
+  value: string | number;
   name: string;
   onBlur: (event: React.FocusEvent<HTMLInputElement, Element>) => void;
   onChange: (event: React.FocusEvent<HTMLInputElement, Element>) => void;
   hasError: boolean;
+  readonly?: boolean;
+  defaultValue?: string | number;
 }
 
 const Input: React.FC<Props> = (props) => {
@@ -34,6 +36,8 @@ const Input: React.FC<Props> = (props) => {
         value={props.value}
         onBlur={props.onBlur}
         onChange={props.onChange}
+        readOnly={!!props.readonly}
+        defaultValue={props.defaultValue}
       />
       {props.hasError && (
         <p className={styles.errorText}>{errorMessageBuilder()}</p>

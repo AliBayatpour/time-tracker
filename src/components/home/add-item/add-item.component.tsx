@@ -1,5 +1,4 @@
 import { Item } from "../../../interfaces/item-interface";
-import { stringValueGenerator } from "../../../utils/items-utils";
 import Add from "../../../assets/icons/add.svg";
 import addItemIcon from "../../../assets/icons/add-item.svg";
 import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
@@ -7,9 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
 import React from "react";
 import { itemActions } from "../../../store/item/item.slice";
-import { isNotEmpty } from "../../../utils/input-validators-utils";
+import {
+  isNotEmpty,
+  isNumWithLimit,
+} from "../../../utils/input-validators-utils";
 import useInput from "../../../hooks/use-input";
 import Input from "../../shared/input/input";
+import { stringValueGenerator } from "../../../utils/string-value-generator-utils";
 
 const AddItem: React.FC = () => {
   const todoItems = useSelector(selectTodoItems);
@@ -40,7 +43,7 @@ const AddItem: React.FC = () => {
     valueChangeHandler: goalChangeHandler,
     inputBlurHandler: goalBlurHandler,
     reset: resetGoalInput,
-  } = useInput(isNotEmpty);
+  } = useInput(isNumWithLimit);
 
   const generateSortValue = (): string => {
     const todoItemsLength = todoItems.length;

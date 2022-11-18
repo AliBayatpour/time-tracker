@@ -11,5 +11,7 @@ export const isPassword = (value: string): boolean => {
 };
 
 export const isNumWithLimit = (value: string): boolean => {
-  return /^\d+$/.test(value) && value.trim() === value ? true : false;
+  return /^\d+$/.test(value) && value.trim() === value && Number(value) > 0
+    ? true
+    : false;
 };
