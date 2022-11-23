@@ -1,10 +1,8 @@
 import { Item } from "../../../interfaces/item-interface";
-import Add from "../../../assets/icons/add.svg";
-import addItemIcon from "../../../assets/icons/add-item.svg";
-import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { ReactComponent as Add } from "../../../assets/icons/add.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
-import React from "react";
+import React, { useState } from "react";
 import { itemActions } from "../../../store/item/item.slice";
 import {
   isNotEmpty,
@@ -13,10 +11,15 @@ import {
 import useInput from "../../../hooks/use-input";
 import Input from "../../shared/input/input";
 import { stringValueGenerator } from "../../../utils/string-value-generator-utils";
+import Button from "../../shared/button/Button.component";
+import Modal from "../../shared/message-modal/Modal.component";
+import styles from "./add-item.module.scss";
 
 const AddItem: React.FC = () => {
   const todoItems = useSelector(selectTodoItems);
   const dispatch = useDispatch();
+
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const {
     value: enteredCategory,
@@ -86,63 +89,78 @@ const AddItem: React.FC = () => {
     resetDescriptionInput();
     resetGoalInput();
   };
-  return (
-    <React.Fragment>
-      <div className="d-flex align-items-center">
-        <img src={addItemIcon} width={30} alt="add list" />
-        <h2 className="text-light ms-3 mb-0">Add Item</h2>
-      </div>
 
-      <form
-        className="row text-light d-flex justify-content-center align-items-center my-3 border border-secondary py-3 position-relative"
-        onSubmit={addItem}
+  const onSetShowModal = (val: boolean) => {
+    setShowModal(val);
+  };
+
+  return (
+    <div className="row">
+      <Button
+        className={styles.addBut}
+        onClick={() => onSetShowModal(true)}
+        size="fab"
+        variant="tertiary"
       >
-        <div className="col-3">
-          <Input
-            type="text"
-            id="category"
-            name="category"
-            value={enteredCategory}
-            onBlur={categoryBlurHandler}
-            onChange={categoryChangeHandler}
-            hasError={categoryHasError}
-          />
-        </div>
-        <div className="col-6">
-          <Input
-            type="text"
-            id="description"
-            name="description"
-            value={enteredDescription}
-            onBlur={descriptionBlurHandler}
-            onChange={descriptionChangeHandler}
-            hasError={descriptionHasError}
-          />
-        </div>
-        <div className="col-2">
-          <Input
-            type="number"
-            id="goal"
-            name="goal"
-            value={enteredGoal}
-            onBlur={goalBlurHandler}
-            onChange={goalChangeHandler}
-            hasError={goalHasError}
-          />
-        </div>
-        <div className={`col-1 mt-4`}>
-          <OverlayTrigger
-            placement="right"
-            delay={{ show: 250, hide: 400 }}
-            overlay={<Tooltip id="add-but-tooltip">Add Item</Tooltip>}
-          >
+        <Add height={15} />
+      </Button>
+
+      <Modal
+        showModal={showModal}
+        onSetShowModal={onSetShowModal}
+        label="Add Task"
+        variant="primary"
+      >
+        <h2>Add Item</h2>
+        <form onSubmit={addItem}>
+          <div>
+            <Input
+              type="text"
+              id="category"
+              label="Category"
+              value={enteredCategory}
+              onBlur={categoryBlurHandler}
+              onChange={categoryChangeHandler}
+              hasError={categoryHasError}
+            />
+          </div>
+          <div>
+            <Input
+              type="text"
+              id="description"
+              label="Description"
+              value={enteredDescription}
+              onBlur={descriptionBlurHandler}
+              onChange={descriptionChangeHandler}
+              hasError={descriptionHasError}
+            />
+          </div>
+          <div>
+            <Input
+              type="number"
+              id="goal"
+              label="Progress"
+              value={enteredGoal}
+              onBlur={goalBlurHandler}
+              onChange={goalChangeHandler}
+              hasError={goalHasError}
+            />
+          </div>
+          <div className="d-flex mt-4">
             <Button type="submit" variant="primary" disabled={!formIsValid}>
-              <img src={Add} height={15} alt="plus" />
+              Add task
             </Button>
-          </OverlayTrigger>
-        </div>
-      </form>
-    </React.Fragment>
+            <Button
+              className="ms-auto"
+              variant="tertiary"
+              onClick={() => onSetShowModal(false)}
+            >
+              Close
+            </Button>
+          </div>
+        </form>
+      </Modal>
+    </div>
   );
 };
 

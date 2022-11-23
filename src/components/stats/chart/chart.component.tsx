@@ -29,8 +29,8 @@ const Chart: React.FC<Props> = ({ statData }) => {
         sumDay = sumDay + payload.value;
       });
       return (
-        <div className="bg-white badge text-start p-3 text-dark">
-          <p className="label">{`${props.label}, ${getWeekDay(
+        <div>
+          <p>{`${props.label}, ${getWeekDay(
             new Date(props.label).getDay()
           )}`}</p>
           <hr />

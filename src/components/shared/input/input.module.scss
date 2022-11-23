@@ -1,16 +1,70 @@
 .formControl {
   display: flex;
-  justify-content: center;
   flex-direction: column;
-  max-width: 300px;
-  margin: 16px 0;
+  input {
+    outline: none;
+    border: none;
+    height: 45px;
+    border-radius: 20px;
+    font-family: "OpenSansSemiBold";
+  }
+  label {
+    font-family: "OpenSansSemiBold";
+  }
+
+  &--basic {
+    label {
+      color: var(--color-white);
+    }
+    input {
+      color: var(--color-secondary);
+      &::placeholder {
+        color: var(--color-primary-800);
+      }
+    }
+  }
+  &--primary {
+    label {
+      color: var(--color-primary);
+    }
+    input {
+      color: var(--color-secondary);
+      &::placeholder {
+        color: var(--color-primary-800);
+      }
+    }
+  }
+  &--secondary {
+    label {
+      color: var(--color-secondary);
+    }
+    input {
+      &::placeholder {
+        color: var(--color-secondary-800);
+      }
+    }
+  }
+  &--tertiary {
+    label {
+      color: var(--color-tertiary);
+    }
+    input {
+      &::placeholder {
+        color: var(--color-tertiary-800);
+      }
+    }
+  }
   &--invalid {
     input {
-      background-color: var(--color-danger-100);
+      background-color: var(--color-quinary-500);
+      &::placeholder {
+        color: var(--color-white-800);
+      }
     }
   }
 }
 
 .errorText {
-  color: var(--color-danger-500);
+  color: var(--color-quinary);
+  font-size: 13px;
 }

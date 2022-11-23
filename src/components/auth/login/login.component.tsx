@@ -5,6 +5,7 @@ import { authActions } from "../../../store/auth/auth.slice";
 import useInput from "../../../hooks/use-input";
 import Input from "../../shared/input/input";
 import { isEmail, isPassword } from "../../../utils/input-validators-utils";
+import Button from "../../shared/button/Button.component";
 const Login: React.FC = () => {
   const dispatch = useDispatch();
 
@@ -39,13 +40,13 @@ const Login: React.FC = () => {
     );
   };
   return (
-    <div className={`${classes.mainContainer} text-light`}>
+    <div className={`${classes.mainContainer} `}>
       <h1>Login</h1>
       <form onSubmit={login}>
         <Input
           type="text"
           id="email"
-          name="Email"
+          label="Email"
           value={enteredEmail}
           onBlur={emailBlurHandler}
           onChange={emailChangeHandler}
@@ -54,19 +55,19 @@ const Login: React.FC = () => {
         <Input
           type="password"
           id="password"
-          name="password"
+          label="Password"
           value={enteredpassword}
           onBlur={passwordBlurHandler}
           onChange={passwordChangeHandler}
           hasError={passwordHasError}
         />
-        <button
+        <Button
           type="submit"
           className="btn btn-primary my-3"
           disabled={!formIsValid}
         >
           Submit
-        </button>
+        </Button>
       </form>
     </div>
   );

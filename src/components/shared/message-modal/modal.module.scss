@@ -1,0 +1,32 @@
+.backdrop {
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  background-color: var(--color-white-400);
+  backdrop-filter: blur(5px);
+}
+.modal {
+  max-width: 400px;
+  border-radius: 20px;
+  min-height: 200px;
+  max-height: 100vh;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(5px);
+  &__body {
+    background-color: transparent;
+  }
+  &--primary {
+    background-color: var(--color-primary-800);
+  }
+  &--secondary {
+    background-color: var(--color-secondary-800);
+  }
+  &--tertiary {
+    background-color: var(--color-tertiary-800);
+  }
+}

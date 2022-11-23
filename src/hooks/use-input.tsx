@@ -13,6 +13,10 @@ const useInput = (validateValue: (val: string) => boolean) => {
     setEnteredValue(event.target.value);
   };
 
+  const defaultValueHandler = (value: string) => {
+    setEnteredValue(value);
+  };
+
   const inputBlurHandler = (
     event: React.FocusEvent<HTMLInputElement, Element>
   ) => {
@@ -31,6 +35,7 @@ const useInput = (validateValue: (val: string) => boolean) => {
     hasError,
     valueChangeHandler,
     inputBlurHandler,
+    defaultValueHandler,
     reset,
   };
 };

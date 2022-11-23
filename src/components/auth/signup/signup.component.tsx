@@ -60,13 +60,13 @@ const Signup: React.FC = () => {
     );
   };
   return (
-    <div className={`${classes.mainContainer} text-light`}>
+    <div className={`${classes.mainContainer} `}>
       <h1>Signup</h1>
       <form onSubmit={signup}>
         <Input
           type="text"
           id="name"
-          name="Name"
+          label="Name"
           value={enteredName}
           onBlur={nameBlurHandler}
           onChange={nameChangeHandler}
@@ -75,7 +75,7 @@ const Signup: React.FC = () => {
         <Input
           type="email"
           id="email"
-          name="Email"
+          label="Email"
           value={enteredEmail}
           onBlur={emailBlurHandler}
           onChange={emailChangeHandler}
@@ -84,17 +84,13 @@ const Signup: React.FC = () => {
         <Input
           type="password"
           id="password"
-          name="password"
+          label="Password"
           value={enteredpassword}
           onBlur={passwordBlurHandler}
           onChange={passwordChangeHandler}
           hasError={passwordHasError}
         />
-        <button
-          type="submit"
-          className="btn btn-primary my-3"
-          disabled={!formIsValid}
-        >
+        <button type="submit" disabled={!formIsValid}>
           Submit
         </button>
       </form>

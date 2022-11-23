@@ -11,10 +11,9 @@ const Auth: React.FC = () => {
   };
 
   return (
-    <div className={`container-lg ${classes.mainContainer}`}>
+    <div className={`container ${classes.mainContainer}`}>
       {isLogin ? <Login /> : <Signup />}
       <button
-        className="btn btn-secondary btn-block"
         onClick={switchAuthModeHandler}
       >
         Switch to {isLogin ? "signup" : "login"}

@@ -1,0 +1,27 @@
+$sidebarSize: 100px;
+
+.sidebar {
+  transition: all 0.5s ease;
+  top: 0;
+  left: -$sidebarSize;
+  width: $sidebarSize;
+  z-index: 2;
+  height: 100vh;
+  border-right: 3px red solid;
+  overflow: visible;
+  &--show {
+    left: 0;
+  }
+}
+
+.menuTrigger {
+  margin-left: auto;
+  transform: translate(calc(100% + 5px), calc(50vh - 50%));
+  transition: all 0.5s ease;
+  z-index: 4;
+
+  &--show {
+    transform: translate(0, calc(50vh - 50%));
+    margin: 0 auto;
+  }
+}

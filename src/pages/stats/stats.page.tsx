@@ -1,9 +1,4 @@
 import React, { useEffect, useState } from "react";
-
-import Chart from "../../components/stats/chart/chart.component";
-import { Tab, Tabs } from "react-bootstrap";
-import DetailStat from "../../components/stats/detail-stat/detail-stat.component";
-import PastItems from "../../components/stats/past-items/past-items.component";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectLast14DaysItems,
@@ -79,8 +74,8 @@ const Stats: React.FC = () => {
   };
 
   return (
-    <div className="container-lg">
-      <Tabs
+    <div className="container">
+      {/* <Tabs
         id="controlled-tab-example"
         activeKey={key}
         onSelect={(tabName) => onSelectTab(tabName)}
@@ -131,7 +126,7 @@ const Stats: React.FC = () => {
           />
           <PastItems nDays={360} />
         </Tab>
-      </Tabs>
+      </Tabs> */}
     </div>
   );
 };

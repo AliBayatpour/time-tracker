@@ -5,6 +5,7 @@ import { convertMinToMilliSec } from "../../../utils/date-utils";
 import { TimerStorage } from "../../../interfaces/item-storage-interface";
 import { useSelector } from "react-redux";
 import { selectRestTime } from "../../../store/rest-timer/rest-timer.selector";
+import Button from "../../shared/button/Button.component";
 
 type Props = {
   onChangeShowRestTimer: (val: boolean) => void;
@@ -59,9 +60,9 @@ const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
   };
 
   return (
-    <div className="container-lg">
+    <div className="container">
       <h4 className="w-100 text-center text-warning">Rest</h4>
-      <div className="w-100 py-4 d-flex justify-content-center bg-dark text-white">
+      <div className="w-100 py-4 d-flex justify-content-center">
         {date && (
           <div className={`${classes["timerContainer"]}`}>
             <Countdown
@@ -74,13 +75,9 @@ const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
               className="d-flex justify-content-center"
             />
             <div className="mt-4 w-100 d-flex justify-content-center">
-              <button
-                className="btn btn-secondary btn-lg"
-                type="button"
-                onClick={handleFinishClick}
-              >
+              <Button className="btn" type="button" onClick={handleFinishClick}>
                 Skip
-              </button>
+              </Button>
             </div>
           </div>
         )}

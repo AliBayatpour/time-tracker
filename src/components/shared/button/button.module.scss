@@ -1,0 +1,60 @@
+.btn {
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  font-family: "OpenSansSemiBold";
+  text-decoration: none;
+  font-size: 14px;
+
+  &:hover {
+    transition: opacity 0.2s;
+    opacity: 0.85;
+  }
+  &--basic {
+    background-color: var(--color-white);
+    padding: 8px 16px;
+    color: var(--color-secondary);
+  }
+  &--large {
+    padding: 10px 22px;
+    font-size: 16px;
+  }
+  &--fab {
+    position: fixed;
+    right: 5vw;
+    bottom: 5vh;
+    border-radius: 50%;
+    padding: 0;
+    width: 65px;
+    height: 65px;
+    padding: 0px !important;
+  }
+  &--default {
+    padding: 8px 16px;
+  }
+  &--primary {
+    background-color: var(--color-primary);
+    color: var(--color-tertiary);
+
+  }
+  &--secondary {
+    background-color: var(--color-secondary);
+  }
+  &--tertiary {
+    background-color: var(--color-tertiary);
+    color: var(--color-primary);
+    svg {
+      width: 25px;
+      height: 25px;
+      path {
+        fill: var(--color-primary);
+      }
+    }
+  }
+  &--round {
+    border-radius: 50%;
+    padding: 10px;
+  }
+}

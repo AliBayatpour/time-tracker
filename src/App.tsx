@@ -1,6 +1,6 @@
 import "./App.scss";
 import Layout from "./components/Layout/Layout.component";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./pages/home/home.page";
 import Stats from "./pages/stats/stats.page";
 import Auth from "./pages/auth/auth.page";
@@ -53,16 +53,14 @@ function App() {
   };
 
   return (
-    <Layout>
-      <Routes>
-        {isLoggedIn && <Route path="/" element={<Home />} />}
-        {isLoggedIn && <Route path="/stats" element={<Stats />} />}
-        {isLoggedIn && <Route path="/settings" element={<Settings />} />}
-        {!isLoggedIn && <Route path="/auth" element={<Auth />} />}
-        {isLoggedIn && <Route path="*" element={<Navigate to="/" />} />}
-        <Route path="*" element={<Navigate to="/auth" />} />
-      </Routes>
-    </Layout>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        {isLoggedIn && <Route index element={<Home />} />}
+        {isLoggedIn && <Route path="stats" element={<Stats />} />}
+        {isLoggedIn && <Route path="settings" element={<Settings />} />}
+      </Route>
+      {!isLoggedIn && <Route path="/auth" element={<Auth />} />}
+    </Routes>
   );
 }
 

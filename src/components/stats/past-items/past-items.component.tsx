@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import { Form } from "react-bootstrap";
 import { Item } from "../../../interfaces/item-interface";
 import {
   convertMinToReadable,
@@ -41,6 +40,7 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
     hasError: categoryHasError,
     valueChangeHandler: categoryChangeHandler,
     inputBlurHandler: categoryBlurHandler,
+    defaultValueHandler: categoryDefaultValueHandler,
   } = useInput(isNotEmpty);
 
   const {
@@ -49,6 +49,7 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
     hasError: descriptionHasError,
     valueChangeHandler: descriptionChangeHandler,
     inputBlurHandler: descriptionBlurHandler,
+    defaultValueHandler: descriptioDefaultValueHandler,
   } = useInput(isNotEmpty);
 
   const {
@@ -57,6 +58,7 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
     hasError: progressHasError,
     valueChangeHandler: progressChangeHandler,
     inputBlurHandler: progressBlurHandler,
+    defaultValueHandler: progressDefaultValueHandler,
   } = useInput(isNumWithLimit);
 
   const updateBtnsRef = useRef<HTMLButtonElement[]>([]);
@@ -84,18 +86,6 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
     dispatch(itemActions.deleteItemStart(item));
   };
 
-  const onChangeForm = (item: Item, index: number) => {
-    if (
-      enteredCategory === item.category &&
-      enteredDescription === item.description &&
-      Number(enteredProgress) === item.progress
-    ) {
-      (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
-    } else {
-      (updateBtnsRef.current[index] as HTMLButtonElement).disabled = false;
-    }
-  };
-
   const fileterItems = (): Item[] => {
     let items: Item[] = [];
     switch (nDays) {
@@ -120,10 +110,10 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
     <React.Fragment>
       <div className="d-flex align-items-center mb-3 mt-5">
         <img src={pastItemsIcon} width={28} alt="past items" />
-        <h2 className="text-light ms-3 mb-0">Past Done Items</h2>
+        <h2 className=" ms-3 mb-0">Past Done Items</h2>
       </div>
-      <p className="text-light">Select the date to see the items and edit</p>
-      <Form.Select
+      <p>Select the date to see the items and edit</p>
+      {/* <Form.Select
         aria-label="Select Date"
         value={selectDate}
         onChange={(event: any) => setSelectDate(event.target.value)}
@@ -136,48 +126,53 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
               {val}
             </option>
           ))}
-      </Form.Select>
-      <h5 className="text-light my-3">
+      </Form.Select> */}
+      <h5 className=" my-3">
         Total Time: (<b>{convertMinToReadable(totalTime(fileterItems()))}</b>)
       </h5>
       {fileterItems().map((item: Item, index: number) => (
         <form
           key={item.modelID}
-          onChange={(event) => onChangeForm(item, index)}
           onSubmit={(event) => updateItem(event, item, index)}
-          className="row my-3 text-light border-primary border border-secondary py-3 position-relative"
+          className="row my-3 py-3 position-relative"
         >
           <div className="col-3">
             <Input
               type="text"
               id="category"
-              name="category"
+              label="Category"
               value={enteredCategory}
               onBlur={categoryBlurHandler}
               onChange={categoryChangeHandler}
               hasError={categoryHasError}
+              onDefaultValue={categoryDefaultValueHandler}
+              defaultValue={item.category}
             />
           </div>
           <div className="col-6">
             <Input
               type="text"
               id="description"
-              name="description"
+              label="Description"
               value={enteredDescription}
               onBlur={descriptionBlurHandler}
               onChange={descriptionChangeHandler}
               hasError={descriptionHasError}
+              onDefaultValue={descriptioDefaultValueHandler}
+              defaultValue={item.description}
             />
           </div>
           <div className="col-1">
             <Input
               type="number"
               id="progress"
-              name="progress"
+              label="Progress"
               value={enteredProgress}
               onBlur={progressBlurHandler}
               onChange={progressChangeHandler}
               hasError={progressHasError}
+              onDefaultValue={progressDefaultValueHandler}
+              defaultValue={item.progress.toString()}
             />
           </div>
           <div className={`d-flex col-1 mt-4`}>
@@ -188,7 +183,6 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
 
             <button
               type="submit"
-              className={`btn btn-light`}
               ref={(elem) =>
                 (updateBtnsRef.current[index] = elem as HTMLButtonElement)
               }
@@ -198,11 +192,7 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
             </button>
           </div>
           <div className={`col-1 mt-4`}>
-            <button
-              type="button"
-              onClick={() => handleRemovetask(item)}
-              className={`btn btn-light`}
-            >
+            <button type="button" onClick={() => handleRemovetask(item)}>
               <img src={trashIcon} height={20} alt="trash" />
             </button>
           </div>

@@ -1,6 +1,5 @@
 import { UserRes } from "../interfaces/user-res-interface";
 
-
 export const calculateRemainingTime = (
   expirationTime: UserRes["standardClaims"]["exp"]
 ) => {
@@ -48,4 +47,3 @@ export const getAuthData = (): {
   }
   return null;
 };
-

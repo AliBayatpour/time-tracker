@@ -13,6 +13,7 @@ import {
   selectIsPaused,
   selectIsStarted,
 } from "../../../store/timer/timer.selector";
+import Button from "../../shared/button/Button.component";
 
 type Props = {
   onChangeShowRestTimer: (val: boolean) => void;
@@ -182,14 +183,12 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
   };
 
   return (
-    <div className="container-lg">
-      <h4 className="w-100 text-center text-primary">
-        {todoItems[0]?.category}
-      </h4>
+    <div className="container">
+      <h3 className="w-100 text-center text-white">{todoItems[0]?.category}</h3>
 
-      <div className="w-100 py-4 d-flex justify-content-center bg-dark text-white">
+      <div className="w-100 py-4 d-flex justify-content-center">
         {date && (
-          <div className={`${classes["timerContainer"]}`}>
+          <div className={`${classes["timerContainer"]} text-tertiary`}>
             <Countdown
               key={date}
               ref={setRef}
@@ -202,38 +201,42 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
               className="d-flex justify-content-center"
             />
             <div className="mt-4 w-100 d-flex justify-content-center">
-              <button
+              <Button
                 type="button"
-                className="btn btn-secondary btn-lg"
+                size="large"
+                className="btn"
                 onClick={handleStartClick}
                 disabled={isStarted}
               >
                 Start
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
-                className="btn btn-secondary btn-lg mx-3"
+                size="large"
+                className="btn mx-3"
                 onClick={handlePauseClick}
                 disabled={isPaused || isCompleted || !isStarted}
               >
                 Pause
-              </button>
-              <button
-                className="btn btn-secondary btn-lg mx-3"
+              </Button>
+              <Button
+                className="btn mx-3"
+                size="large"
                 disabled={isCompleted || (!isStarted && !isPaused)}
                 type="button"
                 onClick={handleResetClick}
               >
                 Reset
-              </button>
-              <button
-                className="btn btn-secondary btn-lg"
+              </Button>
+              <Button
+                className="btn"
+                size="large"
                 disabled={isCompleted || (!isStarted && !isPaused)}
                 type="button"
                 onClick={handleFinishClick}
               >
                 Finish
-              </button>
+              </Button>
             </div>
           </div>
         )}

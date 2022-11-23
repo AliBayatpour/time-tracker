@@ -1,25 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { inputErrorMessages } from "../../../constants/input-error-messages-constants";
 import styles from "./input.module.scss";
 
-interface Props {
+type Props = {
   type: string;
   id: string;
   value: string | number;
-  name: string;
+  label: string;
   onBlur: (event: React.FocusEvent<HTMLInputElement, Element>) => void;
   onChange: (event: React.FocusEvent<HTMLInputElement, Element>) => void;
   hasError: boolean;
   readonly?: boolean;
-  defaultValue?: string | number;
-}
+  onDefaultValue?: (val: string) => void;
+  defaultValue?: string;
+  variant?: "primary" | "secondary" | "tertiary" | "basic";
+};
 
 const Input: React.FC<Props> = (props) => {
+  useEffect(() => {
+    if (props.defaultValue && props.onDefaultValue) {
+      props.onDefaultValue(props.defaultValue);
+    }
+  }, []);
+
   const errorMessageBuilder = (): string => {
-    if (props.name in inputErrorMessages) {
-      return inputErrorMessages[props.name as keyof typeof inputErrorMessages];
+    if (props.label in inputErrorMessages) {
+      return inputErrorMessages[props.label as keyof typeof inputErrorMessages];
     } else {
-      return `${props.name} is not valid`;
+      return "";
     }
   };
 
@@ -27,9 +35,11 @@ const Input: React.FC<Props> = (props) => {
     <div
       className={`${styles.formControl} ${
         props.hasError ? styles["formControl--invalid"] : undefined
-      }`}
+      } ${styles["formControl--" + (props.variant ?? "basic")]} mb-2`}
     >
-      <label htmlFor={props.id}>{props.name}</label>
+      <label htmlFor={props.id} className="mb-1">
+        {props.label}:
+      </label>
       <input
         type={props.type}
         id={props.id}
@@ -37,10 +47,13 @@ const Input: React.FC<Props> = (props) => {
         onBlur={props.onBlur}
         onChange={props.onChange}
         readOnly={!!props.readonly}
-        defaultValue={props.defaultValue}
+        placeholder={props.label}
+        className="py-1 px-2"
       />
-      {props.hasError && (
-        <p className={styles.errorText}>{errorMessageBuilder()}</p>
+      {props.hasError && errorMessageBuilder() && (
+        <small className={`ps-1 pt-1 ${styles.errorText}`}>
+          {errorMessageBuilder()}
+        </small>
       )}
     </div>
   );

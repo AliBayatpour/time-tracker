@@ -12,11 +12,17 @@ const Items: React.FC = () => {
     dispatch(itemActions.fetchItemsStart());
   }, []);
   return (
-    <div className="container-lg mt-5">
-      <AddItem />
-      <TodoItems />
-      <DoneItems />
-    </div>
+    <React.Fragment>
+      <div className="row">
+        <AddItem />
+        <div className="col-12 col-lg-6">
+          <TodoItems />
+        </div>
+        <div className="col-12 col-lg-6">
+          <DoneItems />
+        </div>
+      </div>
+    </React.Fragment>
   );
 };
 export default Items;
