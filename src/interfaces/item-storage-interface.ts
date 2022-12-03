@@ -1,5 +1,5 @@
 export type TimerStorage = {
-  modelID?: string;
+  id?: string;
   endTime?: number;
   autoStart: boolean;
   duration?: number;

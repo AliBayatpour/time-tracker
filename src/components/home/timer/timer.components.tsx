@@ -41,8 +41,8 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
     }
     if (
       todoItems &&
-      timer?.modelID &&
-      timer?.modelID !== todoItems[0].modelID
+      timer?.id &&
+      timer?.id !== todoItems[0].id
     ) {
       localStorage.removeItem("timer");
     }
@@ -109,7 +109,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
   const handleStart = (res: any) => {
     localStorage.removeItem("timer");
     let itemToSet: TimerStorage = {
-      modelID: todoItems[0].modelID as string,
+      id: todoItems[0].id as string,
       endTime: Date.now() + res.total,
       autoStart: true,
     };
@@ -122,7 +122,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
   const handlePause = (res: CountdownTimeDelta): void => {
     localStorage.removeItem("timer");
     let itemToSet: TimerStorage = {
-      modelID: todoItems[0].modelID as string,
+      id: todoItems[0].id as string,
       autoStart: false,
       duration: res.total,
     };

@@ -8,7 +8,7 @@ export const loginAsyncReq = async (
 ): Promise<UserRes | null> => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACK_END_URL}/auth/login`,
+      `${process.env.REACT_APP_BACK_END_URL}/users/login`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -27,6 +27,7 @@ export const loginAsyncReq = async (
     }
     return null;
   } catch (error) {
+    console.log(console.log(error));
     throw new Error("Error happened");
   }
 };
@@ -36,7 +37,7 @@ export const signupAsyncReq = async (
 ): Promise<UserRes | null> => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACK_END_URL}/auth/signup`,
+      `${process.env.REACT_APP_BACK_END_URL}/users/signup`,
       {
         method: "POST",
         body: JSON.stringify({

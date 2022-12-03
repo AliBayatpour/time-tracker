@@ -132,7 +132,7 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
       </h5>
       {fileterItems().map((item: Item, index: number) => (
         <form
-          key={item.modelID}
+          key={item.id}
           onSubmit={(event) => updateItem(event, item, index)}
           className="row my-3 py-3 position-relative"
         >

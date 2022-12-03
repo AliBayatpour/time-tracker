@@ -4,7 +4,7 @@ import { Item } from "../../interfaces/item-interface";
 export const getItemsAsyncReq = async (): Promise<Item[] | []> => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACK_END_URL}/item/`,
+      `${process.env.REACT_APP_BACK_END_URL}/items/`,
       {
         method: "GET",
         headers: {
@@ -31,7 +31,7 @@ export const getItemsAsyncReq = async (): Promise<Item[] | []> => {
 export const addItemAsyncReq = async (item: Item): Promise<Response> => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACK_END_URL}/item/`,
+      `${process.env.REACT_APP_BACK_END_URL}/items/`,
       {
         method: "POST",
         body: JSON.stringify(item),
@@ -51,7 +51,7 @@ export const addItemAsyncReq = async (item: Item): Promise<Response> => {
 export const updateItemAsyncReq = async (item: Item): Promise<Response> => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACK_END_URL}/item/`,
+      `${process.env.REACT_APP_BACK_END_URL}/items/`,
       {
         method: "PATCH",
         body: JSON.stringify(item),
@@ -71,7 +71,7 @@ export const updateItemAsyncReq = async (item: Item): Promise<Response> => {
 export const deleteItemAsyncReq = async (item: Item): Promise<Response> => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACK_END_URL}/item/`,
+      `${process.env.REACT_APP_BACK_END_URL}/items/`,
       {
         method: "DELETE",
         body: JSON.stringify(item),
@@ -93,7 +93,7 @@ export const getLastNDaysItemsAsyncReq = async (
 ): Promise<Item[] | []> => {
   try {
     const response = await fetch(
-      `${process.env.REACT_APP_BACK_END_URL}/item/last-n-days/${nDays}`,
+      `${process.env.REACT_APP_BACK_END_URL}/items/last-n-days/${nDays}`,
       {
         method: "GET",
         headers: {

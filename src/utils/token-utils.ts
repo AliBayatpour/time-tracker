@@ -1,8 +1,6 @@
 import { UserRes } from "../interfaces/user-res-interface";
 
-export const calculateRemainingTime = (
-  expirationTime: UserRes["standardClaims"]["exp"]
-) => {
+export const calculateRemainingTime = (expirationTime: UserRes["exp"]) => {
   const currentTime = new Date().getTime();
   const tokenExpiration = Number(expirationTime);
   const remainingExpTime = tokenExpiration - currentTime;
@@ -10,9 +8,10 @@ export const calculateRemainingTime = (
 };
 
 export const saveAuthData = (userRes: UserRes) => {
+  console.log(userRes);
   localStorage.setItem("access_token", userRes.access_token);
-  localStorage.setItem("exp", userRes.standardClaims.exp.toString());
-  localStorage.setItem("sub", userRes.standardClaims.sub);
+  localStorage.setItem("exp", userRes.exp.toString());
+  localStorage.setItem("sub", userRes.sub);
 };
 
 export const clearAuthData = () => {

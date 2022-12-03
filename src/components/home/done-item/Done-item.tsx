@@ -63,7 +63,7 @@ const DoneItem: React.FC<Props> = ({ item, index }) => {
     dispatch(itemActions.updateItemStart(newItem));
   };
   return (
-    <form key={item.modelID} onSubmit={(event) => updateItem(event, index)}>
+    <form key={item.id} onSubmit={(event) => updateItem(event, index)}>
       <div className="text-primary">
         <b>
           Finished at: <b>{convertDateNumToTime(item.finished_at)}</b>

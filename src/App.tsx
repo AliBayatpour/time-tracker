@@ -18,7 +18,6 @@ function App() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const navigate = useNavigate();
 
-  // autologin
   useEffect(() => {
     loginHandler();
   }, []);
