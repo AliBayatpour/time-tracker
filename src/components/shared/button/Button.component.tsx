@@ -6,7 +6,7 @@ type Props = {
   variant?: "primary" | "secondary" | "tertiary" | "basic";
   type?: "button" | "submit" | "reset" | undefined;
   disabled?: boolean;
-  children?: JSX.Element | string;
+  children?: JSX.Element | JSX.Element[] | string | React.ReactNode;
   className?: string;
   size?: "default" | "large" | "small" | "fab" | "round";
   role?: "button" | "link";

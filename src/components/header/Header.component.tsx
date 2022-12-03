@@ -6,6 +6,7 @@ import { ReactComponent as Home } from "../../assets/icons/home.svg";
 import { ReactComponent as Settings } from "../../assets/icons/settings.svg";
 import { ReactComponent as Charts } from "../../assets/icons/charts.svg";
 import { ReactComponent as Logout } from "../../assets/icons/logout.svg";
+import { ReactComponent as ArrowForward } from "../../assets/icons/arrow-forward.svg";
 import { useState } from "react";
 
 const Header: React.FC = () => {
@@ -20,18 +21,8 @@ const Header: React.FC = () => {
     <div
       className={`${styles.sidebar} ${
         styles[`sidebar--${showSidebar && "show"}`]
-      } position-fixed bg-mirror-primary`}
+      } position-fixed`}
     >
-      <Button
-        size="round"
-        variant="tertiary"
-        onClick={() => setShowSidebar((prev) => !prev)}
-        className={`${styles.menuTrigger} ${
-          styles[`menuTrigger--${showSidebar && "show"}`]
-        }`}
-      >
-        <Logout />
-      </Button>
       <nav className={`container`}>
         <div className="row">
           <div
@@ -39,8 +30,18 @@ const Header: React.FC = () => {
           >
             <Button
               size="round"
-              className="mb-5"
-              variant="tertiary"
+              variant="primary"
+              onClick={() => setShowSidebar((prev) => !prev)}
+              className={`position-fixed ${styles.menuTrigger} ${
+                styles[`menuTrigger--${showSidebar && "show"}`]
+              }`}
+            >
+              <ArrowForward />
+            </Button>
+            <Button
+              size="round"
+              className="my-3"
+              variant="primary"
               role="link"
               to="/"
             >
@@ -48,8 +49,8 @@ const Header: React.FC = () => {
             </Button>
             <Button
               size="round"
-              className="mb-5"
-              variant="tertiary"
+              className="my-3"
+              variant="primary"
               role="link"
               to="/stats"
             >
@@ -57,14 +58,19 @@ const Header: React.FC = () => {
             </Button>
             <Button
               size="round"
-              className="mb-5"
-              variant="tertiary"
+              className="my-3"
+              variant="primary"
               role="link"
               to="/settings"
             >
               <Settings />
             </Button>
-            <Button size="round" variant="tertiary" onClick={onLogoutHandler}>
+            <Button
+              size="round"
+              className="mt-3"
+              variant="primary"
+              onClick={onLogoutHandler}
+            >
               <Logout />
             </Button>
           </div>

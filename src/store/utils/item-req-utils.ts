@@ -16,12 +16,8 @@ export const getItemsAsyncReq = async (): Promise<Item[] | []> => {
     if (!response.ok) {
       throw new Error("Request failed!");
     }
-    const json = (await response.json()) as Item[];
-    if (json.length) {
-      return json;
-    } else {
-      return [];
-    }
+    const json = (await response.json()) as { items: Item[] };
+    return json.items;
   } catch (error) {
     throw new Error("Index Out of Bounds");
   }

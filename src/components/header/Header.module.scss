@@ -7,21 +7,26 @@ $sidebarSize: 100px;
   width: $sidebarSize;
   z-index: 2;
   height: 100vh;
-  border-right: 3px red solid;
   overflow: visible;
+  border-right: 1px var(--color-tertiary) dashed;
+  background-color: var(--color-white-400);
   &--show {
     left: 0;
+  }
+
+  &__navBox {
+    height: 100vh;
   }
 }
 
 .menuTrigger {
-  margin-left: auto;
-  transform: translate(calc(100% + 5px), calc(50vh - 50%));
-  transition: all 0.5s ease;
   z-index: 4;
-
+  transform-origin: center;
+  top: calc(50% - 10px);
+  left: 0;
+  transition: all 0.5s ease !important;
   &--show {
-    transform: translate(0, calc(50vh - 50%));
-    margin: 0 auto;
+    transform: rotate(180deg);
+    left: calc(99px - 20px);
   }
 }

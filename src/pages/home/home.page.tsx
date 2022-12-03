@@ -7,6 +7,7 @@ import { convertMinToMilliSec } from "../../utils/date-utils";
 import ringer from "../../assets/ringtones/win-10.mp3";
 import { selectRestTime } from "../../store/rest-timer/rest-timer.selector";
 import { useSelector } from "react-redux";
+import AddItem from "../../components/home/add-item/add-item.component";
 
 const Home: React.FC = () => {
   const audio = new Audio(ringer);
@@ -38,6 +39,7 @@ const Home: React.FC = () => {
   };
   return (
     <React.Fragment>
+      <AddItem />
       {!restTimer && (
         <Timer
           onChangeShowRestTimer={onChangeShowRestTimer}

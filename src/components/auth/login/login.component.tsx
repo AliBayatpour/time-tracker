@@ -6,7 +6,12 @@ import useInput from "../../../hooks/use-input";
 import Input from "../../shared/input/input";
 import { isEmail, isPassword } from "../../../utils/input-validators-utils";
 import Button from "../../shared/button/Button.component";
-const Login: React.FC = () => {
+
+type Props = {
+  switchAuthModeHandler: () => void;
+};
+
+const Login: React.FC<Props> = ({ switchAuthModeHandler }) => {
   const dispatch = useDispatch();
 
   const {
@@ -41,7 +46,7 @@ const Login: React.FC = () => {
   };
   return (
     <div className={`${classes.mainContainer} `}>
-      <h1>Login</h1>
+      <h1 className="mb-4">Login</h1>
       <form onSubmit={login}>
         <Input
           type="text"
@@ -61,13 +66,16 @@ const Login: React.FC = () => {
           onChange={passwordChangeHandler}
           hasError={passwordHasError}
         />
-        <Button
-          type="submit"
-          className="btn btn-primary my-3"
-          disabled={!formIsValid}
-        >
-          Submit
-        </Button>
+        <div className="d-flex my-3">
+          <Button
+            type="submit"
+            variant="secondary"
+            disabled={!formIsValid}
+          >
+            Submit
+          </Button>
+          <Button onClick={switchAuthModeHandler} className="ms-3">Switch to sign up</Button>
+        </div>
       </form>
     </div>
   );

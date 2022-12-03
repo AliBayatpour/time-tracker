@@ -7,10 +7,15 @@ import {
   isNotEmpty,
   isPassword,
 } from "../../../utils/input-validators-utils";
+import Button from "../../shared/button/Button.component";
 import Input from "../../shared/input/input";
 import classes from "./signup.module.scss";
 
-const Signup: React.FC = () => {
+type Props = {
+  switchAuthModeHandler: () => void;
+};
+
+const Signup: React.FC<Props> = ({ switchAuthModeHandler }) => {
   const dispatch = useDispatch();
 
   const {
@@ -61,7 +66,7 @@ const Signup: React.FC = () => {
   };
   return (
     <div className={`${classes.mainContainer} `}>
-      <h1>Signup</h1>
+      <h1 className="mb-4">Sign up</h1>
       <form onSubmit={signup}>
         <Input
           type="text"
@@ -90,9 +95,14 @@ const Signup: React.FC = () => {
           onChange={passwordChangeHandler}
           hasError={passwordHasError}
         />
-        <button type="submit" disabled={!formIsValid}>
-          Submit
-        </button>
+        <div className="d-flex my-3">
+          <Button type="submit" variant="secondary" disabled={!formIsValid}>
+            Submit
+          </Button>
+          <Button onClick={switchAuthModeHandler} className="ms-3">
+            Switch to log in
+          </Button>
+        </div>
       </form>
     </div>
   );
