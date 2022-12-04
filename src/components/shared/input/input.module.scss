@@ -1,0 +1,82 @@
+.formControl {
+  display: flex;
+  flex-direction: column;
+  input {
+    height: 45px;
+  }
+  textarea {
+    resize: none;
+  }
+
+  input,
+  textarea {
+    outline: none;
+    border: none;
+    border-radius: 20px;
+    font-family: "OpenSansSemiBold";
+  }
+  label {
+    font-family: "OpenSansSemiBold";
+  }
+
+  &--basic {
+    label {
+      color: var(--color-white);
+    }
+    input,
+    textarea {
+      color: var(--color-secondary);
+      &::placeholder {
+        color: var(--color-primary-800);
+      }
+    }
+  }
+  &--primary {
+    label {
+      color: var(--color-primary);
+    }
+    input,
+    textarea {
+      color: var(--color-secondary);
+      &::placeholder {
+        color: var(--color-primary-800);
+      }
+    }
+  }
+  &--secondary {
+    label {
+      color: var(--color-secondary);
+    }
+    input,
+    textarea {
+      &::placeholder {
+        color: var(--color-secondary-800);
+      }
+    }
+  }
+  &--tertiary {
+    label {
+      color: var(--color-tertiary);
+    }
+    input,
+    textarea {
+      &::placeholder {
+        color: var(--color-tertiary-800);
+      }
+    }
+  }
+  &--invalid {
+    input,
+    textarea {
+      background-color: var(--color-quinary-500);
+      &::placeholder {
+        color: var(--color-white-800);
+      }
+    }
+  }
+}
+
+.errorText {
+  color: var(--color-quinary);
+  font-size: 13px;
+}

@@ -1,31 +1,37 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Items from "../../components/home/items/items.component";
 import RestTimer from "../../components/home/rest-timer/rest-timer";
 import Timer from "../../components/home/timer/timer.components";
-import MessageModal from "../../components/shared/message-modal/message-modal.component";
-import RestTimerContext from "../../context/rest-timer-context";
-import { TimerStorageInterface } from "../../interfaces/item-storage-interface";
+import { TimerStorage } from "../../interfaces/item-storage-interface";
 import { convertMinToMilliSec } from "../../utils/date-utils";
-import classes from "./home.module.scss";
 import ringer from "../../assets/ringtones/win-10.mp3";
+import { selectRestTime } from "../../store/rest-timer/rest-timer.selector";
+import { useDispatch, useSelector } from "react-redux";
+import AddItem from "../../components/home/add-item/add-item.component";
+import { itemActions } from "../../store/item/item.slice";
 
 const Home: React.FC = () => {
+  const dispatch = useDispatch();
   const audio = new Audio(ringer);
   audio.loop = false;
-  const timerCtx = useContext(RestTimerContext);
-  const [restTimer, setRestTimer] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem("rest") && !restTimer) {
-      setRestTimer(true);
-    }
-  });
+    dispatch(itemActions.fetchItemsStart());
+  }, []);
+
+  const [restTimer, setRestTimer] = useState(false);
+
+  const restTime = useSelector(selectRestTime);
+
+  if (localStorage.getItem("rest") && !restTimer) {
+    setRestTimer(true);
+  }
 
   const onChangeShowRestTimer = (val: boolean) => {
-    let restSet: TimerStorageInterface;
+    let restSet: TimerStorage;
     if (val) {
       restSet = {
-        endTime: Date.now() + convertMinToMilliSec(timerCtx.restTime),
+        endTime: Date.now() + convertMinToMilliSec(restTime),
         autoStart: true,
       };
       localStorage.setItem("rest", JSON.stringify(restSet));
@@ -40,6 +46,7 @@ const Home: React.FC = () => {
   };
   return (
     <React.Fragment>
+      <AddItem />
       {!restTimer && (
         <Timer
           onChangeShowRestTimer={onChangeShowRestTimer}
@@ -53,7 +60,6 @@ const Home: React.FC = () => {
         />
       )}
       <Items />
-      <MessageModal />
     </React.Fragment>
   );
 };

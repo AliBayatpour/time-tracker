@@ -1,5 +1,5 @@
-import { ChartCategoryInterface } from "../../../interfaces/chart-category-interface";
-import { ItemInterface } from "../../../interfaces/item-interface";
+import { ChartCategory } from "../../../interfaces/chart-category-interface";
+import { Item } from "../../../interfaces/item-interface";
 import { convertMinToReadable } from "../../../utils/date-utils";
 
 import {
@@ -8,18 +8,18 @@ import {
 } from "../../../utils/stat-utils";
 
 type Props = {
-  items: ItemInterface[];
+  items: Item[];
   nDays: number;
   statData: {
     lastNDaysChartResult: {
       [key: string]: any;
     }[];
-    itemCategories: ChartCategoryInterface[];
+    itemCategories: ChartCategory[];
   };
 };
 const DetailStat: React.FC<Props> = ({ items, nDays, statData }) => {
   const calculateDetailCategoryStat = () => {
-    let categories: ChartCategoryInterface[] = [];
+    let categories: ChartCategory[] = [];
     let chartData: {
       [key: string]: any;
     }[] = [];
@@ -28,11 +28,11 @@ const DetailStat: React.FC<Props> = ({ items, nDays, statData }) => {
 
     return categories?.map((categoryObj, index) => (
       <div className="col-3" key={`catDetail-${index}`}>
-        <div className="card my-3" style={{ borderColor: categoryObj.color }}>
-          <h5 className="card-header" style={{ color: categoryObj.color }}>
+        <div className="my-3" style={{ borderColor: categoryObj.color }}>
+          <h5  style={{ color: categoryObj.color }}>
             <b>{categoryObj.category}</b>
           </h5>
-          <b className="card-title ps-3">
+          <b className="ps-3">
             {calculateTotalForCategory(categoryObj.category, chartData)}
           </b>
         </div>
@@ -49,21 +49,19 @@ const DetailStat: React.FC<Props> = ({ items, nDays, statData }) => {
           </h4>
         </div>
         <div className="col-6">
-          <div className="card">
-            <h5 className="card-header">
+          <div>
+            <h5>
               <b>Total Time:</b>
             </h5>
-            <b className="card-title ps-3 text-success">
-              {convertMinToReadable(totalTime(items))}
-            </b>
+            <b>{convertMinToReadable(totalTime(items))}</b>
           </div>
         </div>
-        <div className="col-6">
-          <div className="card">
-            <h5 className="card-header">
+        <div>
+          <div>
+            <h5>
               <b>Average per day:</b>
             </h5>
-            <b className="card-title ps-3 text-secondary">
+            <b className="ps-3">
               {convertMinToReadable(totalTime(items) / nDays)}
             </b>
           </div>

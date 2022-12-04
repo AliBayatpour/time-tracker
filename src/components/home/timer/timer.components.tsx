@@ -1,33 +1,45 @@
-import { useContext, useEffect } from "react";
-import Countdown, { CountdownTimeDelta } from "react-countdown";
-import { TimerStorageInterface } from "../../../interfaces/item-storage-interface";
-import TimerContext from "../../../context/timer-context";
+import { useEffect, useState } from "react";
+import Countdown, { CountdownApi, CountdownTimeDelta } from "react-countdown";
+import { TimerStorage } from "../../../interfaces/item-storage-interface";
 import classes from "./timer.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
-import { updateItemStart } from "../../../store/item/item.action";
 import { convertMinToMilliSec } from "../../../utils/date-utils";
+import { itemActions } from "../../../store/item/item.slice";
+import { timerActions } from "../../../store/timer/timer.slice";
+import {
+  selectAutoStart,
+  selectIsCompleted,
+  selectIsPaused,
+  selectIsStarted,
+} from "../../../store/timer/timer.selector";
+import Button from "../../shared/button/Button.component";
+
 type Props = {
   onChangeShowRestTimer: (val: boolean) => void;
   onPlayAudio: () => void;
 };
 const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
-  const timerCtx = useContext(TimerContext);
+  const [date, setDate] = useState<number | null>(null);
+  const [countdownApi, setCountdownApi] = useState<CountdownApi | null>(null);
+  const [countdown, setcountdown] = useState<Countdown | null>(null);
+
   const todoItems = useSelector(selectTodoItems);
+  const autoStart = useSelector(selectAutoStart);
+  const isStarted = useSelector(selectIsStarted);
+  const isPaused = useSelector(selectIsPaused);
+  const isCompleted = useSelector(selectIsCompleted);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     let timerString = localStorage.getItem("timer");
-    let timer: TimerStorageInterface = timerString && JSON.parse(timerString);
+    let timer: TimerStorage = timerString && JSON.parse(timerString);
     if (!todoItems[0]) {
-      timerCtx.onSetDate(null);
+      onSetDate(null);
       return;
     }
-    if (
-      todoItems &&
-      timer?.modelID &&
-      timer?.modelID !== todoItems[0].modelID
-    ) {
+    if (todoItems && timer?.id && timer?.id !== todoItems[0].id) {
       localStorage.removeItem("timer");
     }
     if (
@@ -36,82 +48,93 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
       timer.endTime &&
       timer.endTime - new Date().getTime() > 0
     ) {
-      timerCtx.onSetDate(timer.endTime);
-      timerCtx.onSetAutoStart(timer.autoStart);
-      timerCtx.onSetIsPaused(false);
-      timerCtx.onSetIsStarted(true);
+      onSetDate(timer.endTime);
+      dispatch(timerActions.setAutoStart(timer.autoStart));
+      dispatch(timerActions.setIsPaused(false));
+      dispatch(timerActions.setIsStarted(true));
     } else if (timer && !timer.autoStart && timer.duration) {
-      timerCtx.onSetDate(Date.now() + timer.duration);
-      timerCtx.onSetAutoStart(timer.autoStart);
-      timerCtx.onSetIsPaused(true);
-      timerCtx.onSetIsStarted(false);
+      onSetDate(Date.now() + timer.duration);
+      dispatch(timerActions.setAutoStart(timer.autoStart));
+      dispatch(timerActions.setIsPaused(true));
+      dispatch(timerActions.setIsStarted(false));
     } else {
       localStorage.removeItem("timer");
-      timerCtx.onSetDate(Date.now() + convertMinToMilliSec(todoItems[0]?.goal));
-      timerCtx.onSetAutoStart(false);
-      timerCtx.onSetIsPaused(false);
-      timerCtx.onSetIsStarted(false);
+      onSetDate(Date.now() + convertMinToMilliSec(todoItems[0]?.goal));
+      dispatch(timerActions.setAutoStart(false));
+      dispatch(timerActions.setIsPaused(false));
+      dispatch(timerActions.setIsStarted(false));
     }
   }, [todoItems]);
 
+  const onSetCountdownApi = (val: CountdownApi) => {
+    setCountdownApi(val);
+  };
+  const onSetCountdown = (val: Countdown) => {
+    setcountdown(val);
+  };
+  const onSetDate = (val: number | null) => {
+    setDate(val);
+  };
+
   const handleStartClick = (): void => {
-    timerCtx.onSetIsCompleted(false);
-    timerCtx.countdownApi && timerCtx.countdownApi.start();
+    dispatch(timerActions.setIsCompleted(false));
+
+    countdownApi && countdownApi.start();
   };
 
   const handlePauseClick = (): void => {
-    timerCtx.countdownApi && timerCtx.countdownApi.pause();
+    countdownApi && countdownApi.pause();
   };
 
   const handleResetClick = (): void => {
     localStorage.removeItem("timer");
-    timerCtx.onSetDate(Date.now() + convertMinToMilliSec(todoItems[0]?.goal));
-    timerCtx.onSetAutoStart(false);
-    timerCtx.onSetIsPaused(false);
-    timerCtx.onSetIsStarted(false);
-    timerCtx.onSetIsCompleted(false);
+    onSetDate(Date.now() + convertMinToMilliSec(todoItems[0]?.goal));
+    dispatch(timerActions.setAutoStart(false));
+    dispatch(timerActions.setIsPaused(false));
+    dispatch(timerActions.setIsStarted(false));
+    dispatch(timerActions.setIsCompleted(false));
   };
 
   const setRef = (countdown: Countdown | null): void => {
     if (countdown) {
-      timerCtx.onSetCountdown(countdown);
-      timerCtx.onSetCountdownApi(countdown.getApi());
+      onSetCountdown(countdown);
+      onSetCountdownApi(countdown.getApi());
     }
   };
 
   const handleStart = (res: any) => {
     localStorage.removeItem("timer");
-    let itemToSet: TimerStorageInterface = {
-      modelID: todoItems[0].modelID as string,
+    let itemToSet: TimerStorage = {
+      id: todoItems[0].id as string,
       endTime: Date.now() + res.total,
       autoStart: true,
     };
 
     localStorage.setItem("timer", JSON.stringify(itemToSet));
-    timerCtx.onSetIsPaused(false);
-    timerCtx.onSetIsStarted(true);
+    dispatch(timerActions.setIsPaused(false));
+    dispatch(timerActions.setIsStarted(true));
   };
 
   const handlePause = (res: CountdownTimeDelta): void => {
     localStorage.removeItem("timer");
-    let itemToSet: TimerStorageInterface = {
-      modelID: todoItems[0].modelID as string,
+    let itemToSet: TimerStorage = {
+      id: todoItems[0].id as string,
       autoStart: false,
       duration: res.total,
     };
     localStorage.setItem("timer", JSON.stringify(itemToSet));
-    timerCtx.onSetIsPaused(true);
-    timerCtx.onSetIsStarted(false);
+    dispatch(timerActions.setIsPaused(true));
+    dispatch(timerActions.setIsStarted(false));
   };
 
   const handleComplete = (res: CountdownTimeDelta) => {
     localStorage.removeItem("timer");
-    timerCtx.onSetIsCompleted(true);
+    dispatch(timerActions.setIsCompleted(true));
     dispatch(
-      updateItemStart({
+      itemActions.updateItemStart({
         ...todoItems[0],
         done: true,
-        finished_at: Math.ceil(new Date().getTime() / 1000),
+        finishedAt: new Date().getTime(),
         progress: todoItems[0].goal,
       })
     );
@@ -126,18 +149,18 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
   };
 
   const handleFinishClick = () => {
-    if (!timerCtx.countdown?.calcTimeDelta().total) {
+    if (!countdown?.calcTimeDelta().total) {
       return;
     }
     localStorage.removeItem("timer");
-    timerCtx.onSetIsCompleted(true);
+    dispatch(timerActions.setIsCompleted(true));
     dispatch(
-      updateItemStart({
+      itemActions.updateItemStart({
         ...todoItems[0],
         done: true,
-        finished_at: Math.ceil(new Date().getTime() / 1000),
+        finishedAt: new Date().getTime(),
         progress: Math.ceil(
-          todoItems[0].goal - timerCtx.countdown?.calcTimeDelta().total / 60000
+          todoItems[0].goal - countdown?.calcTimeDelta().total / 60000
         ),
       })
     );
@@ -146,78 +169,70 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
     document.title = `00:00`;
 
     if (todoItems.length === 1) {
-      timerCtx.onSetDate(null);
+      onSetDate(null);
     }
-    timerCtx.onSetAutoStart(false);
-    timerCtx.onSetIsPaused(false);
-    timerCtx.onSetIsStarted(false);
-    timerCtx.onSetIsCompleted(false);
+    dispatch(timerActions.setAutoStart(false));
+    dispatch(timerActions.setIsPaused(false));
+    dispatch(timerActions.setIsStarted(false));
+    dispatch(timerActions.setIsCompleted(false));
     onChangeShowRestTimer(true);
   };
 
   return (
-    <div className="container-lg">
-      <h4 className="w-100 text-center text-primary">
-        {todoItems[0]?.category}
-      </h4>
+    <div className="container">
+      <h3 className="w-100 text-center text-white">{todoItems[0]?.category}</h3>
 
-      <div className="w-100 py-4 d-flex justify-content-center bg-dark text-white">
-        {timerCtx.date && (
-          <div className={`${classes["timerContainer"]}`}>
+      <div className="w-100 py-4 d-flex justify-content-center">
+        {date && (
+          <div className={`${classes["timerContainer"]} text-tertiary`}>
             <Countdown
-              key={timerCtx.date}
+              key={date}
               ref={setRef}
-              date={timerCtx.date}
+              date={date}
               onStart={handleStart}
               onTick={handleTick}
               onPause={handlePause}
               onComplete={handleComplete}
-              autoStart={timerCtx.autoStart}
+              autoStart={autoStart}
               className="d-flex justify-content-center"
             />
             <div className="mt-4 w-100 d-flex justify-content-center">
-              <button
+              <Button
                 type="button"
-                className="btn btn-secondary btn-lg"
+                size="large"
+                className="btn"
                 onClick={handleStartClick}
-                disabled={timerCtx.isStarted}
+                disabled={isStarted}
               >
                 Start
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
-                className="btn btn-secondary btn-lg mx-3"
+                size="large"
+                className="btn mx-3"
                 onClick={handlePauseClick}
-                disabled={
-                  timerCtx.isPaused ||
-                  timerCtx.isCompleted ||
-                  !timerCtx.isStarted
-                }
+                disabled={isPaused || isCompleted || !isStarted}
               >
                 Pause
-              </button>
-              <button
-                className="btn btn-secondary btn-lg mx-3"
-                disabled={
-                  timerCtx.isCompleted ||
-                  (!timerCtx.isStarted && !timerCtx.isPaused)
-                }
+              </Button>
+              <Button
+                className="btn mx-3"
+                size="large"
+                disabled={isCompleted || (!isStarted && !isPaused)}
                 type="button"
                 onClick={handleResetClick}
               >
                 Reset
-              </button>
-              <button
-                className="btn btn-secondary btn-lg"
-                disabled={
-                  timerCtx.isCompleted ||
-                  (!timerCtx.isStarted && !timerCtx.isPaused)
-                }
+              </Button>
+              <Button
+                className="btn"
+                size="large"
+                disabled={isCompleted || (!isStarted && !isPaused)}
                 type="button"
                 onClick={handleFinishClick}
               >
                 Finish
-              </button>
+              </Button>
             </div>
           </div>
         )}

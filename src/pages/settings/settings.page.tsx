@@ -1,40 +1,67 @@
-import { Button } from "react-bootstrap";
+import React from "react";
+import Button from "../../components/shared/button/Button.component";
+import Input from "../../components/shared/input/input";
+import useInput from "../../hooks/use-input";
+import { isNumWithLimit } from "../../utils/input-validators-utils";
 
 const Settings: React.FC = () => {
+  const {
+    value: enteredRest,
+    isValid: enteredRestIsValid,
+    hasError: restHasError,
+    valueChangeHandler: restChangeHandler,
+    inputBlurHandler: restBlurHandler,
+    defaultValueHandler: restDefaultValueHandler,
+  } = useInput(isNumWithLimit);
+
+  let formIsValid = false;
+  if (enteredRestIsValid) {
+    formIsValid = true;
+  }
+
+  const getRestTime = () => {
+    const localValue = localStorage.getItem("restTime");
+    return localValue ? localValue : "5";
+  };
+
   const onSetRestTime = (event: any) => {
     event.preventDefault();
-    localStorage.setItem("restTime", event.target.elements.rest.value);
+    if (!enteredRestIsValid) {
+      return;
+    }
+    localStorage.setItem("restTime", enteredRest);
   };
   return (
-    <div className="container-lg text-light">
+    <React.Fragment>
       <h1 className="mb-4">Settings</h1>
       <div className="row">
         <form onSubmit={onSetRestTime}>
           <div className="col-12 col-lg-2">
-            <div className="form-group">
-              <label htmlFor="restInput">Rest Time (min)</label>
-              <input
-                type="number"
-                name="rest"
-                className="form-control"
-                id="restInput"
-                placeholder="Rest Time (min)"
-                defaultValue={
-                  localStorage.getItem("restTime")
-                    ? Number(localStorage.getItem("restTime"))
-                    : 5
-                }
-              />
-            </div>
+            <Input
+              type="number"
+              label="Rest"
+              id="restInput"
+              value={enteredRest}
+              onBlur={restBlurHandler}
+              onChange={restChangeHandler}
+              hasError={restHasError}
+              onDefaultValue={restDefaultValueHandler}
+              defaultValue={getRestTime()}
+            />
           </div>
           <div className="col-12">
-            <Button type="submit" variant="primary" className="mt-3 text-white">
+            <Button
+              disabled={!formIsValid}
+              type="submit"
+              variant="primary"
+              className="mt-3"
+            >
               Change rest time
             </Button>
           </div>
         </form>
       </div>
-    </div>
+    </React.Fragment>
   );
 };
 export default Settings;

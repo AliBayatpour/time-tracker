@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background-color: var(--color-primary);
+  width: 100%;
+  overflow-x: hidden;
+}
+body,
+html {
+  font-family: "OpenSansRegular";
+  color: var(--color-secondary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+b {
+  font-family: "OpenSansBold";
+}

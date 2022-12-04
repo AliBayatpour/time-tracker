@@ -1,26 +1,27 @@
 import React, { useRef, useState } from "react";
-import { Form } from "react-bootstrap";
-import { ItemInterface } from "../../../interfaces/item-interface";
+import { Item } from "../../../interfaces/item-interface";
 import {
   convertMinToReadable,
   formatDateV1,
   getLastNDays,
 } from "../../../utils/date-utils";
 import { totalTime } from "../../../utils/stat-utils";
-import classes from "./past-items.module.scss";
-import { ReactComponent as Trash } from "../../../assets/icons/trash.svg";
-import { ReactComponent as Update } from "../../../assets/icons/update.svg";
-import { ReactComponent as PastItemsIcon } from "../../../assets/icons/past-items.svg";
+import trashIcon from "../../../assets/icons/trash.svg";
+import updateIcon from "../../../assets/icons/update.svg";
+import pastItemsIcon from "../../../assets/icons/past-items.svg";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteItemStart,
-  updateItemStart,
-} from "../../../store/item/item.action";
 import {
   selectLast14DaysItems,
   selectLast28DaysItems,
   selectLast7DaysItems,
 } from "../../../store/item/item.selector";
+import { itemActions } from "../../../store/item/item.slice";
+import {
+  isNotEmpty,
+  isNumWithLimit,
+} from "../../../utils/input-validators-utils";
+import useInput from "../../../hooks/use-input";
+import Input from "../../shared/input/input";
 
 type Props = {
   nDays: number;
@@ -32,38 +33,61 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
   const last28DaysItems = useSelector(selectLast28DaysItems);
 
   const [selectDate, setSelectDate] = useState<string>("");
+
+  const {
+    value: enteredCategory,
+    isValid: enteredCategoryIsValid,
+    hasError: categoryHasError,
+    valueChangeHandler: categoryChangeHandler,
+    inputBlurHandler: categoryBlurHandler,
+    defaultValueHandler: categoryDefaultValueHandler,
+  } = useInput(isNotEmpty);
+
+  const {
+    value: enteredDescription,
+    isValid: enteredDescriptionIsValid,
+    hasError: descriptionHasError,
+    valueChangeHandler: descriptionChangeHandler,
+    inputBlurHandler: descriptionBlurHandler,
+    defaultValueHandler: descriptioDefaultValueHandler,
+  } = useInput(isNotEmpty);
+
+  const {
+    value: enteredProgress,
+    isValid: enteredProgressIsValid,
+    hasError: progressHasError,
+    valueChangeHandler: progressChangeHandler,
+    inputBlurHandler: progressBlurHandler,
+    defaultValueHandler: progressDefaultValueHandler,
+  } = useInput(isNumWithLimit);
+
   const updateBtnsRef = useRef<HTMLButtonElement[]>([]);
 
-  const updateItem = (event: any, item: ItemInterface, index: number) => {
+  const updateItem = (event: any, item: Item, index: number) => {
     event.preventDefault();
-    let newItem: ItemInterface = {
+    if (
+      !enteredCategoryIsValid ||
+      !enteredDescriptionIsValid ||
+      !enteredProgressIsValid
+    ) {
+      return;
+    }
+    let newItem: Item = {
       ...item,
-      category: event.target.elements.category.value,
-      description: event.target.elements.description.value,
-      progress: Number(event.target.elements.progress.value),
+      category: enteredCategory,
+      description: enteredDescription,
+      progress: Number(enteredProgress),
     };
-    dispatch(updateItemStart(newItem));
+    dispatch(itemActions.updateItemStart(newItem));
     (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
   };
 
-  const handleRemovetask = (item: ItemInterface) => {
-    dispatch(deleteItemStart(item));
+  const handleRemovetask = (item: Item) => {
+    dispatch(itemActions.deleteItemStart(item));
   };
 
-  const onChangeForm = (event: any, item: ItemInterface, index: number) => {
-    if (
-      event.target.form.elements.category.value === item.category &&
-      event.target.form.elements.description.value === item.description &&
-      Number(event.target.form.elements.progress.value) === item.progress
-    ) {
-      (updateBtnsRef.current[index] as HTMLButtonElement).disabled = true;
-    } else {
-      (updateBtnsRef.current[index] as HTMLButtonElement).disabled = false;
-    }
-  };
-
-  const fileterItems = (): ItemInterface[] => {
-    let items: ItemInterface[] = [];
+  const fileterItems = (): Item[] => {
+    let items: Item[] = [];
     switch (nDays) {
       case 7:
         items = last7DaysItems;
@@ -79,17 +103,17 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
         break;
     }
     return items.filter(
-      (item) => formatDateV1(new Date(item.finished_at * 1000)) === selectDate
+      (item) => formatDateV1(new Date(+item.finishedAt)) === selectDate
     );
   };
   return (
     <React.Fragment>
       <div className="d-flex align-items-center mb-3 mt-5">
-        <PastItemsIcon width={28} />
-        <h2 className="text-light ms-3 mb-0">Past Done Items</h2>
+        <img src={pastItemsIcon} width={28} alt="past items" />
+        <h2 className=" ms-3 mb-0">Past Done Items</h2>
       </div>
-      <p className="text-light">Select the date to see the items and edit</p>
-      <Form.Select
+      <p>Select the date to see the items and edit</p>
+      {/* <Form.Select
         aria-label="Select Date"
         value={selectDate}
         onChange={(event: any) => setSelectDate(event.target.value)}
@@ -102,57 +126,54 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
               {val}
             </option>
           ))}
-      </Form.Select>
-      <h5 className="text-light my-3">
+      </Form.Select> */}
+      <h5 className=" my-3">
         Total Time: (<b>{convertMinToReadable(totalTime(fileterItems()))}</b>)
       </h5>
-      {fileterItems().map((item: ItemInterface, index: number) => (
+      {fileterItems().map((item: Item, index: number) => (
         <form
-          key={item.modelID}
-          onChange={(event) => onChangeForm(event, item, index)}
+          key={item.id}
           onSubmit={(event) => updateItem(event, item, index)}
-          className="row my-3 text-light border-primary border border-secondary py-3 position-relative"
+          className="row my-3 py-3 position-relative"
         >
           <div className="col-3">
-            <div className="form-group">
-              <label htmlFor="doneCategoryInput">Category</label>
-              <input
-                type="text"
-                name="category"
-                className="form-control"
-                id="doneCategoryInput"
-                placeholder="category"
-                defaultValue={item.category}
-              />
-            </div>
+            <Input
+              type="text"
+              id="category"
+              label="Category"
+              value={enteredCategory}
+              onBlur={categoryBlurHandler}
+              onChange={categoryChangeHandler}
+              hasError={categoryHasError}
+              onDefaultValue={categoryDefaultValueHandler}
+              defaultValue={item.category}
+            />
           </div>
           <div className="col-6">
-            <div className="form-group">
-              <label htmlFor="doneDescriptionInput">Description</label>
-              <input
-                type="text"
-                name="description"
-                className="form-control"
-                id="doneDescriptionInput"
-                placeholder="Description"
-                defaultValue={item.description}
-              />
-            </div>
+            <Input
+              type="text"
+              id="description"
+              label="Description"
+              value={enteredDescription}
+              onBlur={descriptionBlurHandler}
+              onChange={descriptionChangeHandler}
+              hasError={descriptionHasError}
+              onDefaultValue={descriptioDefaultValueHandler}
+              defaultValue={item.description}
+            />
           </div>
           <div className="col-1">
-            <div className="form-group">
-              <label htmlFor="doneGoalInput">
-                <small>Progress(min)</small>
-              </label>
-              <input
-                type="number"
-                name="progress"
-                className="form-control"
-                id="doneGoalInput"
-                placeholder="Progress (min)"
-                defaultValue={item.progress}
-              />
-            </div>
+            <Input
+              type="number"
+              id="progress"
+              label="Progress"
+              value={enteredProgress}
+              onBlur={progressBlurHandler}
+              onChange={progressChangeHandler}
+              hasError={progressHasError}
+              onDefaultValue={progressDefaultValueHandler}
+              defaultValue={item.progress.toString()}
+            />
           </div>
           <div className={`d-flex col-1 mt-4`}>
             <span
@@ -162,22 +183,17 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
 
             <button
               type="submit"
-              className={`btn btn-light`}
               ref={(elem) =>
                 (updateBtnsRef.current[index] = elem as HTMLButtonElement)
               }
               disabled
             >
-              <Update height={20} />
+              <img src={updateIcon} height={20} alt="update" />
             </button>
           </div>
           <div className={`col-1 mt-4`}>
-            <button
-              type="button"
-              onClick={() => handleRemovetask(item)}
-              className={`btn btn-light`}
-            >
-              <Trash height={20} />
+            <button type="button" onClick={() => handleRemovetask(item)}>
+              <img src={trashIcon} height={20} alt="trash" />
             </button>
           </div>
         </form>

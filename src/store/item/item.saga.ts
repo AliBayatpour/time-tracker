@@ -1,4 +1,3 @@
-import { AnyAction } from "redux";
 import {
   takeLatest,
   all,
@@ -7,150 +6,130 @@ import {
   CallEffect,
   PutEffect,
 } from "redux-saga/effects";
-import { ItemInterface } from "../../interfaces/item-interface";
+import { Item } from "../../interfaces/item-interface";
+
+import { itemActions, itemCaseReducers, itemSliceName } from "./item.slice";
+import type { Action } from "@reduxjs/toolkit";
 import {
   addItemAsyncReq,
   deleteItemAsyncReq,
   getItemsAsyncReq,
   getLastNDaysItemsAsyncReq,
   updateItemAsyncReq,
-} from "../../utils/items-utils";
-import {
-  addItemFailure,
-  addItemSuccess,
-  fetchItemsFailure,
-  fetchItemsStart,
-  fetchItemsSuccess,
-  fetchLastNDaysItemsFailure,
-  fetchLastNDaysItemsSuccess,
-  updateItemFailure,
-  updateItemSuccess,
-} from "./item.action";
-import { ITEM_ACTION_TYPES } from "./item.types";
+} from "../utils/item-req-utils";
 
 // GET ITEMS
 export function* fetchItemsAsync(): Generator<
-  CallEffect<ItemInterface[]> | PutEffect<AnyAction>,
+  CallEffect<Item[]> | PutEffect<Action>,
   void,
-  ItemInterface[] | []
+  Item[] | []
 > {
   try {
     const response = yield call(getItemsAsyncReq);
-    yield put(fetchItemsSuccess(response));
+    yield put(itemActions.fetchItemsSuccess(response));
   } catch (err) {
-    if (err instanceof Error) {
-      yield put(fetchItemsFailure(err.message));
-    } else {
-      yield put(fetchItemsFailure("unexpected error happened"));
-    }
+    yield put(itemActions.fetchItemsFailed("fetching items failed"));
   }
 }
 
 export function* onFetchItems() {
-  yield takeLatest(ITEM_ACTION_TYPES.FETCH_ITEMS_START, fetchItemsAsync);
+  yield takeLatest(
+    `${itemSliceName}/${itemCaseReducers.fetchItemsStart.name}`,
+    fetchItemsAsync
+  );
 }
 
 // ADD ITEMS
 export function* addItemsAsync(props: {
-  type: ITEM_ACTION_TYPES;
-  payload: ItemInterface;
-}): Generator<CallEffect<Response> | PutEffect<AnyAction>, any, Response> {
+  type: Action;
+  payload: Item;
+}): Generator<CallEffect<Response> | PutEffect<Action>, any, Response> {
   try {
     const response = yield call(addItemAsyncReq, props.payload);
     if (response.ok) {
-      yield put(addItemSuccess());
-      yield put(fetchItemsStart());
+      yield put(itemActions.addItemSuccess());
+      yield put(itemActions.fetchItemsStart());
     } else {
-      yield put(addItemFailure("add item failed"));
+      yield put(itemActions.addItemFailed("add item failed"));
     }
   } catch (err) {
-    if (err instanceof Error) {
-      yield put(fetchItemsFailure(err.message));
-    } else {
-      yield put(fetchItemsFailure("unexpected error happened"));
-    }
+    yield put(itemActions.addItemFailed("add item failed"));
   }
 }
 
 export function* onAddItem() {
-  yield takeLatest(ITEM_ACTION_TYPES.ADD_ITEM_START, addItemsAsync);
+  yield takeLatest(
+    `${itemSliceName}/${itemCaseReducers.addItemStart.name}`,
+    addItemsAsync
+  );
 }
 
 // UPDATE ITEMS
 export function* updateItemsAsync(props: {
-  type: ITEM_ACTION_TYPES;
-  payload: ItemInterface;
-}): Generator<CallEffect<Response> | PutEffect<AnyAction>, any, Response> {
+  type: Action;
+  payload: Item;
+}): Generator<CallEffect<Response> | PutEffect<Action>, any, Response> {
   try {
     const response = yield call(updateItemAsyncReq, props.payload);
     if (response.ok) {
-      yield put(updateItemSuccess());
-      yield put(fetchItemsStart());
+      yield put(itemActions.updateItemSuccess());
+      yield put(itemActions.fetchItemsStart());
     } else {
-      yield put(updateItemFailure("updating item failed"));
+      yield put(itemActions.updateItemFailed("updating item failed"));
     }
   } catch (err) {
-    if (err instanceof Error) {
-      yield put(fetchItemsFailure(err.message));
-    } else {
-      yield put(fetchItemsFailure("unexpected error happened"));
-    }
+    yield put(itemActions.updateItemFailed("updating item failed"));
   }
 }
 
 export function* onUpdateItem() {
-  yield takeLatest(ITEM_ACTION_TYPES.UPDATE_ITEM_START, updateItemsAsync);
+  yield takeLatest(
+    `${itemSliceName}/${itemCaseReducers.updateItemStart.name}`,
+    updateItemsAsync
+  );
 }
 
 // DELETE ITEMS
 export function* deleteItemsAsync(props: {
-  type: ITEM_ACTION_TYPES;
-  payload: ItemInterface;
-}): Generator<CallEffect<Response> | PutEffect<AnyAction>, any, Response> {
+  type: Action;
+  payload: Item;
+}): Generator<CallEffect<Response> | PutEffect<Action>, any, Response> {
   try {
     const response = yield call(deleteItemAsyncReq, props.payload);
     if (response.ok) {
-      yield put(updateItemSuccess());
-      yield put(fetchItemsStart());
+      yield put(itemActions.updateItemSuccess());
+      yield put(itemActions.fetchItemsStart());
     } else {
-      yield put(updateItemFailure("delete item failed"));
+      yield put(itemActions.updateItemFailed("delete item failed"));
     }
   } catch (err) {
-    if (err instanceof Error) {
-      yield put(fetchItemsFailure(err.message));
-    } else {
-      yield put(fetchItemsFailure("unexpected error happened"));
-    }
+    yield put(itemActions.updateItemFailed("delete item failed"));
   }
 }
 
 export function* onDeleteItem() {
-  yield takeLatest(ITEM_ACTION_TYPES.DELETE_ITEM_START, deleteItemsAsync);
+  yield takeLatest(
+    `${itemSliceName}/${itemCaseReducers.deleteItemStart.name}`,
+    deleteItemsAsync
+  );
 }
 
 // GET LAST N ITEMS
 export function* fetchLastNDaysItemsAsync(props: {
-  type: ITEM_ACTION_TYPES;
+  type: Action;
   payload: number;
-}): Generator<
-  CallEffect<ItemInterface[]> | PutEffect<AnyAction>,
-  void,
-  ItemInterface[] | []
-> {
+}): Generator<CallEffect<Item[]> | PutEffect<Action>, void, Item[] | []> {
   try {
     const response = yield call(getLastNDaysItemsAsyncReq, props.payload);
-    yield put(fetchLastNDaysItemsSuccess(response, props.payload));
+    const successPayload = { nDays: props.payload, lastNDaysItems: response };
+    yield put(itemActions.fetchLastNDaysSuccess(successPayload));
   } catch (err) {
-    if (err instanceof Error) {
-      yield put(fetchLastNDaysItemsFailure(err.message));
-    } else {
-      yield put(fetchLastNDaysItemsFailure("unexpected error happened"));
-    }
+    yield put(itemActions.fetchLastNDaysFailed("unexpected error happened"));
   }
 }
 export function* onFetchLastNDaysItems() {
   yield takeLatest(
-    ITEM_ACTION_TYPES.FETCH_LAST_N_DAYS_ITEMS_START,
+    `${itemSliceName}/${itemCaseReducers.fetchLastNDaysStart.name}`,
     fetchLastNDaysItemsAsync
   );
 }

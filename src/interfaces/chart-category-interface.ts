@@ -1,4 +1,4 @@
-export interface ChartCategoryInterface {
+export type ChartCategory = {
   category: string;
   color: string;
-}
+};

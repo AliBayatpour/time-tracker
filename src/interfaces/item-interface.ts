@@ -1,5 +1,5 @@
-export interface ItemInterface {
-  modelID?: string;
+export type Item = {
+  id?: string;
   userId: string;
   category: string;
   description: string;
@@ -7,5 +7,5 @@ export interface ItemInterface {
   progress: number;
   done: boolean;
   goal: number;
-  finished_at: number;
-}
+  finishedAt: string;
+};

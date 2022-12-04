@@ -1,90 +1,108 @@
-import React, { useContext, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { authResInterface } from "../../../interfaces/auth-res-interface";
-import AuthContext from "../../../context/auth-context";
+import React from "react";
+import { useDispatch } from "react-redux";
+import useInput from "../../../hooks/use-input";
+import { authActions } from "../../../store/auth/auth.slice";
+import {
+  isEmail,
+  isNotEmpty,
+  isPassword,
+} from "../../../utils/input-validators-utils";
+import Button from "../../shared/button/Button.component";
+import Input from "../../shared/input/input";
 import classes from "./signup.module.scss";
 
-const Signup: React.FC = () => {
-  const navigate = useNavigate();
-  const nameInputRef = useRef<HTMLInputElement | null>(null);
-  const emailInputRef = useRef<HTMLInputElement | null>(null);
-  const passwordInputRef = useRef<HTMLInputElement | null>(null);
+type Props = {
+  switchAuthModeHandler: () => void;
+};
 
-  const authCtx = useContext(AuthContext);
+const Signup: React.FC<Props> = ({ switchAuthModeHandler }) => {
+  const dispatch = useDispatch();
+
+  const {
+    value: enteredName,
+    isValid: enteredNameIsValid,
+    hasError: nameHasError,
+    valueChangeHandler: nameChangeHandler,
+    inputBlurHandler: nameBlurHandler,
+  } = useInput(isNotEmpty);
+
+  const {
+    value: enteredEmail,
+    isValid: enteredEmailIsValid,
+    hasError: emailHasError,
+    valueChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+  } = useInput(isEmail);
+
+  const {
+    value: enteredpassword,
+    isValid: enteredPasswordIsValid,
+    hasError: passwordHasError,
+    valueChangeHandler: passwordChangeHandler,
+    inputBlurHandler: passwordBlurHandler,
+  } = useInput(isPassword);
+
+  let formIsValid = false;
+  if (enteredNameIsValid && enteredPasswordIsValid && enteredEmailIsValid) {
+    formIsValid = true;
+  }
 
   const signup = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const enteredName = nameInputRef.current?.value;
-    const enteredEmail = emailInputRef.current?.value;
-    const enteredPassword = passwordInputRef.current?.value;
-
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACK_END_URL}/auth/signup/`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            name: enteredName,
-            email: enteredEmail,
-            password: enteredPassword,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const json = (await response.json()) as authResInterface;
-      if (json) {
-        authCtx.login(json);
-        navigate("/", { replace: true });
-      } else {
-        authCtx.logout();
-      }
-    } catch (error) {
-      console.log(error);
+    if (
+      !enteredNameIsValid ||
+      !enteredEmailIsValid ||
+      !enteredPasswordIsValid
+    ) {
+      return;
     }
+    dispatch(
+      authActions.signupStart({
+        name: enteredName,
+        email: enteredEmail,
+        password: enteredpassword,
+      })
+    );
   };
   return (
-    <div className={`${classes.mainContainer} text-light`}>
-      <h1>Signup</h1>
+    <div className={`${classes.mainContainer} `}>
+      <h1 className="mb-4">Sign up</h1>
       <form onSubmit={signup}>
-        <div className="form-group">
-          <label htmlFor="signupName">Name</label>
-          <input
-            type="text"
-            ref={nameInputRef}
-            className="form-control"
-            id="signupName"
-            placeholder="Your name"
-            required
-          />
+        <Input
+          type="text"
+          id="name"
+          label="Name"
+          value={enteredName}
+          onBlur={nameBlurHandler}
+          onChange={nameChangeHandler}
+          hasError={nameHasError}
+        />
+        <Input
+          type="email"
+          id="email"
+          label="Email"
+          value={enteredEmail}
+          onBlur={emailBlurHandler}
+          onChange={emailChangeHandler}
+          hasError={emailHasError}
+        />
+        <Input
+          type="password"
+          id="password"
+          label="Password"
+          value={enteredpassword}
+          onBlur={passwordBlurHandler}
+          onChange={passwordChangeHandler}
+          hasError={passwordHasError}
+        />
+        <div className="d-flex my-3">
+          <Button type="submit" variant="secondary" disabled={!formIsValid}>
+            Submit
+          </Button>
+          <Button onClick={switchAuthModeHandler} className="ms-3">
+            Switch to log in
+          </Button>
         </div>
-        <div className="form-group my-4">
-          <label htmlFor="signupEmail">Email address</label>
-          <input
-            type="email"
-            ref={emailInputRef}
-            className="form-control"
-            id="signupEmail"
-            placeholder="Enter email"
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="signupPass">Password</label>
-          <input
-            type="password"
-            minLength={6}
-            ref={passwordInputRef}
-            className="form-control"
-            id="signupPass"
-            placeholder="Password"
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary my-3">
-          Submit
-        </button>
       </form>
     </div>
   );

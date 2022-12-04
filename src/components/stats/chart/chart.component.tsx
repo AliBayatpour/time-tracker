@@ -10,17 +10,15 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { ItemInterface } from "../../../interfaces/item-interface";
 import { convertMinToReadable, getWeekDay } from "../../../utils/date-utils";
-import { ChartCategoryInterface } from "../../../interfaces/chart-category-interface";
-import { useEffect } from "react";
+import { ChartCategory } from "../../../interfaces/chart-category-interface";
 
 type Props = {
   statData: {
     lastNDaysChartResult: {
       [key: string]: any;
     }[];
-    itemCategories: ChartCategoryInterface[];
+    itemCategories: ChartCategory[];
   };
 };
 const Chart: React.FC<Props> = ({ statData }) => {
@@ -31,8 +29,8 @@ const Chart: React.FC<Props> = ({ statData }) => {
         sumDay = sumDay + payload.value;
       });
       return (
-        <div className="bg-white badge text-start p-3 text-dark">
-          <p className="label">{`${props.label}, ${getWeekDay(
+        <div>
+          <p>{`${props.label}, ${getWeekDay(
             new Date(props.label).getDay()
           )}`}</p>
           <hr />
@@ -54,7 +52,7 @@ const Chart: React.FC<Props> = ({ statData }) => {
     return null;
   };
 
-  const customIntervalBar = (categories: ChartCategoryInterface[]) => {
+  const customIntervalBar = (categories: ChartCategory[]) => {
     return categories.map((category, index) => (
       <Bar
         key={index}

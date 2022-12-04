@@ -1,72 +1,81 @@
-import React, { useContext, useRef } from "react";
-import { authResInterface } from "../../../interfaces/auth-res-interface";
-import AuthContext from "../../../context/auth-context";
+import React from "react";
 import classes from "./login.module.scss";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../../store/auth/auth.slice";
+import useInput from "../../../hooks/use-input";
+import Input from "../../shared/input/input";
+import { isEmail, isPassword } from "../../../utils/input-validators-utils";
+import Button from "../../shared/button/Button.component";
 
-const Login: React.FC = () => {
-  const navigate = useNavigate();
-  const emailInputRef = useRef<HTMLInputElement | null>(null);
-  const passwordInputRef = useRef<HTMLInputElement | null>(null);
+type Props = {
+  switchAuthModeHandler: () => void;
+};
 
-  const authCtx = useContext(AuthContext);
+const Login: React.FC<Props> = ({ switchAuthModeHandler }) => {
+  const dispatch = useDispatch();
+
+  const {
+    value: enteredEmail,
+    isValid: enteredEmailIsValid,
+    hasError: emailHasError,
+    valueChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+  } = useInput(isEmail);
+
+  const {
+    value: enteredpassword,
+    isValid: enteredPasswordIsValid,
+    hasError: passwordHasError,
+    valueChangeHandler: passwordChangeHandler,
+    inputBlurHandler: passwordBlurHandler,
+  } = useInput(isPassword);
+
+  let formIsValid = false;
+  if (enteredPasswordIsValid && enteredEmailIsValid) {
+    formIsValid = true;
+  }
 
   const login = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const enteredEmail = emailInputRef.current?.value;
-    const enteredPassword = passwordInputRef.current?.value;
-    try {
-      const response = await fetch(`${process.env.REACT_APP_BACK_END_URL}/auth/login/`, {
-        method: "POST",
-        body: JSON.stringify({
-          email: enteredEmail,
-          password: enteredPassword,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const json = (await response.json()) as authResInterface;
-      if (json.access_token) {
-        authCtx.login(json);
-        navigate("/", { replace: true });
-      } else {
-        authCtx.logout();
-      }
-    } catch (error) {
-      console.log(error);
+    if (!enteredEmailIsValid || !enteredPasswordIsValid) {
+      return;
     }
+    dispatch(
+      authActions.loginStart({ email: enteredEmail, password: enteredpassword })
+    );
   };
   return (
-    <div className={`${classes.mainContainer} text-light`}>
-      <h1>Login</h1>
+    <div className={`${classes.mainContainer} `}>
+      <h1 className="mb-4">Login</h1>
       <form onSubmit={login}>
-        <div className="form-group mb-4">
-          <label htmlFor="loginEmail">Email address</label>
-          <input
-            type="email"
-            ref={emailInputRef}
-            className="form-control"
-            id="loginEmail"
-            placeholder="Enter email"
-            required
-          />
+        <Input
+          type="text"
+          id="email"
+          label="Email"
+          value={enteredEmail}
+          onBlur={emailBlurHandler}
+          onChange={emailChangeHandler}
+          hasError={emailHasError}
+        />
+        <Input
+          type="password"
+          id="password"
+          label="Password"
+          value={enteredpassword}
+          onBlur={passwordBlurHandler}
+          onChange={passwordChangeHandler}
+          hasError={passwordHasError}
+        />
+        <div className="d-flex my-3">
+          <Button
+            type="submit"
+            variant="secondary"
+            disabled={!formIsValid}
+          >
+            Submit
+          </Button>
+          <Button onClick={switchAuthModeHandler} className="ms-3">Switch to sign up</Button>
         </div>
-        <div className="form-group">
-          <label htmlFor="loginPassword">Password</label>
-          <input
-            type="password"
-            minLength={6}
-            ref={passwordInputRef}
-            className="form-control"
-            id="loginPassword"
-            placeholder="Password"
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary my-3">
-          Submit
-        </button>
       </form>
     </div>
   );

@@ -1,96 +1,186 @@
-import { ItemInterface } from "../../../interfaces/item-interface";
-import { stringValueGenerator } from "../../../utils/items-utils";
+import { Item } from "../../../interfaces/item-interface";
 import { ReactComponent as Add } from "../../../assets/icons/add.svg";
-import { ReactComponent as AddItemIcon } from "../../../assets/icons/add-item.svg";
-import { Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
-import { addItemStart } from "../../../store/item/item.action";
-import React from "react";
+import React, { Fragment, useState } from "react";
+import { itemActions } from "../../../store/item/item.slice";
+import {
+  isNotEmpty,
+  isNumWithLimit,
+} from "../../../utils/input-validators-utils";
+import useInput from "../../../hooks/use-input";
+import Input from "../../shared/input/input";
+import { stringValueGenerator } from "../../../utils/string-value-generator-utils";
+import Button from "../../shared/button/Button.component";
+import Modal from "../../shared/message-modal/Modal.component";
+import styles from "./add-item.module.scss";
 
 const AddItem: React.FC = () => {
   const todoItems = useSelector(selectTodoItems);
   const dispatch = useDispatch();
 
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  const {
+    value: enteredCategory,
+    isValid: enteredCategoryIsValid,
+    hasError: categoryHasError,
+    valueChangeHandler: categoryChangeHandler,
+    inputBlurHandler: categoryBlurHandler,
+    reset: resetCategoryInput,
+  } = useInput(isNotEmpty);
+
+  const {
+    value: enteredDescription,
+    isValid: enteredDescriptionIsValid,
+    hasError: descriptionHasError,
+    valueChangeHandler: descriptionChangeHandler,
+    inputBlurHandler: descriptionBlurHandler,
+    reset: resetDescriptionInput,
+  } = useInput(isNotEmpty);
+
+  const {
+    value: enteredGoal,
+    isValid: enteredGoalIsValid,
+    hasError: goalHasError,
+    valueChangeHandler: goalChangeHandler,
+    inputBlurHandler: goalBlurHandler,
+    reset: resetGoalInput,
+  } = useInput(isNumWithLimit);
+
+  const generateSortValue = (): string => {
+    const todoItemsLength = todoItems.length;
+    return todoItemsLength
+      ? stringValueGenerator(todoItems[todoItemsLength - 1].sort)
+      : stringValueGenerator();
+  };
+
+  let formIsValid = false;
+  if (
+    enteredCategoryIsValid &&
+    enteredDescriptionIsValid &&
+    enteredGoalIsValid
+  ) {
+    formIsValid = true;
+  }
+
   const addItem = (event: any) => {
     event.preventDefault();
-    const todoItemsLength = todoItems.length;
-    let newitem: ItemInterface = {
-      userId: localStorage.getItem("sub") as string,
-      category: event.target.elements.category.value,
-      description: event.target.elements.description.value,
-      sort: todoItemsLength
-        ? stringValueGenerator(todoItems[todoItemsLength - 1].sort)
-        : stringValueGenerator(),
-      progress: 0,
-      goal: Number(event.target.elements.goal.value),
-      done: false,
-      finished_at: 0,
-    };
-    dispatch(addItemStart(newitem));
-    event.target.reset();
-  };
-  return (
-    <React.Fragment>
-      <div className="d-flex align-items-center">
-        <AddItemIcon width={30} />
-        <h2 className="text-light ms-3 mb-0">Add Item</h2>
-      </div>
 
-      <form
-        className="row text-light d-flex justify-content-center align-items-center my-3 border border-secondary py-3 position-relative"
-        onSubmit={addItem}
+    if (
+      !enteredCategoryIsValid ||
+      !enteredDescriptionIsValid ||
+      !enteredGoalIsValid
+    ) {
+      return;
+    }
+
+    let newitem: Item = {
+      userId: localStorage.getItem("sub") as string,
+      category: enteredCategory,
+      description: enteredDescription,
+      sort: generateSortValue(),
+      progress: 0,
+      goal: Number(enteredGoal),
+      done: false,
+      finishedAt: "0",
+    };
+    dispatch(itemActions.addItemStart(newitem));
+    resetCategoryInput();
+    resetDescriptionInput();
+    resetGoalInput();
+    onSetShowModal(false);
+  };
+
+  const onSetShowModal = (val: boolean) => {
+    setShowModal(val);
+  };
+
+  const Backdrop = () => {
+    return (
+      <div
+        className={`${styles.backdrop} position-fixed`}
+        onClick={() => onSetShowModal(false)}
+      ></div>
+    );
+  };
+
+  return (
+    <div className="row">
+      <Button
+        className={styles.addBut}
+        onClick={() => onSetShowModal(true)}
+        size="fab"
+        variant="tertiary"
       >
-        <div className="col-3">
-          <div className="form-group">
-            <label htmlFor="addCategoryInput">Category</label>
-            <input
-              type="text"
-              name="category"
-              className="form-control"
-              id="addCategoryInput"
-              placeholder="category"
-            />
-          </div>
-        </div>
-        <div className="col-6">
-          <div className="form-group">
-            <label htmlFor="addDescriptionInput">Description</label>
-            <input
-              type="text"
-              name="description"
-              className="form-control"
-              id="addDescriptionInput"
-              placeholder="Description"
-            />
-          </div>
-        </div>
-        <div className="col-2">
-          <div className="form-group">
-            <label htmlFor="addGoalInput">Goal (min)</label>
-            <input
-              type="number"
-              name="goal"
-              className="form-control"
-              id="addGoalInput"
-              placeholder="Goal (min)"
-              defaultValue={60}
-            />
-          </div>
-        </div>
-        <div className={`col-1 mt-4`}>
-          <OverlayTrigger
-            placement="right"
-            delay={{ show: 250, hide: 400 }}
-            overlay={<Tooltip id="add-but-tooltip">Add Item</Tooltip>}
+        <Add height={15} />
+      </Button>
+      {showModal ? (
+        <Fragment>
+          <Backdrop />,
+          <div
+            className={`${styles.modal} ${styles["modal--primary"]} w-100 position-fixed p-3`}
           >
-            <Button type="submit" variant="primary">
-              <Add height={15} />
-            </Button>
-          </OverlayTrigger>
-        </div>
-      </form>
-    </React.Fragment>
+            <h4 className={`${styles.modal__label}`}>Add Task</h4>
+            <div className={`${styles.modal__body}`}>
+              <h2>Add Item</h2>
+              <form onSubmit={addItem}>
+                <div>
+                  <Input
+                    type="text"
+                    id="category"
+                    label="Category"
+                    value={enteredCategory}
+                    onBlur={categoryBlurHandler}
+                    onChange={categoryChangeHandler}
+                    hasError={categoryHasError}
+                  />
+                </div>
+                <div>
+                  <Input
+                    type="text"
+                    id="description"
+                    label="Description"
+                    value={enteredDescription}
+                    onBlur={descriptionBlurHandler}
+                    onChange={descriptionChangeHandler}
+                    hasError={descriptionHasError}
+                    textArea
+                  />
+                </div>
+                <div>
+                  <Input
+                    type="number"
+                    id="goal"
+                    label="Progress"
+                    value={enteredGoal}
+                    onBlur={goalBlurHandler}
+                    onChange={goalChangeHandler}
+                    hasError={goalHasError}
+                  />
+                </div>
+                <div className="d-flex mt-4">
+                  <Button
+                    type="submit"
+                    variant="secondary"
+                    disabled={!formIsValid}
+                  >
+                    Add task
+                  </Button>
+                  <Button
+                    className="ms-auto"
+                    variant="tertiary"
+                    onClick={() => onSetShowModal(false)}
+                  >
+                    Close
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </Fragment>
+      ) : null}
+    </div>
   );
 };
 
