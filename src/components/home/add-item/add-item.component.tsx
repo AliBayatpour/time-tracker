@@ -85,6 +85,7 @@ const AddItem: React.FC = () => {
       done: false,
       finishedAt: "0",
     };
+
     dispatch(itemActions.addItemStart(newitem));
     resetCategoryInput();
     resetDescriptionInput();
@@ -152,7 +153,7 @@ const AddItem: React.FC = () => {
                   <Input
                     type="number"
                     id="goal"
-                    label="Progress"
+                    label="Goal"
                     value={enteredGoal}
                     onBlur={goalBlurHandler}
                     onChange={goalChangeHandler}

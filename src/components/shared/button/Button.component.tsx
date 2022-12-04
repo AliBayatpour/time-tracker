@@ -31,7 +31,7 @@ const Button: React.FC<Props> = ({
           styles.btn
         } ${styles["btn--" + (variant ?? "basic")]}  ${
           styles["btn--" + (size ?? "default")]
-        } ${className}`}
+        } ${styles["btn--" + (disabled && "disabled")]}  ${className}`}
         onClick={onClick}
         disabled={disabled}
         type={type ?? "button"}

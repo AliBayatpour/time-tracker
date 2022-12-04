@@ -204,7 +204,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
                 onClick={handleStartClick}
                 disabled={isStarted}
               >
-                Start
+               {isPaused ? "Resume" : "Start"}
               </Button>
               <Button
                 type="button"
