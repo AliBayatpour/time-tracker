@@ -15,9 +15,15 @@ const TodoItems: React.FC = () => {
 
   const [showModal, setShowModal] = useState<boolean>(false);
 
+  //save reference for dragItem and dragOverItem
+  const [dragItem, setDragItem] = useState<Item["id"]>();
+  const [dragOverItem, setDragOverItem] = useState<Item["id"]>();
+
   const onSetShowModal = (val: boolean) => {
     setShowModal(val);
   };
+
+  const onDragEnd = () => {};
 
   return (
     <div
@@ -41,7 +47,13 @@ const TodoItems: React.FC = () => {
             My goal Today: {convertMinToReadable(totalTodoTime(todoItems))}
           </h5>
           {todoItems.map((item: Item, index: number) => (
-            <div key={"todo" + index} draggable>
+            <div
+              key={item.id}
+              draggable
+              onDragStart={() => setDragItem(item.id)}
+              onDragEnter={() => setDragOverItem(item.id)}
+              onDragEnd={onDragEnd}
+            >
               <Card variant="primary" className="mb-3">
                 <TodoItem item={item} index={index} />
               </Card>
