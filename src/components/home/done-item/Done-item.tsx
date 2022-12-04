@@ -70,17 +70,35 @@ const DoneItem: React.FC<Props> = ({ item, index }) => {
           Finished at: <b>{convertDateNumToTime(+item.finishedAt)}</b>
         </b>
       </div>
-      <Input
-        type="text"
-        id="category"
-        label="Category"
-        value={enteredCategory}
-        onBlur={categoryBlurHandler}
-        onChange={categoryChangeHandler}
-        hasError={categoryHasError}
-        onDefaultValue={categoryDefaultValueHandler}
-        defaultValue={item.category}
-      />
+      <div className="row gap-1">
+        <div className="col-8">
+          <Input
+            type="text"
+            id="category"
+            label="Category"
+            value={enteredCategory}
+            onBlur={categoryBlurHandler}
+            onChange={categoryChangeHandler}
+            hasError={categoryHasError}
+            onDefaultValue={categoryDefaultValueHandler}
+            defaultValue={item.category}
+          />
+        </div>
+
+        <div className="col-4">
+          <Input
+            type="number"
+            id="progress"
+            label="Progress"
+            value={enteredProgress}
+            onBlur={progressBlurHandler}
+            onChange={progressChangeHandler}
+            hasError={progressHasError}
+            onDefaultValue={progressDefaultValueHandler}
+            defaultValue={item.progress.toString()}
+          />
+        </div>
+      </div>
 
       <Input
         type="text"
@@ -95,17 +113,6 @@ const DoneItem: React.FC<Props> = ({ item, index }) => {
         textArea
       />
 
-      <Input
-        type="number"
-        id="progress"
-        label="Progress"
-        value={enteredProgress}
-        onBlur={progressBlurHandler}
-        onChange={progressChangeHandler}
-        hasError={progressHasError}
-        onDefaultValue={progressDefaultValueHandler}
-        defaultValue={item.progress.toString()}
-      />
       <Button variant="secondary" type="submit">
         Update
       </Button>

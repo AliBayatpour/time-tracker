@@ -73,17 +73,36 @@ const TodoItem: React.FC<Props> = ({ item, index }) => {
 
   return (
     <form onSubmit={(event) => updateItem(event)}>
-      <Input
-        type="text"
-        id="category"
-        label="Category"
-        value={enteredCategory}
-        onBlur={categoryBlurHandler}
-        onChange={categoryChangeHandler}
-        hasError={categoryHasError}
-        onDefaultValue={categoryDefaultValueHandler}
-        defaultValue={item.category}
-      />
+      <div className="row gap-1">
+        <div className="col-8">
+          <Input
+            type="text"
+            id="category"
+            label="Category"
+            value={enteredCategory}
+            onBlur={categoryBlurHandler}
+            onChange={categoryChangeHandler}
+            hasError={categoryHasError}
+            onDefaultValue={categoryDefaultValueHandler}
+            defaultValue={item.category}
+          />
+        </div>
+
+        <div className="col-4">
+          <Input
+            type="number"
+            readonly={index === 0 && (isStarted || isPaused) ? true : false}
+            id="goal"
+            label="Goal"
+            value={enteredGoal}
+            onBlur={goalBlurHandler}
+            onChange={goalChangeHandler}
+            hasError={goalHasError}
+            onDefaultValue={goalDefaultValueHandler}
+            defaultValue={item.goal.toString()}
+          />
+        </div>
+      </div>
 
       <Input
         type="text"
@@ -97,20 +116,9 @@ const TodoItem: React.FC<Props> = ({ item, index }) => {
         defaultValue={item.description}
         textArea
       />
-
-      <Input
-        type="number"
-        readonly={index === 0 && (isStarted || isPaused) ? true : false}
-        id="goal"
-        label="Goal"
-        value={enteredGoal}
-        onBlur={goalBlurHandler}
-        onChange={goalChangeHandler}
-        hasError={goalHasError}
-        onDefaultValue={goalDefaultValueHandler}
-        defaultValue={item.goal.toString()}
-      />
-      <Button variant="tertiary" type="submit">Update</Button>
+      <Button variant="tertiary" type="submit">
+        Update
+      </Button>
     </form>
   );
 };

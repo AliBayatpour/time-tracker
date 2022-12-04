@@ -41,9 +41,11 @@ const TodoItems: React.FC = () => {
             My goal Today: {convertMinToReadable(totalTodoTime(todoItems))}
           </h5>
           {todoItems.map((item: Item, index: number) => (
-            <Card variant="primary" className="mb-3" key={"todo" + index}>
-              <TodoItem item={item} index={index} />
-            </Card>
+            <div key={"todo" + index} draggable>
+              <Card variant="primary" className="mb-3">
+                <TodoItem item={item} index={index} />
+              </Card>
+            </div>
           ))}
         </div>
       </Fragment>
