@@ -103,7 +103,7 @@ const PastItems: React.FC<Props> = ({ nDays }) => {
         break;
     }
     return items.filter(
-      (item) => formatDateV1(new Date(item.finished_at * 1000)) === selectDate
+      (item) => formatDateV1(new Date(+item.finishedAt)) === selectDate
     );
   };
   return (

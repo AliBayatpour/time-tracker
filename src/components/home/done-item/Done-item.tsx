@@ -7,6 +7,7 @@ import {
   isNotEmpty,
   isNumWithLimit,
 } from "../../../utils/input-validators-utils";
+import Button from "../../shared/button/Button.component";
 import Input from "../../shared/input/input";
 
 type Props = {
@@ -64,9 +65,9 @@ const DoneItem: React.FC<Props> = ({ item, index }) => {
   };
   return (
     <form key={item.id} onSubmit={(event) => updateItem(event, index)}>
-      <div className="text-primary">
+      <div className="text-secondary">
         <b>
-          Finished at: <b>{convertDateNumToTime(item.finished_at)}</b>
+          Finished at: <b>{convertDateNumToTime(+item.finishedAt)}</b>
         </b>
       </div>
       <Input
@@ -91,6 +92,7 @@ const DoneItem: React.FC<Props> = ({ item, index }) => {
         hasError={descriptionHasError}
         onDefaultValue={descriptioDefaultValueHandler}
         defaultValue={item.description}
+        textArea
       />
 
       <Input
@@ -104,6 +106,9 @@ const DoneItem: React.FC<Props> = ({ item, index }) => {
         onDefaultValue={progressDefaultValueHandler}
         defaultValue={item.progress.toString()}
       />
+      <Button variant="secondary" type="submit">
+        Update
+      </Button>
     </form>
   );
 };

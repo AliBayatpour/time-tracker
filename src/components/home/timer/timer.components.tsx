@@ -39,11 +39,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
       onSetDate(null);
       return;
     }
-    if (
-      todoItems &&
-      timer?.id &&
-      timer?.id !== todoItems[0].id
-    ) {
+    if (todoItems && timer?.id && timer?.id !== todoItems[0].id) {
       localStorage.removeItem("timer");
     }
     if (
@@ -138,7 +134,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
       itemActions.updateItemStart({
         ...todoItems[0],
         done: true,
-        finished_at: Math.ceil(new Date().getTime() / 1000),
+        finishedAt: new Date().getTime(),
         progress: todoItems[0].goal,
       })
     );
@@ -162,7 +158,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
       itemActions.updateItemStart({
         ...todoItems[0],
         done: true,
-        finished_at: Math.ceil(new Date().getTime() / 1000),
+        finishedAt: new Date().getTime(),
         progress: Math.ceil(
           todoItems[0].goal - countdown?.calcTimeDelta().total / 60000
         ),

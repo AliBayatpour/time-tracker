@@ -71,7 +71,7 @@ export const lastNDaysChartDataBuilder = (
       });
     }
     const indexOfItem = lastNDaysArr.findIndex(
-      (date) => date === formatDateV1(new Date(item.finished_at * 1000))
+      (date) => date === formatDateV1(new Date(+item.finishedAt * 1000))
     );
     if (!lastNDaysChartResult[indexOfItem][item.category]) {
       lastNDaysChartResult[indexOfItem][item.category] = item.progress;

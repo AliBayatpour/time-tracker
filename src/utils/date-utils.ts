@@ -43,7 +43,8 @@ export const getWeekDay = (dayNum: number) => {
   return weekday[dayNum];
 };
 
-export const convertDateNumToTime = (sec: number): string => {
-  const dateFormat = new Date(sec * 1000);
+export const convertDateNumToTime = (mili: number): string => {
+  const dateFormat = new Date(mili);
+  console.log(dateFormat);
   return dateFormat.toLocaleTimeString();
 };

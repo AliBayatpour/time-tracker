@@ -1,7 +1,6 @@
 import React from "react";
 import { Item } from "../../../interfaces/item-interface";
 import { convertMinToReadable } from "../../../utils/date-utils";
-import doneList from "../../../assets/icons/done-list.svg";
 import { selectDoneItems } from "../../../store/item/item.selector";
 import { useSelector } from "react-redux";
 import { totalTime } from "../../../utils/stat-utils";
@@ -18,7 +17,6 @@ const DoneItems: React.FC = () => {
       <div
         className={`my-5 bg-mirror-white p-3 w-100 d-flex flex-column align-items-center ${styles.listBox}`}
       >
-        <img alt="done" src={doneList} width={30} />
         <h2>Done Items</h2>
 
         <h5 className="mb-4">

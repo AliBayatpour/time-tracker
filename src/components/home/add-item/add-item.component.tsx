@@ -83,12 +83,13 @@ const AddItem: React.FC = () => {
       progress: 0,
       goal: Number(enteredGoal),
       done: false,
-      finished_at: 0,
+      finishedAt: "0",
     };
     dispatch(itemActions.addItemStart(newitem));
     resetCategoryInput();
     resetDescriptionInput();
     resetGoalInput();
+    onSetShowModal(false);
   };
 
   const onSetShowModal = (val: boolean) => {
@@ -144,6 +145,7 @@ const AddItem: React.FC = () => {
                     onBlur={descriptionBlurHandler}
                     onChange={descriptionChangeHandler}
                     hasError={descriptionHasError}
+                    textArea
                   />
                 </div>
                 <div>
@@ -160,7 +162,7 @@ const AddItem: React.FC = () => {
                 <div className="d-flex mt-4">
                   <Button
                     type="submit"
-                    variant="primary"
+                    variant="secondary"
                     disabled={!formIsValid}
                   >
                     Add task

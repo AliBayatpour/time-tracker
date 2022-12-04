@@ -6,5 +6,5 @@ export const filterTodoItems = (items: Item[]): Item[] => {
 };
 export const filterDoneItems = (items: Item[]) => {
   let filteredItems = items.filter((item) => item.done);
-  return filteredItems.sort((a, b) => (a.finished_at > b.finished_at ? 1 : -1));
+  return filteredItems.sort((a, b) => (a.finishedAt > b.finishedAt ? 1 : -1));
 };

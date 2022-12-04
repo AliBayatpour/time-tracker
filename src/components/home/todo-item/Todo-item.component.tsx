@@ -10,6 +10,7 @@ import {
   isNotEmpty,
   isNumWithLimit,
 } from "../../../utils/input-validators-utils";
+import Button from "../../shared/button/Button.component";
 import Input from "../../shared/input/input";
 
 type Props = {
@@ -94,6 +95,7 @@ const TodoItem: React.FC<Props> = ({ item, index }) => {
         hasError={descriptionHasError}
         onDefaultValue={descriptioDefaultValueHandler}
         defaultValue={item.description}
+        textArea
       />
 
       <Input
@@ -108,6 +110,7 @@ const TodoItem: React.FC<Props> = ({ item, index }) => {
         onDefaultValue={goalDefaultValueHandler}
         defaultValue={item.goal.toString()}
       />
+      <Button variant="tertiary" type="submit">Update</Button>
     </form>
   );
 };

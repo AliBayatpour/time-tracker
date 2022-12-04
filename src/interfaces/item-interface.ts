@@ -7,5 +7,5 @@ export type Item = {
   progress: number;
   done: boolean;
   goal: number;
-  finished_at: number;
+  finishedAt: string;
 };

@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { Item } from "../../../interfaces/item-interface";
-import todoListIcon from "../../../assets/icons/todo-list.svg";
+import { ReactComponent as TodoListIcon } from "../../../assets/icons/todo-list.svg";
 import { totalTodoTime } from "../../../utils/stat-utils";
 import { convertMinToReadable } from "../../../utils/date-utils";
 import { useSelector } from "react-redux";
@@ -20,7 +20,9 @@ const TodoItems: React.FC = () => {
   };
 
   return (
-    <div className={`${styles.mainContainer} h-100 d-flex justify-content-center`}>
+    <div
+      className={`${styles.mainContainer} h-100 d-flex justify-content-center`}
+    >
       <MessageModal
         showModal={showModal}
         onSetShowModal={onSetShowModal}
@@ -34,7 +36,6 @@ const TodoItems: React.FC = () => {
         <div
           className={`my-5 bg-mirror-white p-3 w-100 d-flex flex-column align-items-center ${styles.listBox}`}
         >
-          <img src={todoListIcon} width={30} alt="todo list" />
           <h2 className="text-secondary">Todo Items</h2>
           <h5 className="mb-4">
             My goal Today: {convertMinToReadable(totalTodoTime(todoItems))}
