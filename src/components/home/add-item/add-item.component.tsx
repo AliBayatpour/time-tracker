@@ -122,44 +122,48 @@ const AddItem: React.FC = () => {
           <div
             className={`${styles.modal} ${styles["modal--primary"]} w-100 position-fixed p-3`}
           >
-            <h4 className={`${styles.modal__label}`}>Add Task</h4>
+            <h3 className={`${styles.modal__label} mb-3`}>Add Task</h3>
             <div className={`${styles.modal__body}`}>
-              <h2>Add Item</h2>
               <form onSubmit={addItem}>
-                <div>
-                  <Input
-                    type="text"
-                    id="category"
-                    label="Category"
-                    value={enteredCategory}
-                    onBlur={categoryBlurHandler}
-                    onChange={categoryChangeHandler}
-                    hasError={categoryHasError}
-                  />
+                <div className="row gap-1">
+                  <div className="col-8">
+                    {" "}
+                    <Input
+                      type="text"
+                      id="category"
+                      label="Category"
+                      value={enteredCategory}
+                      onBlur={categoryBlurHandler}
+                      onChange={categoryChangeHandler}
+                      hasError={categoryHasError}
+                    />
+                  </div>
+
+                  <div className="col-4">
+                    <Input
+                      type="number"
+                      id="goal"
+                      label="Goal"
+                      value={enteredGoal}
+                      onBlur={goalBlurHandler}
+                      onChange={goalChangeHandler}
+                      hasError={goalHasError}
+                    />
+                  </div>
+                  <div className="col-12">
+                    <Input
+                      type="text"
+                      id="description"
+                      label="Description"
+                      value={enteredDescription}
+                      onBlur={descriptionBlurHandler}
+                      onChange={descriptionChangeHandler}
+                      hasError={descriptionHasError}
+                      textArea
+                    />
+                  </div>
                 </div>
-                <div>
-                  <Input
-                    type="text"
-                    id="description"
-                    label="Description"
-                    value={enteredDescription}
-                    onBlur={descriptionBlurHandler}
-                    onChange={descriptionChangeHandler}
-                    hasError={descriptionHasError}
-                    textArea
-                  />
-                </div>
-                <div>
-                  <Input
-                    type="number"
-                    id="goal"
-                    label="Goal"
-                    value={enteredGoal}
-                    onBlur={goalBlurHandler}
-                    onChange={goalChangeHandler}
-                    hasError={goalHasError}
-                  />
-                </div>
+
                 <div className="d-flex mt-4">
                   <Button
                     type="submit"
