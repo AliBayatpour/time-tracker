@@ -127,7 +127,6 @@ const AddItem: React.FC = () => {
               <form onSubmit={addItem}>
                 <div className="row gap-1">
                   <div className="col-8">
-                    {" "}
                     <Input
                       type="text"
                       id="category"
