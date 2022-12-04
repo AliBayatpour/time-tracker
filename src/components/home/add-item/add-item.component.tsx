@@ -2,7 +2,7 @@ import { Item } from "../../../interfaces/item-interface";
 import { ReactComponent as Add } from "../../../assets/icons/add.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { itemActions } from "../../../store/item/item.slice";
 import {
   isNotEmpty,
@@ -74,6 +74,7 @@ const AddItem: React.FC = () => {
     ) {
       return;
     }
+
     let newitem: Item = {
       userId: localStorage.getItem("sub") as string,
       category: enteredCategory,
@@ -94,6 +95,15 @@ const AddItem: React.FC = () => {
     setShowModal(val);
   };
 
+  const Backdrop = () => {
+    return (
+      <div
+        className={`${styles.backdrop} position-fixed`}
+        onClick={() => onSetShowModal(false)}
+      ></div>
+    );
+  };
+
   return (
     <div className="row">
       <Button
@@ -104,62 +114,70 @@ const AddItem: React.FC = () => {
       >
         <Add height={15} />
       </Button>
-
-      <Modal
-        showModal={showModal}
-        onSetShowModal={onSetShowModal}
-        label="Add Task"
-        variant="primary"
-      >
-        <h2>Add Item</h2>
-        <form onSubmit={addItem}>
-          <div>
-            <Input
-              type="text"
-              id="category"
-              label="Category"
-              value={enteredCategory}
-              onBlur={categoryBlurHandler}
-              onChange={categoryChangeHandler}
-              hasError={categoryHasError}
-            />
+      {showModal ? (
+        <Fragment>
+          <Backdrop />,
+          <div
+            className={`${styles.modal} ${styles["modal--primary"]} w-100 position-fixed p-3`}
+          >
+            <h4 className={`${styles.modal__label}`}>Add Task</h4>
+            <div className={`${styles.modal__body}`}>
+              <h2>Add Item</h2>
+              <form onSubmit={addItem}>
+                <div>
+                  <Input
+                    type="text"
+                    id="category"
+                    label="Category"
+                    value={enteredCategory}
+                    onBlur={categoryBlurHandler}
+                    onChange={categoryChangeHandler}
+                    hasError={categoryHasError}
+                  />
+                </div>
+                <div>
+                  <Input
+                    type="text"
+                    id="description"
+                    label="Description"
+                    value={enteredDescription}
+                    onBlur={descriptionBlurHandler}
+                    onChange={descriptionChangeHandler}
+                    hasError={descriptionHasError}
+                  />
+                </div>
+                <div>
+                  <Input
+                    type="number"
+                    id="goal"
+                    label="Progress"
+                    value={enteredGoal}
+                    onBlur={goalBlurHandler}
+                    onChange={goalChangeHandler}
+                    hasError={goalHasError}
+                  />
+                </div>
+                <div className="d-flex mt-4">
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    disabled={!formIsValid}
+                  >
+                    Add task
+                  </Button>
+                  <Button
+                    className="ms-auto"
+                    variant="tertiary"
+                    onClick={() => onSetShowModal(false)}
+                  >
+                    Close
+                  </Button>
+                </div>
+              </form>
+            </div>
           </div>
-          <div>
-            <Input
-              type="text"
-              id="description"
-              label="Description"
-              value={enteredDescription}
-              onBlur={descriptionBlurHandler}
-              onChange={descriptionChangeHandler}
-              hasError={descriptionHasError}
-            />
-          </div>
-          <div>
-            <Input
-              type="number"
-              id="goal"
-              label="Progress"
-              value={enteredGoal}
-              onBlur={goalBlurHandler}
-              onChange={goalChangeHandler}
-              hasError={goalHasError}
-            />
-          </div>
-          <div className="d-flex mt-4">
-            <Button type="submit" variant="primary" disabled={!formIsValid}>
-              Add task
-            </Button>
-            <Button
-              className="ms-auto"
-              variant="tertiary"
-              onClick={() => onSetShowModal(false)}
-            >
-              Close
-            </Button>
-          </div>
-        </form>
-      </Modal>
+        </Fragment>
+      ) : null}
     </div>
   );
 };
