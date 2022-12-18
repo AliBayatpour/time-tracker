@@ -45,6 +45,5 @@ export const getWeekDay = (dayNum: number) => {
 
 export const convertDateNumToTime = (mili: number): string => {
   const dateFormat = new Date(mili);
-  console.log(dateFormat);
   return dateFormat.toLocaleTimeString();
 };

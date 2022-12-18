@@ -8,7 +8,6 @@ export const calculateRemainingTime = (expirationTime: UserRes["exp"]) => {
 };
 
 export const saveAuthData = (userRes: UserRes) => {
-  console.log(userRes);
   localStorage.setItem("access_token", userRes.access_token);
   localStorage.setItem("exp", userRes.exp.toString());
   localStorage.setItem("sub", userRes.sub);
