@@ -8,4 +8,4 @@ services:
     volumes:
       - ./src:/app/src
     ports:
-      - "3008:3008"
+      - "3006:3000"

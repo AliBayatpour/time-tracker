@@ -16,10 +16,10 @@ import { itemActions } from "../../store/item/item.slice";
 
 enum TabsKeys {
   LAST_7_DAYS = "last7Days",
-  LAST_14_DAYS = "last14Days",
-  LAST_28_DAYS = "last28Days",
-  LAST_180_DAYS = "last180Days",
-  LAST_360_DAYS = "last360Days",
+  THIS_MONTH = "thisMonth",
+  LAST_MONTH = "lastMonth",
+  LAST_6_MONTHS = "last6Months",
+  LAST_YEAR = "lastYear",
 }
 
 const Stats: React.FC = () => {
@@ -29,12 +29,6 @@ const Stats: React.FC = () => {
   const last28DaysStatData = useSelector(selectLast28DaysStatData);
   const last180DaysStatData = useSelector(selectLast180DaysStatData);
   const last360DaysStatData = useSelector(selectLast360DaysStatData);
-
-  const last7DaysItems = useSelector(selectLast7DaysItems);
-  const last14DaysItems = useSelector(selectLast14DaysItems);
-  const last28DaysItems = useSelector(selectLast28DaysItems);
-  const last180DaysItems = useSelector(selectLast180DaysItems);
-  const last360DaysItems = useSelector(selectLast360DaysItems);
 
   const [key, setKey] = useState<string>(TabsKeys.LAST_7_DAYS);
 
@@ -51,19 +45,19 @@ const Stats: React.FC = () => {
         dispatch(itemActions.fetchLastNDaysStart(7));
         setKey(tabName);
         break;
-      case TabsKeys.LAST_14_DAYS:
+      case TabsKeys.THIS_MONTH:
         dispatch(itemActions.fetchLastNDaysStart(14));
         setKey(tabName);
         break;
-      case TabsKeys.LAST_28_DAYS:
+      case TabsKeys.LAST_MONTH:
         dispatch(itemActions.fetchLastNDaysStart(28));
         setKey(tabName);
         break;
-      case TabsKeys.LAST_180_DAYS:
+      case TabsKeys.LAST_6_MONTHS:
         dispatch(itemActions.fetchLastNDaysStart(180));
         setKey(tabName);
         break;
-      case TabsKeys.LAST_360_DAYS:
+      case TabsKeys.LAST_YEAR:
         dispatch(itemActions.fetchLastNDaysStart(360));
         setKey(tabName);
         break;
@@ -75,7 +69,6 @@ const Stats: React.FC = () => {
 
   return (
     <div className="container">
-      
       {/* <Tabs
         id="controlled-tab-example"
         activeKey={key}
