@@ -1,126 +1,65 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  selectLast14DaysItems,
-  selectLast14DaysStatData,
-  selectLast180DaysItems,
-  selectLast180DaysStatData,
-  selectLast28DaysItems,
-  selectLast28DaysStatData,
-  selectLast360DaysItems,
-  selectLast360DaysStatData,
-  selectLast7DaysItems,
-  selectLast7DaysStatData,
-} from "../../store/item/item.selector";
+import Input from "../../components/shared/input/input";
+import Chart from "../../components/stats/chart/chart.component";
+import useInput from "../../hooks/use-input";
+import { selectStatData } from "../../store/item/item.selector";
 import { itemActions } from "../../store/item/item.slice";
+import classes from "./stats.module.scss";
 
-enum TabsKeys {
-  LAST_7_DAYS = "last7Days",
-  THIS_MONTH = "thisMonth",
-  LAST_MONTH = "lastMonth",
-  LAST_6_MONTHS = "last6Months",
-  LAST_YEAR = "lastYear",
-}
+const tabsKeys = {
+  LAST_7_DAYS: "Last 7 days",
+  LAST_30_DAYS: "Last 30 days",
+  LAST_180_DAYS: "Last 180 days",
+  LAST_360_DAYS: "Last 360 days",
+};
 
 const Stats: React.FC = () => {
   const dispatch = useDispatch();
-  const last7DaysStatData = useSelector(selectLast7DaysStatData);
-  const last14DaysStatData = useSelector(selectLast14DaysStatData);
-  const last28DaysStatData = useSelector(selectLast28DaysStatData);
-  const last180DaysStatData = useSelector(selectLast180DaysStatData);
-  const last360DaysStatData = useSelector(selectLast360DaysStatData);
 
-  const [key, setKey] = useState<string>(TabsKeys.LAST_7_DAYS);
+  const statData = useSelector(selectStatData);
+  const { value: enteredInterval, valueChangeHandler: intervalChangeHandler } =
+    useInput();
 
   useEffect(() => {
     dispatch(itemActions.fetchLastNDaysStart(7));
   }, []);
 
-  const onSelectTab = (tabName: string | null) => {
-    if (!tabName) {
-      return;
-    }
-    switch (tabName) {
-      case TabsKeys.LAST_7_DAYS:
+  useEffect(() => {
+    console.log(enteredInterval);
+    switch (enteredInterval) {
+      case tabsKeys.LAST_7_DAYS:
         dispatch(itemActions.fetchLastNDaysStart(7));
-        setKey(tabName);
         break;
-      case TabsKeys.THIS_MONTH:
-        dispatch(itemActions.fetchLastNDaysStart(14));
-        setKey(tabName);
+      case tabsKeys.LAST_30_DAYS:
+        dispatch(itemActions.fetchLastNDaysStart(30));
         break;
-      case TabsKeys.LAST_MONTH:
-        dispatch(itemActions.fetchLastNDaysStart(28));
-        setKey(tabName);
-        break;
-      case TabsKeys.LAST_6_MONTHS:
+      case tabsKeys.LAST_180_DAYS:
         dispatch(itemActions.fetchLastNDaysStart(180));
-        setKey(tabName);
         break;
-      case TabsKeys.LAST_YEAR:
+      case tabsKeys.LAST_360_DAYS:
         dispatch(itemActions.fetchLastNDaysStart(360));
-        setKey(tabName);
         break;
 
       default:
         break;
     }
-  };
+  }, [enteredInterval]);
 
   return (
     <div className="container">
-      {/* <Tabs
-        id="controlled-tab-example"
-        activeKey={key}
-        onSelect={(tabName) => onSelectTab(tabName)}
-        className="mb-3"
-      >
-        <Tab eventKey={TabsKeys.LAST_7_DAYS} title="Last 7 Days">
-          <Chart statData={last7DaysStatData} />
-          <DetailStat
-            nDays={7}
-            statData={last7DaysStatData}
-            items={last7DaysItems}
+      <div className={`w-100 d-flex justify-content-center`}>
+        <div className={`${classes.intervalBox}`}>
+          <Input
+            id="interval"
+            value={enteredInterval}
+            onChange={intervalChangeHandler}
+            inputElement="select"
+            options={Object.values(tabsKeys)}
           />
-          <PastItems nDays={7} />
-        </Tab>
-        <Tab eventKey={TabsKeys.LAST_14_DAYS} title="Last 14 Days">
-          <Chart statData={last14DaysStatData} />
-          <DetailStat
-            nDays={14}
-            statData={last14DaysStatData}
-            items={last14DaysItems}
-          />
-          <PastItems nDays={14} />
-        </Tab>
-        <Tab eventKey={TabsKeys.LAST_28_DAYS} title="Last 28 Days">
-          <Chart statData={last28DaysStatData} />
-          <DetailStat
-            nDays={28}
-            items={last28DaysItems}
-            statData={last28DaysStatData}
-          />
-          <PastItems nDays={28} />
-        </Tab>
-        <Tab eventKey={TabsKeys.LAST_180_DAYS} title="Last 180 Days">
-          <Chart statData={last180DaysStatData} />
-          <DetailStat
-            nDays={180}
-            items={last180DaysItems}
-            statData={last180DaysStatData}
-          />
-          <PastItems nDays={180} />
-        </Tab>
-        <Tab eventKey={TabsKeys.LAST_360_DAYS} title="Last 360 Days">
-          <Chart statData={last360DaysStatData} />
-          <DetailStat
-            nDays={360}
-            items={last360DaysItems}
-            statData={last360DaysStatData}
-          />
-          <PastItems nDays={360} />
-        </Tab>
-      </Tabs> */}
+        </div>
+      </div>
+      <Chart statData={statData} />
     </div>
   );
 };

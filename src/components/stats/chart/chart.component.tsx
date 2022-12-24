@@ -11,17 +11,19 @@ import {
   Legend,
 } from "recharts";
 import { convertMinToReadable, getWeekDay } from "../../../utils/date-utils";
-import { ChartCategory } from "../../../interfaces/chart-category-interface";
+import { ItemsReducerState } from "../../../interfaces/items-store/items-reducer-state-interface";
+import {
+  buildChartData,
+  colorList,
+  randomColorGenerator,
+} from "../../../utils/stat-utils";
 
 type Props = {
-  statData: {
-    lastNDaysChartResult: {
-      [key: string]: any;
-    }[];
-    itemCategories: ChartCategory[];
-  };
+  statData: ItemsReducerState["statData"];
 };
+
 const Chart: React.FC<Props> = ({ statData }) => {
+  const chartData = buildChartData(statData.stat);
   const CustomTooltip = (props: any) => {
     if (props.active) {
       let sumDay = 0;
@@ -29,36 +31,43 @@ const Chart: React.FC<Props> = ({ statData }) => {
         sumDay = sumDay + payload.value;
       });
       return (
-        <div>
-          <p>{`${props.label}, ${getWeekDay(
-            new Date(props.label).getDay()
-          )}`}</p>
-          <hr />
+        <div className={`p-2 ${classes.tooltipBox} bg-mirror-white`}>
+          <p className={`${classes.tooltipBox__title}`}>{`${
+            props.label
+          }, ${getWeekDay(new Date(props.label).getDay())}`}</p>
+          <hr className="mb-1" />
           {props.payload?.map((payload: any, index: number) => {
             return (
               <p key={`tooltip${index}`}>
-                <span style={{ color: payload.fill }}>{payload.name}</span>:{" "}
+                <span className="me-1" style={{ color: payload.fill }}>
+                  {payload.name}:
+                </span>
                 <span>{convertMinToReadable(payload.value)}</span>
               </p>
             );
           })}
-          <b>
-            <span>Total: </span>
+          <hr className="my-1" />
+          <p>
+            <span className={`${classes.tooltipBox__total}`}>Total: </span>
             <span>{convertMinToReadable(sumDay)}</span>
-          </b>
+          </p>
         </div>
       );
     }
     return null;
   };
 
-  const customIntervalBar = (categories: ChartCategory[]) => {
-    return categories.map((category, index) => (
+  const customIntervalBar = () => {
+    return statData.categories.map((category, index) => (
       <Bar
         key={index}
-        dataKey={category.category}
+        dataKey={category}
         stackId="stack1"
-        fill={category.color}
+        fill={
+          index > colorList.length - 1
+            ? randomColorGenerator()
+            : colorList[index]
+        }
       />
     ));
   };
@@ -66,7 +75,7 @@ const Chart: React.FC<Props> = ({ statData }) => {
     <div className={`${classes.mainContainer}`}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
-          data={statData.lastNDaysChartResult}
+          data={chartData}
           margin={{
             top: 5,
             right: 30,
@@ -75,7 +84,10 @@ const Chart: React.FC<Props> = ({ statData }) => {
           }}
         >
           <CartesianGrid strokeDasharray="3 3" style={{ fill: "#ffffff" }} />
-          <XAxis dataKey="date" style={{ fontSize: "10px", fill: "#ffffff" }} />
+          <XAxis
+            dataKey="label"
+            style={{ fontSize: "10px", fill: "#ffffff" }}
+          />
 
           <YAxis style={{ fontSize: "14px", fill: "#ffffff" }}>
             <Label
@@ -88,7 +100,7 @@ const Chart: React.FC<Props> = ({ statData }) => {
           <Tooltip content={<CustomTooltip />} />
           <Legend />
 
-          {customIntervalBar(statData.itemCategories)}
+          {customIntervalBar()}
         </BarChart>
       </ResponsiveContainer>
     </div>

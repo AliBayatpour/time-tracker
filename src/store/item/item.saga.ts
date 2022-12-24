@@ -121,8 +121,7 @@ export function* fetchLastNDaysItemsAsync(props: {
 }): Generator<CallEffect<Item[]> | PutEffect<Action>, void, Item[] | []> {
   try {
     const response = yield call(getLastNDaysItemsAsyncReq, props.payload);
-    const successPayload = { nDays: props.payload, lastNDaysItems: response };
-    yield put(itemActions.fetchLastNDaysSuccess(successPayload));
+    yield put(itemActions.fetchLastNDaysSuccess(response));
   } catch (err) {
     yield put(itemActions.fetchLastNDaysFailed("unexpected error happened"));
   }

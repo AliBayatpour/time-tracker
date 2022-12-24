@@ -158,7 +158,7 @@ const AddItem: React.FC = () => {
                       onBlur={descriptionBlurHandler}
                       onChange={descriptionChangeHandler}
                       hasError={descriptionHasError}
-                      textArea
+                      inputElement="textarea"
                     />
                   </div>
                 </div>

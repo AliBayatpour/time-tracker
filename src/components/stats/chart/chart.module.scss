@@ -2,3 +2,16 @@
   width: 100%;
   height: 400px;
 }
+
+.tooltipBox {
+  border-radius: 20px;
+  font-family: "OpenSansSemiBold";
+
+  &__title {
+    color: var(--color-secondary);
+  }
+
+  &__total {
+    color: var(--color-secondary);
+  }
+}

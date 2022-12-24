@@ -110,7 +110,7 @@ const DoneItem: React.FC<Props> = ({ item, index }) => {
         hasError={descriptionHasError}
         onDefaultValue={descriptioDefaultValueHandler}
         defaultValue={item.description}
-        textArea
+        inputElement="textarea"
       />
 
       <Button variant="secondary" type="submit">

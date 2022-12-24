@@ -101,12 +101,8 @@ export const getLastNDaysItemsAsyncReq = async (
     if (!response.ok) {
       throw new Error("Request failed!");
     }
-    const json = (await response.json()) as Item[];
-    if (json.length) {
-      return json;
-    } else {
-      return [];
-    }
+    const json = await response.json();
+    return json;
   } catch (error) {
     throw new Error("Index Out of Bounds");
   }

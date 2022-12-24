@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-import logger from "redux-logger";
 import createSagaMiddleware from "redux-saga";
 import { authReducer } from "./auth/auth.slice";
 import { itemReducer } from "./item/item.slice";
@@ -8,7 +7,7 @@ import { rootSaga } from "./root-saga";
 import { timerReducer } from "./timer/timer.slice";
 
 const sagaMiddleware = createSagaMiddleware();
-const middleWares = [logger, sagaMiddleware];
+const middleWares = [sagaMiddleware];
 
 export const store = configureStore({
   reducer: {

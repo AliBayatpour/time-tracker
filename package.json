@@ -19,7 +19,7 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.3",
     "react-scripts": "5.0.1",
-    "recharts": "^2.1.16",
+    "recharts": "^2.2.0",
     "redux-saga": "^1.2.1",
     "reselect": "^4.1.7",
     "sass": "^1.56.1",

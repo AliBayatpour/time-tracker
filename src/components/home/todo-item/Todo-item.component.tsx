@@ -114,7 +114,7 @@ const TodoItem: React.FC<Props> = ({ item, index }) => {
         hasError={descriptionHasError}
         onDefaultValue={descriptioDefaultValueHandler}
         defaultValue={item.description}
-        textArea
+        inputElement="textarea"
       />
       <Button variant="tertiary" type="submit">
         Update

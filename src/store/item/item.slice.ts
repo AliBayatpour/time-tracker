@@ -2,11 +2,7 @@ import { ItemsReducerState } from "../../interfaces/items-store/items-reducer-st
 import { createSlice } from "@reduxjs/toolkit";
 const initialState: ItemsReducerState = {
   items: [],
-  last7Days: [],
-  last14Days: [],
-  last28Days: [],
-  last180Days: [],
-  last360Days: [],
+  statData: { stat: [], categories: [] },
   isLoading: false,
   error: null,
 };
@@ -71,26 +67,7 @@ const itemSlice = createSlice({
     fetchLastNDaysSuccess(state, action) {
       state.isLoading = false;
       state.error = null;
-
-      switch (action.payload.nDays) {
-        case 7:
-          state.last7Days = action.payload.lastNDaysItems;
-          break;
-        case 14:
-          state.last14Days = action.payload.lastNDaysItems;
-          break;
-        case 28:
-          state.last28Days = action.payload.lastNDaysItems;
-          break;
-        case 180:
-          state.last180Days = action.payload.lastNDaysItems;
-          break;
-        case 360:
-          state.last360Days = action.payload.lastNDaysItems;
-          break;
-        default:
-          break;
-      }
+      state.statData = action.payload;
     },
     fetchLastNDaysFailed(state, action) {
       state.isLoading = false;

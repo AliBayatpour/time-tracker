@@ -1,4 +1,3 @@
-export type ChartCategory = {
-  category: string;
-  color: string;
-};
+export type ChartData = {
+  [key: string]: number | string;
+}[];

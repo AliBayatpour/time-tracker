@@ -2,10 +2,8 @@ version: "3"
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ./src:/app/src
+    build: .
+    # volumes:
+    #   - ./src:/app/src
     ports:
-      - "3006:3000"
+      - "3000:3000"
