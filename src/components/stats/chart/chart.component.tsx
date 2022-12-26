@@ -10,13 +10,9 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import { convertMinToReadable, getWeekDay } from "../../../utils/date-utils";
+import { convertMinToReadable } from "../../../utils/date-utils";
 import { ItemsReducerState } from "../../../interfaces/items-store/items-reducer-state-interface";
-import {
-  buildChartData,
-  colorList,
-  randomColorGenerator,
-} from "../../../utils/stat-utils";
+import { buildChartData } from "../../../utils/stat-utils";
 
 type Props = {
   statData: ItemsReducerState["statData"];
@@ -32,9 +28,7 @@ const Chart: React.FC<Props> = ({ statData }) => {
       });
       return (
         <div className={`p-2 ${classes.tooltipBox} bg-mirror-white`}>
-          <p className={`${classes.tooltipBox__title}`}>{`${
-            props.label
-          }, ${getWeekDay(new Date(props.label).getDay())}`}</p>
+          <p className={`${classes.tooltipBox__title}`}>{props.label}</p>
           <hr className="mb-1" />
           {props.payload?.map((payload: any, index: number) => {
             return (
@@ -58,16 +52,12 @@ const Chart: React.FC<Props> = ({ statData }) => {
   };
 
   const customIntervalBar = () => {
-    return statData.categories.map((category, index) => (
+    return Object.entries(statData.categories).map((category, index) => (
       <Bar
         key={index}
-        dataKey={category}
+        dataKey={category[0]}
         stackId="stack1"
-        fill={
-          index > colorList.length - 1
-            ? randomColorGenerator()
-            : colorList[index]
-        }
+        fill={category[1].color}
       />
     ));
   };

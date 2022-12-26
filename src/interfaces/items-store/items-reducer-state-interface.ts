@@ -4,7 +4,8 @@ export type ItemsReducerState = {
   items: Item[];
   statData: {
     stat: [string, { [key: string]: number }][];
-    categories: string[];
+    categories: { [key: string]: { color: string; total: number } };
+    total: number;
   };
   isLoading: boolean;
   error: null | Error["message"];

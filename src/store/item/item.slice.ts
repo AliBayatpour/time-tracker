@@ -2,7 +2,7 @@ import { ItemsReducerState } from "../../interfaces/items-store/items-reducer-st
 import { createSlice } from "@reduxjs/toolkit";
 const initialState: ItemsReducerState = {
   items: [],
-  statData: { stat: [], categories: [] },
+  statData: { stat: [], categories: {}, total: 0 },
   isLoading: false,
   error: null,
 };

@@ -2,9 +2,11 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Input from "../../components/shared/input/input";
 import Chart from "../../components/stats/chart/chart.component";
+import DetailStat from "../../components/stats/detail-stat/detail-stat.component";
 import useInput from "../../hooks/use-input";
 import { selectStatData } from "../../store/item/item.selector";
 import { itemActions } from "../../store/item/item.slice";
+import { convertMinToReadable } from "../../utils/date-utils";
 import classes from "./stats.module.scss";
 
 const tabsKeys = {
@@ -60,6 +62,7 @@ const Stats: React.FC = () => {
         </div>
       </div>
       <Chart statData={statData} />
+      <DetailStat statData={statData} />
     </div>
   );
 };

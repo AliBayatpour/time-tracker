@@ -1,7 +1,6 @@
 .card {
   border-radius: 20px;
   overflow: hidden;
-  max-width: 320px;
   backdrop-filter: blur(5px);
   &--basic {
     background-color: var(--color-white);
