@@ -1,5 +1,4 @@
-import React, { ChangeEventHandler, useEffect } from "react";
-import { Type } from "typescript";
+import React, { useEffect } from "react";
 import { inputErrorMessages } from "../../../constants/input-error-messages-constants";
 import styles from "./input.module.scss";
 

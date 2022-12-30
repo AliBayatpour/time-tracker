@@ -12,7 +12,6 @@ import useInput from "../../../hooks/use-input";
 import Input from "../../shared/input/input";
 import { stringValueGenerator } from "../../../utils/string-value-generator-utils";
 import Button from "../../shared/button/Button.component";
-import Modal from "../../shared/message-modal/Modal.component";
 import styles from "./add-item.module.scss";
 
 const AddItem: React.FC = () => {

@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AuthReducerState } from "../../interfaces/auth-store/auth-reducer-state-interface";
+import { clearAuthData } from "../../utils/token-utils";
 
 const initialState: AuthReducerState = {
   isLoggedIn: false,
@@ -37,6 +38,7 @@ const authSlice = createSlice({
       state.error = action.payload;
     },
     logout(state) {
+      clearAuthData();
       state.isLoggedIn = false;
     },
   },

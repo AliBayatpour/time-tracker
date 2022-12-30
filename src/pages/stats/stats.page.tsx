@@ -6,7 +6,6 @@ import DetailStat from "../../components/stats/detail-stat/detail-stat.component
 import useInput from "../../hooks/use-input";
 import { selectStatData } from "../../store/item/item.selector";
 import { itemActions } from "../../store/item/item.slice";
-import { convertMinToReadable } from "../../utils/date-utils";
 import classes from "./stats.module.scss";
 
 const tabsKeys = {

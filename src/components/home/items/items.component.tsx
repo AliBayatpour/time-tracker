@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import DoneItems from "../done-items/done-items.component";
 import TodoItems from "../todo-items/todo-items.component";
 
