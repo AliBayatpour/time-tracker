@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  time-tracker-dev-fe:
+    build:
+      dockerfile: Dockerfile.dev
+      context: .
+    volumes:
+      - ./src:/app/src
+    ports:
+      - "3006:3000"
+    environment:
+      - REACT_APP_BACK_END_URL=http://localhost:4100/api
