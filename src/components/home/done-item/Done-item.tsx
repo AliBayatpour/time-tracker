@@ -9,6 +9,7 @@ import {
 } from "../../../utils/input-validators-utils";
 import Button from "../../shared/button/Button.component";
 import Input from "../../shared/input/input";
+import { useState, useEffect } from "react";
 
 type Props = {
   item: Item;
@@ -16,6 +17,8 @@ type Props = {
 };
 const DoneItem: React.FC<Props> = ({ item, index }) => {
   const dispatch = useDispatch();
+
+  const [updateActive, setUpdateActive] = useState(false);
 
   const {
     value: enteredCategory,
@@ -43,6 +46,18 @@ const DoneItem: React.FC<Props> = ({ item, index }) => {
     inputBlurHandler: progressBlurHandler,
     defaultValueHandler: progressDefaultValueHandler,
   } = useInput(isNumWithLimit);
+
+  useEffect(() => {
+    if (
+      (enteredCategory && item.category !== enteredCategory) ||
+      (enteredDescription && item.description !== enteredDescription) ||
+      (enteredProgress && item.progress !== +enteredProgress)
+    ) {
+      setUpdateActive(true);
+    } else {
+      setUpdateActive(false);
+    }
+  }, [enteredCategory, enteredProgress, enteredDescription]);
 
   const updateItem = (event: any, index: number) => {
     event.preventDefault();
@@ -113,9 +128,11 @@ const DoneItem: React.FC<Props> = ({ item, index }) => {
         inputElement="textarea"
       />
 
-      <Button variant="secondary" type="submit">
-        Update
-      </Button>
+      {updateActive && (
+        <Button variant="secondary" type="submit">
+          Update
+        </Button>
+      )}
     </form>
   );
 };

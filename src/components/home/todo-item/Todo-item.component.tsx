@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useInput from "../../../hooks/use-input";
 import { Item } from "../../../interfaces/item-interface";
@@ -20,6 +21,8 @@ type Props = {
 
 const TodoItem: React.FC<Props> = ({ item, index }) => {
   const dispatch = useDispatch();
+
+  const [updateActive, setUpdateActive] = useState(false);
 
   const isPaused = useSelector(selectIsPaused);
   const isStarted = useSelector(selectIsStarted);
@@ -50,6 +53,18 @@ const TodoItem: React.FC<Props> = ({ item, index }) => {
     inputBlurHandler: goalBlurHandler,
     defaultValueHandler: goalDefaultValueHandler,
   } = useInput(isNumWithLimit);
+
+  useEffect(() => {
+    if (
+      (enteredCategory && item.category !== enteredCategory) ||
+      (enteredDescription && item.description !== enteredDescription) ||
+      (enteredGoal && item.goal !== +enteredGoal)
+    ) {
+      setUpdateActive(true);
+    } else {
+      setUpdateActive(false);
+    }
+  }, [enteredCategory, enteredGoal, enteredDescription]);
 
   const updateItem = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -116,9 +131,11 @@ const TodoItem: React.FC<Props> = ({ item, index }) => {
         defaultValue={item.description}
         inputElement="textarea"
       />
-      <Button variant="tertiary" type="submit">
-        Update
-      </Button>
+      {updateActive && (
+        <Button variant="tertiary" type="submit">
+          Update
+        </Button>
+      )}
     </form>
   );
 };
