@@ -11,6 +11,13 @@ import { useEffect } from "react";
 import { getAccessToken, getAuthData } from "./utils/token-utils";
 import { authActions } from "./store/auth/auth.slice";
 
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+import "@fontsource/roboto/900.css";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
 function App() {
   let logoutTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -21,6 +28,20 @@ function App() {
   useEffect(() => {
     loginHandler();
   }, []);
+
+  const primaryTheme = createTheme({
+    palette: {
+      primary: {
+        main: "#6c6dff",
+      },
+      secondary: {
+        main: "#f50057",
+      },
+      info: {
+        main: "#f7b801",
+      },
+    },
+  });
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -54,14 +75,16 @@ function App() {
   };
 
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        {isLoggedIn && <Route index element={<Home />} />}
-        {isLoggedIn && <Route path="stats" element={<Stats />} />}
-        {isLoggedIn && <Route path="settings" element={<Settings />} />}
-      </Route>
-      {!isLoggedIn && <Route path="/auth" element={<Auth />} />}
-    </Routes>
+    <ThemeProvider theme={primaryTheme}>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          {isLoggedIn && <Route index element={<Home />} />}
+          {isLoggedIn && <Route path="stats" element={<Stats />} />}
+          {isLoggedIn && <Route path="settings" element={<Settings />} />}
+        </Route>
+        {!isLoggedIn && <Route path="/auth" element={<Auth />} />}
+      </Routes>
+    </ThemeProvider>
   );
 }
 

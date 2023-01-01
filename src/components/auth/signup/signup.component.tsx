@@ -1,105 +1,125 @@
-import React from "react";
+import { Button, TextField } from "@mui/material";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import useInput from "../../../hooks/use-input";
 import { authActions } from "../../../store/auth/auth.slice";
 import {
   isEmail,
   isNotEmpty,
   isPassword,
 } from "../../../utils/input-validators-utils";
-import Button from "../../shared/button/Button.component";
-import Input from "../../shared/input/input";
 import classes from "./signup.module.scss";
 
 type Props = {
   switchAuthModeHandler: () => void;
 };
 
-const Signup: React.FC<Props> = ({ switchAuthModeHandler }) => {
+type SignUpForm = {
+  name: { value: string; isValid: boolean };
+  email: { value: string; isValid: boolean };
+  password: { value: string; isValid: boolean };
+};
+
+const loginInitialState = {
+  name: { value: "", isValid: false },
+  email: { value: "", isValid: false },
+  password: { value: "", isValid: false },
+};
+
+const SignUp: React.FC<Props> = ({ switchAuthModeHandler }) => {
   const dispatch = useDispatch();
-
-  const {
-    value: enteredName,
-    isValid: enteredNameIsValid,
-    hasError: nameHasError,
-    valueChangeHandler: nameChangeHandler,
-    inputBlurHandler: nameBlurHandler,
-  } = useInput(isNotEmpty);
-
-  const {
-    value: enteredEmail,
-    isValid: enteredEmailIsValid,
-    hasError: emailHasError,
-    valueChangeHandler: emailChangeHandler,
-    inputBlurHandler: emailBlurHandler,
-  } = useInput(isEmail);
-
-  const {
-    value: enteredpassword,
-    isValid: enteredPasswordIsValid,
-    hasError: passwordHasError,
-    valueChangeHandler: passwordChangeHandler,
-    inputBlurHandler: passwordBlurHandler,
-  } = useInput(isPassword);
+  const [signUpForm, setSignUpForm] = useState<SignUpForm>(loginInitialState);
 
   let formIsValid = false;
-  if (enteredNameIsValid && enteredPasswordIsValid && enteredEmailIsValid) {
+  if (
+    signUpForm.name.isValid &&
+    signUpForm.password.isValid &&
+    signUpForm.email.isValid
+  ) {
     formIsValid = true;
   }
 
   const signup = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (
-      !enteredNameIsValid ||
-      !enteredEmailIsValid ||
-      !enteredPasswordIsValid
+      !signUpForm.name.isValid ||
+      !signUpForm.email.isValid ||
+      !signUpForm.password.isValid
     ) {
       return;
     }
     dispatch(
       authActions.signupStart({
-        name: enteredName,
-        email: enteredEmail,
-        password: enteredpassword,
+        name: signUpForm.name.value,
+        email: signUpForm.email.value,
+        password: signUpForm.password.value,
       })
     );
+  };
+
+  const validateInput = (
+    inputKey: keyof SignUpForm,
+    value: string
+  ): boolean => {
+    switch (inputKey) {
+      case "name":
+        return isNotEmpty(value);
+      case "email":
+        return isEmail(value);
+      case "password":
+        return isPassword(value);
+      default:
+        return false;
+    }
+  };
+
+  const changeFormHandler = (key: keyof SignUpForm, value: string) => {
+    setSignUpForm((prev) => {
+      return {
+        ...prev,
+        [key]: { value: value, isValid: validateInput(key, value) },
+      };
+    });
   };
   return (
     <div className={`${classes.mainContainer} `}>
       <h1 className="mb-4">Sign up</h1>
       <form onSubmit={signup}>
-        <Input
+        <TextField
           type="text"
           id="name"
           label="Name"
-          value={enteredName}
-          onBlur={nameBlurHandler}
-          onChange={nameChangeHandler}
-          hasError={nameHasError}
+          value={signUpForm.name.value}
+          onChange={(event) => changeFormHandler("name", event?.target.value)}
+          error={!signUpForm.name.isValid}
         />
-        <Input
+        <TextField
           type="email"
           id="email"
           label="Email"
-          value={enteredEmail}
-          onBlur={emailBlurHandler}
-          onChange={emailChangeHandler}
-          hasError={emailHasError}
+          value={signUpForm.email.value}
+          onChange={(event) => changeFormHandler("email", event?.target.value)}
+          error={!signUpForm.email.isValid}
         />
-        <Input
+        <TextField
           type="password"
           id="password"
           label="Password"
-          value={enteredpassword}
-          onBlur={passwordBlurHandler}
-          onChange={passwordChangeHandler}
-          hasError={passwordHasError}
+          value={signUpForm.password.value}
+          onChange={(event) =>
+            changeFormHandler("password", event?.target.value)
+          }
+          error={!signUpForm.password.isValid}
         />
+
         <div className="d-flex my-3">
-          <Button type="submit" variant="secondary" disabled={!formIsValid}>
+          <Button type="submit" variant="contained" disabled={!formIsValid}>
             Submit
           </Button>
-          <Button onClick={switchAuthModeHandler} className="ms-3">
+          <Button
+            variant="outlined"
+            onClick={switchAuthModeHandler}
+            className="ms-3"
+          >
             Switch to log in
           </Button>
         </div>
@@ -108,4 +128,4 @@ const Signup: React.FC<Props> = ({ switchAuthModeHandler }) => {
   );
 };
 
-export default Signup;
+export default SignUp;

@@ -13,7 +13,7 @@ import {
   selectIsPaused,
   selectIsStarted,
 } from "../../../store/timer/timer.selector";
-import Button from "../../shared/button/Button.component";
+import { Button } from "@mui/material";
 
 type Props = {
   onChangeShowRestTimer: (val: boolean) => void;
@@ -180,7 +180,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
 
   return (
     <div className="container">
-      <h3 className="w-100 text-center text-white">{todoItems[0]?.category}</h3>
+      <h3 className="w-100 text-center">{todoItems[0]?.category}</h3>
 
       <div className="w-100 py-4 d-flex justify-content-center">
         {date && (
@@ -198,26 +198,26 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
             />
             <div className="mt-4 w-100 d-flex justify-content-center">
               <Button
+                className="mx-2"
+                variant="outlined"
                 type="button"
-                size="large"
-                className="btn"
                 onClick={handleStartClick}
                 disabled={isStarted}
               >
-               {isPaused ? "Resume" : "Start"}
+                {isPaused ? "Resume" : "Start"}
               </Button>
               <Button
+                className="mx-2"
                 type="button"
-                size="large"
-                className="btn mx-3"
+                variant="outlined"
                 onClick={handlePauseClick}
                 disabled={isPaused || isCompleted || !isStarted}
               >
                 Pause
               </Button>
               <Button
-                className="btn mx-3"
-                size="large"
+                className="mx-2"
+                variant="outlined"
                 disabled={isCompleted || (!isStarted && !isPaused)}
                 type="button"
                 onClick={handleResetClick}
@@ -225,8 +225,8 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
                 Reset
               </Button>
               <Button
-                className="btn"
-                size="large"
+                className="mx-2"
+                variant="outlined"
                 disabled={isCompleted || (!isStarted && !isPaused)}
                 type="button"
                 onClick={handleFinishClick}

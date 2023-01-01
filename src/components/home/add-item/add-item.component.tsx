@@ -1,5 +1,4 @@
 import { Item } from "../../../interfaces/item-interface";
-import { ReactComponent as Add } from "../../../assets/icons/add.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
 import React, { Fragment, useState } from "react";
@@ -8,44 +7,29 @@ import {
   isNotEmpty,
   isNumWithLimit,
 } from "../../../utils/input-validators-utils";
-import useInput from "../../../hooks/use-input";
-import Input from "../../shared/input/input";
 import { stringValueGenerator } from "../../../utils/string-value-generator-utils";
-import Button from "../../shared/button/Button.component";
-import styles from "./add-item.module.scss";
+import classes from "./add-item.module.scss";
+import { Button, Fab, IconButton, TextField } from "@mui/material";
+import { Add } from "@mui/icons-material";
+
+type Form = {
+  category: { value: string; isValid: boolean };
+  goal: { value: string; isValid: boolean };
+  description: { value: string; isValid: boolean };
+};
+
+const formInitialState = {
+  category: { value: "", isValid: false },
+  goal: { value: "", isValid: false },
+  description: { value: "", isValid: false },
+};
 
 const AddItem: React.FC = () => {
   const todoItems = useSelector(selectTodoItems);
   const dispatch = useDispatch();
+  const [form, setForm] = useState<Form>(formInitialState);
 
   const [showModal, setShowModal] = useState<boolean>(false);
-
-  const {
-    value: enteredCategory,
-    isValid: enteredCategoryIsValid,
-    hasError: categoryHasError,
-    valueChangeHandler: categoryChangeHandler,
-    inputBlurHandler: categoryBlurHandler,
-    reset: resetCategoryInput,
-  } = useInput(isNotEmpty);
-
-  const {
-    value: enteredDescription,
-    isValid: enteredDescriptionIsValid,
-    hasError: descriptionHasError,
-    valueChangeHandler: descriptionChangeHandler,
-    inputBlurHandler: descriptionBlurHandler,
-    reset: resetDescriptionInput,
-  } = useInput(isNotEmpty);
-
-  const {
-    value: enteredGoal,
-    isValid: enteredGoalIsValid,
-    hasError: goalHasError,
-    valueChangeHandler: goalChangeHandler,
-    inputBlurHandler: goalBlurHandler,
-    reset: resetGoalInput,
-  } = useInput(isNumWithLimit);
 
   const generateSortValue = (): string => {
     const todoItemsLength = todoItems.length;
@@ -55,11 +39,7 @@ const AddItem: React.FC = () => {
   };
 
   let formIsValid = false;
-  if (
-    enteredCategoryIsValid &&
-    enteredDescriptionIsValid &&
-    enteredGoalIsValid
-  ) {
+  if (form.category.isValid && form.description.isValid && form.goal.isValid) {
     formIsValid = true;
   }
 
@@ -67,28 +47,26 @@ const AddItem: React.FC = () => {
     event.preventDefault();
 
     if (
-      !enteredCategoryIsValid ||
-      !enteredDescriptionIsValid ||
-      !enteredGoalIsValid
+      !form.category.isValid ||
+      !form.description.isValid ||
+      !form.goal.isValid
     ) {
       return;
     }
 
-    let newitem: Item = {
+    let newItem: Item = {
       userId: localStorage.getItem("sub") as string,
-      category: enteredCategory,
-      description: enteredDescription,
+      category: form.category.value,
+      description: form.description.value,
       sort: generateSortValue(),
       progress: 0,
-      goal: Number(enteredGoal),
+      goal: Number(form.goal.value),
       done: false,
       finishedAt: "0",
     };
 
-    dispatch(itemActions.addItemStart(newitem));
-    resetCategoryInput();
-    resetDescriptionInput();
-    resetGoalInput();
+    dispatch(itemActions.addItemStart(newItem));
+    setForm(formInitialState);
     onSetShowModal(false);
   };
 
@@ -96,10 +74,31 @@ const AddItem: React.FC = () => {
     setShowModal(val);
   };
 
+  const validateInput = (inputKey: keyof Form, value: string): boolean => {
+    switch (inputKey) {
+      case "category":
+      case "description":
+        return isNotEmpty(value);
+      case "goal":
+        return isNumWithLimit(value);
+      default:
+        return false;
+    }
+  };
+
+  const changeFormHandler = (key: keyof Form, value: string) => {
+    setForm((prev) => {
+      return {
+        ...prev,
+        [key]: { value: value, isValid: validateInput(key, value) },
+      };
+    });
+  };
+
   const Backdrop = () => {
     return (
       <div
-        className={`${styles.backdrop} position-fixed`}
+        className={`${classes.backdrop} position-fixed`}
         onClick={() => onSetShowModal(false)}
       ></div>
     );
@@ -107,57 +106,65 @@ const AddItem: React.FC = () => {
 
   return (
     <div className="row">
-      <Button
-        className={styles.addBut}
+      <Fab
+        className={classes.addBut}
+        color="primary"
+        aria-label="add"
         onClick={() => onSetShowModal(true)}
-        size="fab"
-        variant="tertiary"
+        size="large"
       >
-        <Add height={15} />
-      </Button>
+        <Add />
+      </Fab>
+
       {showModal ? (
         <Fragment>
           <Backdrop />,
           <div
-            className={`${styles.modal} ${styles["modal--primary"]} w-100 position-fixed p-3`}
+            className={`${classes.modal} ${classes["modal--primary"]} w-100 position-fixed p-3`}
           >
-            <h3 className={`${styles.modal__label} mb-3`}>Add Task</h3>
-            <div className={`${styles.modal__body}`}>
+            <h3 className={`${classes.modal__label} mb-3`}>Add Task</h3>
+            <div className={`${classes.modal__body}`}>
               <form onSubmit={addItem}>
                 <div className="row gap-1">
                   <div className="col-8">
-                    <Input
+                    <TextField
                       type="text"
                       id="category"
                       label="Category"
-                      value={enteredCategory}
-                      onBlur={categoryBlurHandler}
-                      onChange={categoryChangeHandler}
-                      hasError={categoryHasError}
+                      value={form.category.value}
+                      onChange={(event) =>
+                        changeFormHandler("category", event?.target.value)
+                      }
+                      error={!form.category.isValid}
+                      required
                     />
                   </div>
 
                   <div className="col-4">
-                    <Input
+                    <TextField
                       type="number"
                       id="goal"
                       label="Goal"
-                      value={enteredGoal}
-                      onBlur={goalBlurHandler}
-                      onChange={goalChangeHandler}
-                      hasError={goalHasError}
+                      value={form.goal.value}
+                      onChange={(event) =>
+                        changeFormHandler("goal", event?.target.value)
+                      }
+                      error={!form.goal.isValid}
+                      required
                     />
                   </div>
                   <div className="col-12">
-                    <Input
+                    <TextField
                       type="text"
                       id="description"
                       label="Description"
-                      value={enteredDescription}
-                      onBlur={descriptionBlurHandler}
-                      onChange={descriptionChangeHandler}
-                      hasError={descriptionHasError}
-                      inputElement="textarea"
+                      value={form.description.value}
+                      onChange={(event) =>
+                        changeFormHandler("description", event?.target.value)
+                      }
+                      error={!form.description.isValid}
+                      multiline
+                      required
                     />
                   </div>
                 </div>
@@ -165,14 +172,15 @@ const AddItem: React.FC = () => {
                 <div className="d-flex mt-4">
                   <Button
                     type="submit"
-                    variant="secondary"
+                    variant="contained"
                     disabled={!formIsValid}
                   >
                     Add task
                   </Button>
                   <Button
                     className="ms-auto"
-                    variant="tertiary"
+                    variant="outlined"
+                    color="warning"
                     onClick={() => onSetShowModal(false)}
                   >
                     Close

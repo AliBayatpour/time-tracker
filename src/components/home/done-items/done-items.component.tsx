@@ -7,7 +7,6 @@ import { totalTime } from "../../../utils/stat-utils";
 import styles from "./done-items.module.scss";
 
 import DoneItem from "../done-item/Done-item";
-import Card from "../../shared/card/Card.component";
 
 const DoneItems: React.FC = () => {
   const doneItems = useSelector(selectDoneItems);
@@ -20,13 +19,13 @@ const DoneItems: React.FC = () => {
         <h2>Done Items</h2>
 
         <h5 className="mb-4">
-          Total Time Today: (<b>{convertMinToReadable(totalTime(doneItems))}</b>
-          )
+          Total Progress Today: (
+          <b>{convertMinToReadable(totalTime(doneItems))}</b>)
         </h5>
         {doneItems.map((item: Item, index: number) => (
-          <Card variant="tertiary" key={"done" + index} className="mb-3">
+          <div key={item.id} className="w-100">
             <DoneItem item={item} index={index} />
-          </Card>
+          </div>
         ))}
       </div>
     </div>

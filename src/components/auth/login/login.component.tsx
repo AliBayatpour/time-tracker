@@ -1,80 +1,101 @@
-import React from "react";
+import React, { useState } from "react";
 import classes from "./login.module.scss";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../../store/auth/auth.slice";
-import useInput from "../../../hooks/use-input";
-import Input from "../../shared/input/input";
 import { isEmail, isPassword } from "../../../utils/input-validators-utils";
-import Button from "../../shared/button/Button.component";
+import { Button, TextField } from "@mui/material";
 
 type Props = {
   switchAuthModeHandler: () => void;
 };
 
+type LoginForm = {
+  email: { value: string; isValid: boolean };
+  password: { value: string; isValid: boolean };
+};
+
+const loginInitialState = {
+  email: { value: "", isValid: false },
+  password: { value: "", isValid: false },
+};
+
 const Login: React.FC<Props> = ({ switchAuthModeHandler }) => {
   const dispatch = useDispatch();
-
-  const {
-    value: enteredEmail,
-    isValid: enteredEmailIsValid,
-    hasError: emailHasError,
-    valueChangeHandler: emailChangeHandler,
-    inputBlurHandler: emailBlurHandler,
-  } = useInput(isEmail);
-
-  const {
-    value: enteredpassword,
-    isValid: enteredPasswordIsValid,
-    hasError: passwordHasError,
-    valueChangeHandler: passwordChangeHandler,
-    inputBlurHandler: passwordBlurHandler,
-  } = useInput(isPassword);
+  const [loginForm, setLoginForm] = useState<LoginForm>(loginInitialState);
 
   let formIsValid = false;
-  if (enteredPasswordIsValid && enteredEmailIsValid) {
+  if (loginForm.password.isValid && loginForm.email.isValid) {
     formIsValid = true;
   }
 
   const login = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!enteredEmailIsValid || !enteredPasswordIsValid) {
+    if (!loginForm.email.isValid || !loginForm.password.isValid) {
       return;
     }
     dispatch(
-      authActions.loginStart({ email: enteredEmail, password: enteredpassword })
+      authActions.loginStart({
+        email: loginForm.email.value,
+        password: loginForm.password.value,
+      })
     );
   };
+
+  const validateInput = (inputKey: keyof LoginForm, value: string): boolean => {
+    switch (inputKey) {
+      case "email":
+        return isEmail(value);
+      case "password":
+        return isPassword(value);
+      default:
+        return false;
+    }
+  };
+
+  const changeFormHandler = (key: keyof LoginForm, value: string) => {
+    setLoginForm((prev) => {
+      return {
+        ...prev,
+        [key]: { value: value, isValid: validateInput(key, value) },
+      };
+    });
+  };
+
   return (
     <div className={`${classes.mainContainer} `}>
       <h1 className="mb-4">Login</h1>
       <form onSubmit={login}>
-        <Input
+        <TextField
           type="text"
           id="email"
           label="Email"
-          value={enteredEmail}
-          onBlur={emailBlurHandler}
-          onChange={emailChangeHandler}
-          hasError={emailHasError}
+          variant="outlined"
+          value={loginForm.email.value}
+          onChange={(event) => changeFormHandler("email", event?.target.value)}
+          error={!loginForm.email.isValid}
         />
-        <Input
+        <TextField
           type="password"
           id="password"
           label="Password"
-          value={enteredpassword}
-          onBlur={passwordBlurHandler}
-          onChange={passwordChangeHandler}
-          hasError={passwordHasError}
+          value={loginForm.password.value}
+          onChange={(event) =>
+            changeFormHandler("password", event?.target.value)
+          }
+          error={!loginForm.password.isValid}
         />
+
         <div className="d-flex my-3">
-          <Button
-            type="submit"
-            variant="secondary"
-            disabled={!formIsValid}
-          >
+          <Button type="submit" variant="contained" disabled={!formIsValid}>
             Submit
           </Button>
-          <Button onClick={switchAuthModeHandler} className="ms-3">Switch to sign up</Button>
+          <Button
+            variant="outlined"
+            onClick={switchAuthModeHandler}
+            className="ms-3"
+          >
+            Switch to sign up
+          </Button>
         </div>
       </form>
     </div>

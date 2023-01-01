@@ -1,6 +1,5 @@
 import { useDispatch } from "react-redux";
 import { authActions } from "../../store/auth/auth.slice";
-import Button from "../shared/button/Button.component";
 import styles from "./header.module.scss";
 import { ReactComponent as Home } from "../../assets/icons/home.svg";
 import { ReactComponent as Settings } from "../../assets/icons/settings.svg";
@@ -8,6 +7,7 @@ import { ReactComponent as Charts } from "../../assets/icons/charts.svg";
 import { ReactComponent as Logout } from "../../assets/icons/logout.svg";
 import { ReactComponent as ArrowForward } from "../../assets/icons/arrow-forward.svg";
 import { useState } from "react";
+import { IconButton } from "@mui/material";
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
@@ -28,51 +28,26 @@ const Header: React.FC = () => {
           <div
             className={`${styles.sidebar__navBox} w-100 d-flex flex-column align-items-center justify-content-center`}
           >
-            <Button
-              size="round"
-              variant="primary"
+            <IconButton
               onClick={() => setShowSidebar((prev) => !prev)}
               className={`position-fixed ${styles.menuTrigger} ${
                 styles[`menuTrigger--${showSidebar && "show"}`]
               }`}
             >
               <ArrowForward />
-            </Button>
-            <Button
-              size="round"
-              className="my-3"
-              variant="primary"
-              role="link"
-              to="/"
-            >
+            </IconButton>
+            <IconButton className="my-3">
               <Home />
-            </Button>
-            <Button
-              size="round"
-              className="my-3"
-              variant="primary"
-              role="link"
-              to="/stats"
-            >
+            </IconButton>
+            <IconButton className="my-3">
               <Charts />
-            </Button>
-            <Button
-              size="round"
-              className="my-3"
-              variant="primary"
-              role="link"
-              to="/settings"
-            >
+            </IconButton>
+            <IconButton className="my-3">
               <Settings />
-            </Button>
-            <Button
-              size="round"
-              className="mt-3"
-              variant="primary"
-              onClick={onLogoutHandler}
-            >
+            </IconButton>
+            <IconButton className="mt-3" onClick={onLogoutHandler}>
               <Logout />
-            </Button>
+            </IconButton>
           </div>
         </div>
       </nav>

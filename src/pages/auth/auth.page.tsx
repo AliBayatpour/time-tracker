@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Login from "../../components/auth/login/login.component";
-import Signup from "../../components/auth/signup/signup.component";
+import SignUp from "../../components/auth/signup/signup.component";
 import classes from "./auth.module.scss";
 
 const Auth: React.FC = () => {
@@ -11,7 +11,7 @@ const Auth: React.FC = () => {
       {isLogin ? (
         <Login switchAuthModeHandler={() => setIsLogin(false)} />
       ) : (
-        <Signup switchAuthModeHandler={() => setIsLogin(true)}  />
+        <SignUp switchAuthModeHandler={() => setIsLogin(true)} />
       )}
     </div>
   );

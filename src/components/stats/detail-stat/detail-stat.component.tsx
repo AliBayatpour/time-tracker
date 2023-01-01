@@ -5,8 +5,7 @@ import { ReactComponent as Satisfied } from "../../../assets/icons/emotions/sati
 import { ReactComponent as VerySatisfied } from "../../../assets/icons/emotions/very-satisfied.svg";
 import { ItemsReducerState } from "../../../interfaces/items-store/items-reducer-state-interface";
 import { convertMinToReadable } from "../../../utils/date-utils";
-
-import Card from "../../shared/card/Card.component";
+import { Card } from "@mui/material";
 
 type Props = {
   statData: ItemsReducerState["statData"];
@@ -32,9 +31,11 @@ const DetailStat: React.FC<Props> = ({ statData }) => {
     );
   return (
     <div className="p-3">
+      <div>{satisfactionIcon}</div>
+
       <div className="row gap-1">
-        <div className="col-6">
-          <Card className="mb-3 d-flex space-between">
+        <div className="col-3">
+          <Card>
             <div>
               <p>
                 <b>Total:</b>
@@ -43,6 +44,10 @@ const DetailStat: React.FC<Props> = ({ statData }) => {
                 <b>{convertMinToReadable(statData.total)}</b>
               </p>
             </div>
+          </Card>
+        </div>
+        <div className="col-3">
+          <Card>
             <div>
               <p>
                 <b>Average per day (6 Days):</b>
@@ -51,7 +56,6 @@ const DetailStat: React.FC<Props> = ({ statData }) => {
                 <b>{convertMinToReadable(averageMinPerDay)}</b>
               </p>
             </div>
-            <div>{satisfactionIcon}</div>
           </Card>
         </div>
 
@@ -59,7 +63,7 @@ const DetailStat: React.FC<Props> = ({ statData }) => {
           <div className="col-3" key={statItem[0] + index}>
             <Card
               className="mb-3"
-              styles={{ backgroundColor: statItem[1].color, color: "#ffffff" }}
+              style={{ backgroundColor: statItem[1].color, color: "#ffffff" }}
             >
               <p>
                 <b>Category:</b> {statItem[0]}

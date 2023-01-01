@@ -1,21 +1,20 @@
-import React from "react";
-import Button from "../../components/shared/button/Button.component";
-import Input from "../../components/shared/input/input";
-import useInput from "../../hooks/use-input";
+import { Button, TextField } from "@mui/material";
+import React, { useState } from "react";
 import { isNumWithLimit } from "../../utils/input-validators-utils";
 
+type Form = {
+  rest: { value: string; isValid: boolean };
+};
+
+const formInitialState = {
+  rest: { value: "", isValid: false },
+};
+
 const Settings: React.FC = () => {
-  const {
-    value: enteredRest,
-    isValid: enteredRestIsValid,
-    hasError: restHasError,
-    valueChangeHandler: restChangeHandler,
-    inputBlurHandler: restBlurHandler,
-    defaultValueHandler: restDefaultValueHandler,
-  } = useInput(isNumWithLimit);
+  const [form, setForm] = useState<Form>(formInitialState);
 
   let formIsValid = false;
-  if (enteredRestIsValid) {
+  if (form.rest.isValid) {
     formIsValid = true;
   }
 
@@ -26,26 +25,45 @@ const Settings: React.FC = () => {
 
   const onSetRestTime = (event: any) => {
     event.preventDefault();
-    if (!enteredRestIsValid) {
+    if (!form.rest.isValid) {
       return;
     }
-    localStorage.setItem("restTime", enteredRest);
+    localStorage.setItem("restTime", form.rest.value);
   };
+
+  const validateInput = (inputKey: keyof Form, value: string): boolean => {
+    switch (inputKey) {
+      case "rest":
+        return isNumWithLimit(value);
+      default:
+        return false;
+    }
+  };
+
+  const changeFormHandler = (key: keyof Form, value: string) => {
+    setForm((prev) => {
+      return {
+        ...prev,
+        [key]: { value: value, isValid: validateInput(key, value) },
+      };
+    });
+  };
+
   return (
     <React.Fragment>
       <h1 className="mb-4">Settings</h1>
       <div className="row">
         <form onSubmit={onSetRestTime}>
           <div className="col-12 col-lg-2">
-            <Input
+            <TextField
               type="number"
               label="Rest"
               id="restInput"
-              value={enteredRest}
-              onBlur={restBlurHandler}
-              onChange={restChangeHandler}
-              hasError={restHasError}
-              onDefaultValue={restDefaultValueHandler}
+              value={form.rest.value}
+              onChange={(event) =>
+                changeFormHandler("rest", event?.target.value)
+              }
+              error={!form.rest.isValid}
               defaultValue={getRestTime()}
             />
           </div>
@@ -53,7 +71,8 @@ const Settings: React.FC = () => {
             <Button
               disabled={!formIsValid}
               type="submit"
-              variant="primary"
+              color="primary"
+              variant="contained"
               className="mt-3"
             >
               Change rest time

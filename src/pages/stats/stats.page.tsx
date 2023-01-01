@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import { MenuItem, TextField } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Input from "../../components/shared/input/input";
 import Chart from "../../components/stats/chart/chart.component";
 import DetailStat from "../../components/stats/detail-stat/detail-stat.component";
-import useInput from "../../hooks/use-input";
 import { selectStatData } from "../../store/item/item.selector";
 import { itemActions } from "../../store/item/item.slice";
 import classes from "./stats.module.scss";
@@ -15,20 +14,35 @@ const tabsKeys = {
   LAST_360_DAYS: "Last 360 days",
 };
 
+type StatForm = {
+  interval: { value: string; isValid: boolean };
+};
+
+const statInitialState = {
+  interval: { value: "", isValid: true },
+};
+
 const Stats: React.FC = () => {
   const dispatch = useDispatch();
+  const [statForm, setStatForm] = useState<StatForm>(statInitialState);
 
   const statData = useSelector(selectStatData);
-  const { value: enteredInterval, valueChangeHandler: intervalChangeHandler } =
-    useInput();
 
   useEffect(() => {
     dispatch(itemActions.fetchLastNDaysStart(7));
   }, []);
 
+  const changeFormHandler = (key: keyof StatForm, value: string) => {
+    setStatForm((prev) => {
+      return {
+        ...prev,
+        [key]: { value: value, isValid: true },
+      };
+    });
+  };
+
   useEffect(() => {
-    console.log(enteredInterval);
-    switch (enteredInterval) {
+    switch (statForm.interval.value) {
       case tabsKeys.LAST_7_DAYS:
         dispatch(itemActions.fetchLastNDaysStart(7));
         break;
@@ -45,19 +59,26 @@ const Stats: React.FC = () => {
       default:
         break;
     }
-  }, [enteredInterval]);
+  }, [statForm.interval.value]);
 
   return (
     <div className="container">
       <div className={`w-100 d-flex justify-content-center`}>
         <div className={`${classes.intervalBox}`}>
-          <Input
+          <TextField
             id="interval"
-            value={enteredInterval}
-            onChange={intervalChangeHandler}
-            inputElement="select"
-            options={Object.values(tabsKeys)}
-          />
+            value={statForm.interval.value}
+            onChange={(event) =>
+              changeFormHandler("interval", event?.target.value)
+            }
+            select
+          >
+            {Object.values(tabsKeys).map((item) => (
+              <MenuItem key={item[1]} value={item[1]}>
+                {item[0]}
+              </MenuItem>
+            ))}
+          </TextField>
         </div>
       </div>
       <Chart statData={statData} />

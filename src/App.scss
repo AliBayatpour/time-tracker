@@ -1,6 +1,5 @@
 @use "./styles/grid";
 @use "./styles/spacing";
-@use "./styles/fonts";
 @use "./styles/utils";
 @use "./styles/colors";
 @use "./styles/default";
@@ -10,7 +9,7 @@
   --color-primary-800: rgba(118, 120, 237, 0.8);
   --color-primary-200: rgba(118, 120, 237, 0.2);
   --color-primary-500: rgba(118, 120, 237, 0.5);
-  --color-secondary: rgb(61, 52, 139);
+  --color-secondary: #3d348b;
   --color-secondary-200: rgba(61, 52, 139, 0.2);
   --color-secondary-800: rgba(61, 52, 139, 0.9);
   --color-tertiary: #f7b801;

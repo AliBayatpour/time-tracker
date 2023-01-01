@@ -1,11 +1,7 @@
 .addBut {
-  background-color: var(--color-tertiary);
-
-  svg {
-    path {
-      fill: var(--color-primary);
-    }
-  }
+  position: fixed !important;
+  bottom: 16px;
+  right: 16px;
 }
 
 .backdrop {

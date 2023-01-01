@@ -5,7 +5,7 @@ import { convertMinToMilliSec } from "../../../utils/date-utils";
 import { TimerStorage } from "../../../interfaces/item-storage-interface";
 import { useSelector } from "react-redux";
 import { selectRestTime } from "../../../store/rest-timer/rest-timer.selector";
-import Button from "../../shared/button/Button.component";
+import { Button } from "@mui/material";
 
 type Props = {
   onChangeShowRestTimer: (val: boolean) => void;
@@ -75,7 +75,11 @@ const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
               className="d-flex justify-content-center"
             />
             <div className="mt-4 w-100 d-flex justify-content-center">
-              <Button className="btn" type="button" onClick={handleFinishClick}>
+              <Button
+                variant="outlined"
+                type="button"
+                onClick={handleFinishClick}
+              >
                 Skip
               </Button>
             </div>
