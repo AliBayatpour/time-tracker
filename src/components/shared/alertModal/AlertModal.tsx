@@ -30,7 +30,7 @@ const AlertModal: React.FC<Prop> = ({
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>{body}</DialogContent>
       <DialogActions>
-        <Button  onClick={yesHandler} variant="outlined">
+        <Button onClick={yesHandler} variant="outlined">
           Yes
         </Button>
         <Button onClick={handleClose} variant="contained">
