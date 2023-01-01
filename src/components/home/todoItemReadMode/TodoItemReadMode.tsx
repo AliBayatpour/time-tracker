@@ -76,6 +76,7 @@ const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
       ...item,
       finishedAt: new Date().getTime().toString(),
       done: true,
+      progress: item.goal,
     };
     dispatch(itemActions.updateItemStart(updatedItem));
     handleClose();
