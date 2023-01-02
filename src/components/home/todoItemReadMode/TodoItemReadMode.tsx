@@ -67,7 +67,7 @@ const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
   };
 
   const handleDeleteItem = () => {
-    dispatch(itemActions.deleteItemStart(item.id));
+    dispatch(itemActions.deleteItemStart(item));
     handleClose();
   };
 
