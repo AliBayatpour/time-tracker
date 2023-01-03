@@ -76,7 +76,8 @@ const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
             />
             <div className="mt-4 w-100 d-flex justify-content-center">
               <Button
-                variant="outlined"
+                variant="contained"
+                color="secondary"
                 type="button"
                 onClick={handleFinishClick}
               >

@@ -100,11 +100,11 @@ const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
           aria-expanded={!!anchorEl ? "true" : undefined}
           onClick={handleClick}
           aria-label="more"
-          color="primary"
+          color="secondary"
         >
           <MenuIcon />
         </IconButton>
-        <IconButton onClick={goToEditMode} aria-label="more" color="primary">
+        <IconButton onClick={goToEditMode} aria-label="more" color="secondary">
           <Edit />
         </IconButton>
       </div>
@@ -148,7 +148,7 @@ const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
         <div className="col-8">
           <div className="d-flex align-items-center">
             <Tooltip title="Category">
-              <Category color="primary" />
+              <Category color="secondary" />
             </Tooltip>
             <p className="ms-1">{item.category}</p>
           </div>
@@ -156,7 +156,7 @@ const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
         <div className="col-4">
           <div className="d-flex align-items-center">
             <Tooltip title="Goal">
-              <Timer color="primary" />
+              <Timer color="secondary" />
             </Tooltip>
             <p className="ms-1">{convertMinToReadable(item.goal)}</p>
           </div>
@@ -164,7 +164,7 @@ const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
         <div className="col-12 mt-3">
           <div className="d-flex">
             <Tooltip title="Description">
-              <Description color="primary" />
+              <Description color="secondary" />
             </Tooltip>
             <small className="ms-1 mt-1">{item.description}</small>
           </div>

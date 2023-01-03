@@ -32,14 +32,14 @@ function App() {
   const primaryTheme = createTheme({
     palette: {
       primary: {
-        main: "#6c6dff",
+        main: "#EF476F",
         contrastText: "#ffffff",
       },
       secondary: {
-        main: "#f50057",
+        main: "#FFD166",
       },
       info: {
-        main: "#f7b801",
+        main: "#06D6A0",
       },
     },
   });

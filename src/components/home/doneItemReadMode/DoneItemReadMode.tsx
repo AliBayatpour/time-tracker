@@ -14,14 +14,7 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
-import {
-  Edit,
-  Menu as MenuIcon,
-  Delete,
-  ContentCopy,
-  Done,
-} from "@mui/icons-material";
-import { stringValueGenerator } from "../../../utils/string-value-generator-utils";
+import { Edit, Menu as MenuIcon, Delete, Done } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
 import { useDispatch } from "react-redux";

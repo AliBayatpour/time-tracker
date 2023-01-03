@@ -1,4 +1,4 @@
-import { MenuItem, TextField } from "@mui/material";
+import { MenuItem, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Chart from "../../components/stats/chart/chart.component";
@@ -64,17 +64,20 @@ const Stats: React.FC = () => {
   return (
     <div className="container">
       <div className={`w-100 d-flex justify-content-center`}>
-        <div className={`${classes.intervalBox}`}>
+        <div className={`${classes.intervalBox} mb-5`}>
           <TextField
+            variant="filled"
+            hiddenLabel
             id="interval"
             value={statForm.interval.value}
+            className="w-100"
             onChange={(event) =>
               changeFormHandler("interval", event?.target.value)
             }
             select
           >
             {Object.values(tabsKeys).map((item) => (
-              <MenuItem key={item} value={item}>
+              <MenuItem key={item} value={item} color="secondary">
                 {item}
               </MenuItem>
             ))}
