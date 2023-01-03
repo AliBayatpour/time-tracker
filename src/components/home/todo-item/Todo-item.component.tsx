@@ -21,7 +21,7 @@ const TodoItem: React.FC<Props> = ({ item, index }) => {
   };
 
   return (
-    <Card className="w-100">
+    <Card className="w-100 mb-3">
       <CardContent>
         {editMode ? (
           <TodoItemEditMode

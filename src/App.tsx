@@ -33,6 +33,7 @@ function App() {
     palette: {
       primary: {
         main: "#6c6dff",
+        contrastText: "#ffffff",
       },
       secondary: {
         main: "#f50057",
@@ -79,7 +80,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           {isLoggedIn && <Route index element={<Home />} />}
-          {isLoggedIn && <Route path="stats" element={<Stats />} />}
+          {isLoggedIn && <Route path="statistics" element={<Stats />} />}
           {isLoggedIn && <Route path="settings" element={<Settings />} />}
         </Route>
         {!isLoggedIn && <Route path="/auth" element={<Auth />} />}

@@ -61,7 +61,7 @@ const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
 
   return (
     <div className="container">
-      <h4 className="w-100 text-center text-warning">Rest</h4>
+      <h4 className="w-100 text-center">Rest</h4>
       <div className="w-100 py-4 d-flex justify-content-center">
         {date && (
           <div className={`${classes["timerContainer"]}`}>

@@ -7,14 +7,18 @@ import { totalTime } from "../../../utils/stat-utils";
 import styles from "./done-items.module.scss";
 
 import DoneItem from "../done-item/Done-item";
+import { Box } from "@mui/material";
 
 const DoneItems: React.FC = () => {
   const doneItems = useSelector(selectDoneItems);
 
   return (
-    <div className={`${styles.mainContainer} d-flex justify-content-center`}>
+    <Box
+      sx={{ backgroundColor: "info.light" }}
+      className={`${styles.mainContainer} d-flex justify-content-center`}
+    >
       <div
-        className={`my-5 bg-mirror-white p-3 w-100 d-flex flex-column align-items-center ${styles.listBox}`}
+        className={`my-5 p-3 w-100 d-flex flex-column align-items-center ${styles.listBox}`}
       >
         <h2>Done Items</h2>
 
@@ -28,7 +32,7 @@ const DoneItems: React.FC = () => {
           </div>
         ))}
       </div>
-    </div>
+    </Box>
   );
 };
 

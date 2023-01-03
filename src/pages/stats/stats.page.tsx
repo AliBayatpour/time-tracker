@@ -19,7 +19,7 @@ type StatForm = {
 };
 
 const statInitialState = {
-  interval: { value: "", isValid: true },
+  interval: { value: tabsKeys.LAST_7_DAYS, isValid: true },
 };
 
 const Stats: React.FC = () => {
@@ -74,8 +74,8 @@ const Stats: React.FC = () => {
             select
           >
             {Object.values(tabsKeys).map((item) => (
-              <MenuItem key={item[1]} value={item[1]}>
-                {item[0]}
+              <MenuItem key={item} value={item}>
+                {item}
               </MenuItem>
             ))}
           </TextField>

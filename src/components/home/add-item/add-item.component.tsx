@@ -9,7 +9,15 @@ import {
 } from "../../../utils/input-validators-utils";
 import { stringValueGenerator } from "../../../utils/string-value-generator-utils";
 import classes from "./add-item.module.scss";
-import { Button, Fab, IconButton, TextField } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Fab,
+  IconButton,
+  TextField,
+} from "@mui/material";
 import { Add } from "@mui/icons-material";
 
 type Form = {
@@ -95,102 +103,89 @@ const AddItem: React.FC = () => {
     });
   };
 
-  const Backdrop = () => {
-    return (
-      <div
-        className={`${classes.backdrop} position-fixed`}
-        onClick={() => onSetShowModal(false)}
-      ></div>
-    );
-  };
-
   return (
     <div className="row">
       <Fab
         className={classes.addBut}
-        color="primary"
+        color="secondary"
         aria-label="add"
         onClick={() => onSetShowModal(true)}
         size="large"
       >
         <Add />
       </Fab>
+      <Dialog
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <DialogTitle>Add Task</DialogTitle>
+        <DialogContent>
+          <form onSubmit={addItem}>
+            <div className="row pt-3 gap-1">
+              <div className="col-8">
+                <TextField
+                  className="w-100"
+                  type="text"
+                  id="category"
+                  label="Category"
+                  value={form.category.value}
+                  onChange={(event) =>
+                    changeFormHandler("category", event?.target.value)
+                  }
+                  error={!form.category.isValid}
+                  required
+                />
+              </div>
 
-      {showModal ? (
-        <Fragment>
-          <Backdrop />,
-          <div
-            className={`${classes.modal} ${classes["modal--primary"]} w-100 position-fixed p-3`}
-          >
-            <h3 className={`${classes.modal__label} mb-3`}>Add Task</h3>
-            <div className={`${classes.modal__body}`}>
-              <form onSubmit={addItem}>
-                <div className="row gap-1">
-                  <div className="col-8">
-                    <TextField
-                      type="text"
-                      id="category"
-                      label="Category"
-                      value={form.category.value}
-                      onChange={(event) =>
-                        changeFormHandler("category", event?.target.value)
-                      }
-                      error={!form.category.isValid}
-                      required
-                    />
-                  </div>
-
-                  <div className="col-4">
-                    <TextField
-                      type="number"
-                      id="goal"
-                      label="Goal"
-                      value={form.goal.value}
-                      onChange={(event) =>
-                        changeFormHandler("goal", event?.target.value)
-                      }
-                      error={!form.goal.isValid}
-                      required
-                    />
-                  </div>
-                  <div className="col-12">
-                    <TextField
-                      type="text"
-                      id="description"
-                      label="Description"
-                      value={form.description.value}
-                      onChange={(event) =>
-                        changeFormHandler("description", event?.target.value)
-                      }
-                      error={!form.description.isValid}
-                      multiline
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="d-flex mt-4">
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    disabled={!formIsValid}
-                  >
-                    Add task
-                  </Button>
-                  <Button
-                    className="ms-auto"
-                    variant="outlined"
-                    color="warning"
-                    onClick={() => onSetShowModal(false)}
-                  >
-                    Close
-                  </Button>
-                </div>
-              </form>
+              <div className="col-4">
+                <TextField
+                  type="number"
+                  id="goal"
+                  label="Goal"
+                  value={form.goal.value}
+                  onChange={(event) =>
+                    changeFormHandler("goal", event?.target.value)
+                  }
+                  error={!form.goal.isValid}
+                  required
+                />
+              </div>
+              <div className="col-12 mt-3">
+                <TextField
+                  type="text"
+                  className="w-100"
+                  id="description"
+                  label="Description"
+                  value={form.description.value}
+                  onChange={(event) =>
+                    changeFormHandler("description", event?.target.value)
+                  }
+                  error={!form.description.isValid}
+                  multiline
+                  rows={3}
+                  required
+                />
+              </div>
             </div>
-          </div>
-        </Fragment>
-      ) : null}
+
+            <div className="d-flex mt-4">
+              <Button type="submit" variant="contained" disabled={!formIsValid}>
+                Add task
+              </Button>
+              <Button
+                className="ms-auto"
+                variant="text"
+                color="inherit"
+                onClick={() => onSetShowModal(false)}
+              >
+                Close
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

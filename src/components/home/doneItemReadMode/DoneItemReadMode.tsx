@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Item } from "../../../interfaces/item-interface";
-import { Category, Timer, Description } from "@mui/icons-material";
-import { convertMinToReadable } from "../../../utils/date-utils";
+import { Category, Timer, Description, Update } from "@mui/icons-material";
+import {
+  convertDateNumToTime,
+  convertMinToReadable,
+} from "../../../utils/date-utils";
 import {
   Divider,
   IconButton,
@@ -30,7 +33,7 @@ type Props = {
   goToEditMode: () => void;
 };
 
-const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
+const DoneItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
   const dispatch = useDispatch();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -44,42 +47,8 @@ const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
     setAnchorEl(null);
   };
 
-  const generateSortValue = (): string => {
-    const todoItemsLength = todoItems.length;
-    return todoItemsLength
-      ? stringValueGenerator(todoItems[todoItemsLength - 1].sort)
-      : stringValueGenerator();
-  };
-
-  const duplicateItem = () => {
-    let newItem: Item = {
-      userId: localStorage.getItem("sub") as string,
-      category: item.category,
-      description: item.description,
-      sort: generateSortValue(),
-      progress: 0,
-      goal: Number(item.goal),
-      done: false,
-      finishedAt: "0",
-    };
-
-    dispatch(itemActions.addItemStart(newItem));
-    handleClose();
-  };
-
   const handleDeleteItem = () => {
     dispatch(itemActions.deleteItemStart(item));
-    handleClose();
-  };
-
-  const handleMarkAsComplete = () => {
-    let updatedItem: Item = {
-      ...item,
-      finishedAt: new Date().getTime().toString(),
-      done: true,
-      progress: item.goal,
-    };
-    dispatch(itemActions.updateItemStart(updatedItem));
     handleClose();
   };
 
@@ -100,11 +69,11 @@ const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
           aria-expanded={!!anchorEl ? "true" : undefined}
           onClick={handleClick}
           aria-label="more"
-          color="primary"
+          color="info"
         >
           <MenuIcon />
         </IconButton>
-        <IconButton onClick={goToEditMode} aria-label="more" color="primary">
+        <IconButton onClick={goToEditMode} aria-label="more" color="info">
           <Edit />
         </IconButton>
       </div>
@@ -123,18 +92,6 @@ const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
           horizontal: "left",
         }}
       >
-        <MenuItem onClick={duplicateItem}>
-          <ListItemIcon>
-            <ContentCopy fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Duplicate</ListItemText>
-        </MenuItem>
-        <MenuItem onClick={handleMarkAsComplete}>
-          <ListItemIcon>
-            <Done fontSize="small" />
-          </ListItemIcon>
-          <ListItemText>Complete</ListItemText>
-        </MenuItem>
         <MenuItem onClick={() => setShowAlertModal(true)}>
           <ListItemIcon>
             <Delete fontSize="small" />
@@ -148,23 +105,31 @@ const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
         <div className="col-8">
           <div className="d-flex align-items-center">
             <Tooltip title="Category">
-              <Category color="primary" />
+              <Category color="info" />
             </Tooltip>
             <p className="ms-1">{item.category}</p>
           </div>
         </div>
         <div className="col-4">
           <div className="d-flex align-items-center">
-            <Tooltip title="Goal">
-              <Timer color="primary" />
+            <Tooltip title="Progress">
+              <Update color="info" />
             </Tooltip>
-            <p className="ms-1">{convertMinToReadable(item.goal)}</p>
+            <p className="ms-1">{convertMinToReadable(item.progress)}</p>
+          </div>
+        </div>
+        <div className="col-6">
+          <div className="d-flex align-items-center mt-3">
+            <Tooltip title="Finished at">
+              <Done color="info" />
+            </Tooltip>
+            <p className="ms-1">{convertDateNumToTime(+item.finishedAt)}</p>
           </div>
         </div>
         <div className="col-12 mt-3">
           <div className="d-flex">
             <Tooltip title="Description">
-              <Description color="primary" />
+              <Description color="info" />
             </Tooltip>
             <small className="ms-1 mt-1">{item.description}</small>
           </div>
@@ -174,4 +139,4 @@ const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
   );
 };
 
-export default TodoItemReadMode;
+export default DoneItemReadMode;

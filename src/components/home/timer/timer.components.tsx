@@ -13,7 +13,7 @@ import {
   selectIsPaused,
   selectIsStarted,
 } from "../../../store/timer/timer.selector";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
 type Props = {
   onChangeShowRestTimer: (val: boolean) => void;
@@ -184,7 +184,10 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
 
       <div className="w-100 py-4 d-flex justify-content-center">
         {date && (
-          <div className={`${classes["timerContainer"]} text-tertiary`}>
+          <Box
+            sx={{ color: "primary.contrastText" }}
+            className={`${classes["timerContainer"]}`}
+          >
             <Countdown
               key={date}
               ref={setRef}
@@ -200,6 +203,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
               <Button
                 className="mx-2"
                 variant="outlined"
+                color="secondary"
                 type="button"
                 onClick={handleStartClick}
                 disabled={isStarted}
@@ -210,6 +214,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
                 className="mx-2"
                 type="button"
                 variant="outlined"
+                color="secondary"
                 onClick={handlePauseClick}
                 disabled={isPaused || isCompleted || !isStarted}
               >
@@ -218,6 +223,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
               <Button
                 className="mx-2"
                 variant="outlined"
+                color="secondary"
                 disabled={isCompleted || (!isStarted && !isPaused)}
                 type="button"
                 onClick={handleResetClick}
@@ -227,6 +233,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
               <Button
                 className="mx-2"
                 variant="outlined"
+                color="secondary"
                 disabled={isCompleted || (!isStarted && !isPaused)}
                 type="button"
                 onClick={handleFinishClick}
@@ -234,7 +241,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
                 Finish
               </Button>
             </div>
-          </div>
+          </Box>
         )}
       </div>
     </div>
