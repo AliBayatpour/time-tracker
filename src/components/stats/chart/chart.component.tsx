@@ -14,7 +14,7 @@ import {
 import { convertMinToReadable } from "../../../utils/date-utils";
 import { ItemsReducerState } from "../../../interfaces/items-store/items-reducer-state-interface";
 import { buildChartData } from "../../../utils/stat-utils";
-import { Chip } from "@mui/material";
+import { Box, Chip, Divider, Typography } from "@mui/material";
 
 type Props = {
   statData: ItemsReducerState["statData"];
@@ -29,25 +29,30 @@ const Chart: React.FC<Props> = ({ statData }) => {
         sumDay = sumDay + payload.value;
       });
       return (
-        <div className={`p-2 ${classes.tooltipBox} bg-mirror-white`}>
-          <p className={`${classes.tooltipBox__title}`}>{props.label}</p>
-          <hr className="mb-1" />
+        <Box
+          className={`p-2 ${classes.tooltipBox}`}
+          sx={{ bgcolor: "primary.main" }}
+        >
+          <Typography variant="subtitle2" gutterBottom>
+            {props.label}
+          </Typography>
+          <Divider className="mb-1" />
           {props.payload?.map((payload: any, index: number) => {
             return (
-              <p key={`tooltip${index}`}>
+              <Typography variant="body2" gutterBottom key={`tooltip${index}`}>
                 <span className="me-1" style={{ color: payload.fill }}>
                   {payload.name}:
                 </span>
                 <span>{convertMinToReadable(payload.value)}</span>
-              </p>
+              </Typography>
             );
           })}
-          <hr className="my-1" />
-          <p>
-            <span className={`${classes.tooltipBox__total}`}>Total: </span>
+          <Divider className="my-1" />
+          <Typography variant="subtitle2" gutterBottom>
+            <span>Total: </span>
             <span>{convertMinToReadable(sumDay)}</span>
-          </p>
-        </div>
+          </Typography>
+        </Box>
       );
     }
     return null;
@@ -58,7 +63,7 @@ const Chart: React.FC<Props> = ({ statData }) => {
       <div className="w-100 d-flex justify-content-center">
         {payload?.map((entry, index) => (
           <Chip
-            sx={{ backgroundColor: entry.color, color: "primary.contrastText" }}
+            sx={{ backgroundColor: entry.color }}
             key={`chip-${index}`}
             label={entry.value}
             className="mx-1"

@@ -1,13 +1,23 @@
 import { useState } from "react";
 import { Item } from "../../../interfaces/item-interface";
-import { Category, Timer, Description, Update } from "@mui/icons-material";
+import {
+  Category,
+  Timer,
+  Description,
+  Update,
+  ExpandMore,
+  ExpandLess,
+  More,
+} from "@mui/icons-material";
 import {
   convertDateNumToTime,
   convertMinToReadable,
 } from "../../../utils/date-utils";
 import {
+  Collapse,
   Divider,
   IconButton,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Menu,
@@ -15,8 +25,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Edit, Menu as MenuIcon, Delete, Done } from "@mui/icons-material";
-import { useSelector } from "react-redux";
-import { selectTodoItems } from "../../../store/item/item.selector";
 import { useDispatch } from "react-redux";
 import { itemActions } from "../../../store/item/item.slice";
 import AlertModal from "../../shared/alertModal/AlertModal";
@@ -31,7 +39,7 @@ const DoneItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [showAlertModal, setShowAlertModal] = useState<boolean>(false);
-  const todoItems = useSelector(selectTodoItems);
+  const [openExpand, setOpenExpand] = useState(false);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -111,21 +119,35 @@ const DoneItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
             <p className="ms-1">{convertMinToReadable(item.progress)}</p>
           </div>
         </div>
-        <div className="col-6">
-          <div className="d-flex align-items-center mt-3">
-            <Tooltip title="Finished at">
-              <Done color="info" />
-            </Tooltip>
-            <p className="ms-1">{convertDateNumToTime(+item.finishedAt)}</p>
-          </div>
+        <div className="col-12">
+          <ListItemButton onClick={() => setOpenExpand((prev) => !prev)}>
+            <ListItemText secondary="More" />
+            {openExpand ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
         </div>
-        <div className="col-12 mt-3">
-          <div className="d-flex">
-            <Tooltip title="Description">
-              <Description color="info" />
-            </Tooltip>
-            <small className="ms-1 mt-1">{item.description}</small>
-          </div>
+        <div className="col-12">
+          <Collapse in={openExpand} timeout="auto" unmountOnExit>
+            <div className="row">
+              <div className="col-6">
+                <div className="d-flex align-items-center mt-3">
+                  <Tooltip title="Finished at">
+                    <Done color="info" />
+                  </Tooltip>
+                  <p className="ms-1">
+                    {convertDateNumToTime(+item.finishedAt)}
+                  </p>
+                </div>
+              </div>
+              <div className="col-12 mt-3">
+                <div className="d-flex">
+                  <Tooltip title="Description">
+                    <Description color="info" />
+                  </Tooltip>
+                  <p className="ms-1">{item.description}</p>
+                </div>
+              </div>
+            </div>
+          </Collapse>
         </div>
       </div>
     </>

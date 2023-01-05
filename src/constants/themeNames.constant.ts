@@ -14,10 +14,26 @@ export const THEME_DATA = {
     label: "Power Rangers",
     value: powerRangers,
   },
-  SANDY_BEACH: { key: "SANDY_BEACH", label: "Sandy Beach", value: sandyBeach },
-  PINKY_CAT: { key: "PINKY_CAT", label: "Pinky Cat", value: pinkyCat },
-  GIPSY_KING: { key: "GIPSY_KING", label: "Gipsy King", value: gipsyKing },
-  SUNNY_NIGHT: { key: "SUNNY_NIGHT", label: "Sunny Night", value: sunnyNight },
+  SANDY_BEACH: {
+    key: "SANDY_BEACH",
+    label: "Sandy Beach",
+    value: sandyBeach,
+  },
+  PINKY_CAT: {
+    key: "PINKY_CAT",
+    label: "Pinky Cat",
+    value: pinkyCat,
+  },
+  GIPSY_KING: {
+    key: "GIPSY_KING",
+    label: "Gipsy King",
+    value: gipsyKing,
+  },
+  SUNNY_NIGHT: {
+    key: "SUNNY_NIGHT",
+    label: "Sunny Night",
+    value: sunnyNight,
+  },
   PINK_WEREWOLF: {
     key: "PINK_WEREWOLF",
     label: "Pink Werewolf",

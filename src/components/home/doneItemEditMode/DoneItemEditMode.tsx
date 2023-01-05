@@ -125,7 +125,7 @@ const DoneItemEditMode: React.FC<Props> = ({ item, goToReadMode, index }) => {
         <IconButton
           onClick={backToReadMode}
           aria-label="more"
-          color="primary"
+          color="secondary"
           className="ms-auto"
         >
           <Close />

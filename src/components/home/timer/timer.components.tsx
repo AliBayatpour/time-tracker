@@ -180,11 +180,16 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
 
   return (
     <div className="container">
-      <Typography className="w-100 text-center" variant="h5" color="secondary">
+      <Typography
+        sx={{ fontWeight: 700 }}
+        className="w-100 text-center"
+        variant="h5"
+        color="secondary"
+      >
         {todoItems[0]?.category}
       </Typography>
 
-      <div className="w-100 py-4 d-flex justify-content-center">
+      <div className="w-100 pb-4 d-flex justify-content-center">
         {date && (
           <Box
             sx={{ color: "secondary.main" }}
@@ -201,7 +206,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
               autoStart={autoStart}
               className="d-flex justify-content-center"
             />
-            <div className="mt-4 w-100 d-flex justify-content-center">
+            <div className="w-100 d-flex justify-content-center">
               <Button
                 className="mx-2"
                 variant="contained"

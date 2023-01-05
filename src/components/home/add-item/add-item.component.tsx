@@ -171,7 +171,7 @@ const AddItem: React.FC = () => {
             </div>
 
             <div className="d-flex mt-4">
-              <Button type="submit" variant="contained" disabled={!formIsValid}>
+              <Button color="secondary" type="submit" variant="contained" disabled={!formIsValid}>
                 Add task
               </Button>
               <Button

@@ -81,7 +81,6 @@ const DetailStat: React.FC<Props> = ({ statData }) => {
                 key={statItem[0]}
                 sx={{
                   color: statItem[1].color,
-                  backgroundColor: "primary.contrastText",
                 }}
               >
                 <ListItemIcon>

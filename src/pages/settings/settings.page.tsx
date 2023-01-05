@@ -1,20 +1,24 @@
 import { MenuItem, Select } from "@mui/material";
 import React from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { THEME_DATA, THEME_KEYS } from "../../constants/themeNames.constant";
+import { selectTheme } from "../../store/settings/settings.selector";
+import { settingsActions } from "../../store/settings/settings.slice";
 
-type Form = {
-  rest: { value: string; isValid: boolean };
-};
+// type Form = {
+//   rest: { value: string; isValid: boolean };
+// };
 
 // const formInitialState = {
 //   rest: { value: "", isValid: false },
 // };
 
-type Props = {
-  setTheme: (themeName: keyof typeof THEME_DATA) => void;
-  themeKey: keyof typeof THEME_DATA;
-};
-const Settings: React.FC<Props> = ({ setTheme, themeKey }) => {
+const Settings: React.FC = () => {
+  const dispatch = useDispatch();
+
+  const themeKey = useSelector(selectTheme);
+
   // const [form, setForm] = useState<Form>(formInitialState);
 
   // let formIsValid = false;
@@ -53,10 +57,6 @@ const Settings: React.FC<Props> = ({ setTheme, themeKey }) => {
   //   });
   // };
 
-  const handleThemeChange = (themeName: any) => {
-    console.log(themeName);
-  };
-
   return (
     <>
       <div className="row">
@@ -64,9 +64,12 @@ const Settings: React.FC<Props> = ({ setTheme, themeKey }) => {
           labelId="demo-simple-select-label"
           id="demo-simple-select"
           label="Age"
-          onChange={(e) => setTheme(e.target.value as THEME_KEYS)}
+          onChange={(e) =>
+            dispatch(
+              settingsActions.setTheme(THEME_DATA[e.target.value as THEME_KEYS])
+            )
+          }
           value={themeKey}
-          sx={{ select: { color: "primary.contrastText" } }}
           inputProps={{ style: { color: "yellow" } }}
         >
           {(Object.keys(THEME_DATA) as THEME_KEYS[]).map((value) => (

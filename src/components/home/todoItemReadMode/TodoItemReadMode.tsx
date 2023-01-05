@@ -1,10 +1,18 @@
 import { useState } from "react";
 import { Item } from "../../../interfaces/item-interface";
-import { Category, Timer, Description } from "@mui/icons-material";
+import {
+  Category,
+  Timer,
+  Description,
+  ExpandLess,
+  ExpandMore,
+} from "@mui/icons-material";
 import { convertMinToReadable } from "../../../utils/date-utils";
 import {
+  Collapse,
   Divider,
   IconButton,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Menu,
@@ -35,6 +43,8 @@ const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [showAlertModal, setShowAlertModal] = useState<boolean>(false);
+  const [openExpand, setOpenExpand] = useState(false);
+
   const todoItems = useSelector(selectTodoItems);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -161,13 +171,23 @@ const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
             <p className="ms-1">{convertMinToReadable(item.goal)}</p>
           </div>
         </div>
-        <div className="col-12 mt-3">
-          <div className="d-flex">
-            <Tooltip title="Description">
-              <Description color="secondary" />
-            </Tooltip>
-            <small className="ms-1 mt-1">{item.description}</small>
-          </div>
+        <div className="col-12">
+          <ListItemButton onClick={() => setOpenExpand((prev) => !prev)}>
+            <ListItemText secondary="More" />
+            {openExpand ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+        </div>
+        <div className="col-12">
+          <Collapse in={openExpand} timeout="auto" unmountOnExit>
+            <div className="col-12 mt-3">
+              <div className="d-flex">
+                <Tooltip title="Description">
+                  <Description color="secondary" />
+                </Tooltip>
+                <p className="ms-1">{item.description}</p>
+              </div>
+            </div>
+          </Collapse>
         </div>
       </div>
     </>

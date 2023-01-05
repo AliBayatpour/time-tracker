@@ -18,20 +18,15 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import "@fontsource/roboto/900.css";
 import { ThemeProvider } from "@mui/material/styles";
-import {
-  THEME_INFO,
-  THEME_KEYS,
-  THEME_DATA,
-} from "./constants/themeNames.constant";
+import { THEME_KEYS, THEME_DATA } from "./constants/themeNames.constant";
 import { CssBaseline } from "@mui/material";
+import { selectTheme } from "./store/settings/settings.selector";
 
 function App() {
   let logoutTimer: ReturnType<typeof setTimeout> | undefined;
-  const [selectedTheme, setSelectedTheme] = useState<THEME_INFO>(
-    THEME_DATA.SUNNY_NIGHT
-  );
   const dispatch = useDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const themeKey = useSelector(selectTheme);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,27 +64,14 @@ function App() {
     }
   };
 
-  const handleSetTheme = (e: keyof typeof THEME_DATA) => {
-    setSelectedTheme(THEME_DATA[e]);
-  };
   return (
-    <ThemeProvider theme={selectedTheme.value}>
+    <ThemeProvider theme={THEME_DATA[themeKey].value}>
       <CssBaseline />
       <Routes>
         <Route path="/" element={<Layout />}>
           {isLoggedIn && <Route index element={<Home />} />}
           {isLoggedIn && <Route path="statistics" element={<Stats />} />}
-          {isLoggedIn && (
-            <Route
-              path="settings"
-              element={
-                <Settings
-                  setTheme={handleSetTheme}
-                  themeKey={selectedTheme.key as THEME_KEYS}
-                />
-              }
-            />
-          )}
+          {isLoggedIn && <Route path="settings" element={<Settings />} />}
         </Route>
         {!isLoggedIn && <Route path="/auth" element={<Auth />} />}
       </Routes>
