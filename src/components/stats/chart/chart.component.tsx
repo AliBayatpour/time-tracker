@@ -9,10 +9,12 @@ import {
   Label,
   ResponsiveContainer,
   Legend,
+  LegendProps,
 } from "recharts";
 import { convertMinToReadable } from "../../../utils/date-utils";
 import { ItemsReducerState } from "../../../interfaces/items-store/items-reducer-state-interface";
 import { buildChartData } from "../../../utils/stat-utils";
+import { Chip } from "@mui/material";
 
 type Props = {
   statData: ItemsReducerState["statData"];
@@ -49,6 +51,21 @@ const Chart: React.FC<Props> = ({ statData }) => {
       );
     }
     return null;
+  };
+  const renderLegend = (props: LegendProps) => {
+    const { payload } = props;
+    return (
+      <div className="w-100 d-flex justify-content-center">
+        {payload?.map((entry, index) => (
+          <Chip
+            sx={{ backgroundColor: entry.color, color: "primary.contrastText" }}
+            key={`chip-${index}`}
+            label={entry.value}
+            className="mx-1"
+          />
+        ))}
+      </div>
+    );
   };
 
   const customIntervalBar = () => {
@@ -88,7 +105,7 @@ const Chart: React.FC<Props> = ({ statData }) => {
             />
           </YAxis>
           <Tooltip content={<CustomTooltip />} />
-          <Legend />
+          <Legend content={(props) => renderLegend(props as LegendProps)} />
 
           {customIntervalBar()}
         </BarChart>

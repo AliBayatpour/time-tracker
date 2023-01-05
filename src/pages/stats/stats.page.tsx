@@ -1,4 +1,4 @@
-import { MenuItem, TextField, Typography } from "@mui/material";
+import { MenuItem, TextField, Toolbar, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Chart from "../../components/stats/chart/chart.component";
@@ -75,9 +75,10 @@ const Stats: React.FC = () => {
               changeFormHandler("interval", event?.target.value)
             }
             select
+            color="secondary"
           >
             {Object.values(tabsKeys).map((item) => (
-              <MenuItem key={item} value={item} color="secondary">
+              <MenuItem key={item} value={item}>
                 {item}
               </MenuItem>
             ))}

@@ -1,59 +1,81 @@
-import { Button, TextField } from "@mui/material";
-import React, { useState } from "react";
-import { isNumWithLimit } from "../../utils/input-validators-utils";
+import { MenuItem, Select } from "@mui/material";
+import React from "react";
+import { THEME_DATA, THEME_KEYS } from "../../constants/themeNames.constant";
 
 type Form = {
   rest: { value: string; isValid: boolean };
 };
 
-const formInitialState = {
-  rest: { value: "", isValid: false },
+// const formInitialState = {
+//   rest: { value: "", isValid: false },
+// };
+
+type Props = {
+  setTheme: (themeName: keyof typeof THEME_DATA) => void;
+  themeKey: keyof typeof THEME_DATA;
 };
+const Settings: React.FC<Props> = ({ setTheme, themeKey }) => {
+  // const [form, setForm] = useState<Form>(formInitialState);
 
-const Settings: React.FC = () => {
-  const [form, setForm] = useState<Form>(formInitialState);
+  // let formIsValid = false;
+  // if (form.rest.isValid) {
+  //   formIsValid = true;
+  // }
 
-  let formIsValid = false;
-  if (form.rest.isValid) {
-    formIsValid = true;
-  }
+  // const getRestTime = () => {
+  //   const localValue = localStorage.getItem("restTime");
+  //   return localValue ? localValue : "5";
+  // };
 
-  const getRestTime = () => {
-    const localValue = localStorage.getItem("restTime");
-    return localValue ? localValue : "5";
-  };
+  // const onSetRestTime = (event: any) => {
+  //   event.preventDefault();
+  //   if (!form.rest.isValid) {
+  //     return;
+  //   }
+  //   localStorage.setItem("restTime", form.rest.value);
+  // };
 
-  const onSetRestTime = (event: any) => {
-    event.preventDefault();
-    if (!form.rest.isValid) {
-      return;
-    }
-    localStorage.setItem("restTime", form.rest.value);
-  };
+  // const validateInput = (inputKey: keyof Form, value: string): boolean => {
+  //   switch (inputKey) {
+  //     case "rest":
+  //       return isNumWithLimit(value);
+  //     default:
+  //       return false;
+  //   }
+  // };
 
-  const validateInput = (inputKey: keyof Form, value: string): boolean => {
-    switch (inputKey) {
-      case "rest":
-        return isNumWithLimit(value);
-      default:
-        return false;
-    }
-  };
+  // const changeFormHandler = (key: keyof Form, value: string) => {
+  //   setForm((prev) => {
+  //     return {
+  //       ...prev,
+  //       [key]: { value: value, isValid: validateInput(key, value) },
+  //     };
+  //   });
+  // };
 
-  const changeFormHandler = (key: keyof Form, value: string) => {
-    setForm((prev) => {
-      return {
-        ...prev,
-        [key]: { value: value, isValid: validateInput(key, value) },
-      };
-    });
+  const handleThemeChange = (themeName: any) => {
+    console.log(themeName);
   };
 
   return (
-    <React.Fragment>
-      <h1 className="mb-4">Settings</h1>
+    <>
       <div className="row">
-        <form onSubmit={onSetRestTime}>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          label="Age"
+          onChange={(e) => setTheme(e.target.value as THEME_KEYS)}
+          value={themeKey}
+          sx={{ select: { color: "primary.contrastText" } }}
+          inputProps={{ style: { color: "yellow" } }}
+        >
+          {(Object.keys(THEME_DATA) as THEME_KEYS[]).map((value) => (
+            <MenuItem key={value} value={value}>
+              {THEME_DATA[value].label}
+            </MenuItem>
+          ))}
+        </Select>
+        {/* <form onSubmit={onSetRestTime}>
           <div className="col-12 col-lg-2">
             <TextField
               type="number"
@@ -78,9 +100,9 @@ const Settings: React.FC = () => {
               Change rest time
             </Button>
           </div>
-        </form>
+        </form> */}
       </div>
-    </React.Fragment>
+    </>
   );
 };
 export default Settings;
