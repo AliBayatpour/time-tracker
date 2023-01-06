@@ -136,14 +136,6 @@ const Header: React.FC = () => {
           </ListItemButton>
         </ListItem>
         <ListItem>
-          <ListItemButton onClick={() => navigateAndClose("/settings")}>
-            <ListItemIcon>
-              <Settings />
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem>
           <ListItemButton onClick={onLogoutHandler}>
             <ListItemIcon>
               <Logout />

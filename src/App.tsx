@@ -5,7 +5,6 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./pages/home/home.page";
 import Stats from "./pages/stats/stats.page";
 import Auth from "./pages/auth/auth.page";
-import Settings from "./pages/settings/settings.page";
 import { selectIsLoggedIn } from "./store/auth/auth.selector";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -18,7 +17,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import "@fontsource/roboto/900.css";
 import { ThemeProvider } from "@mui/material/styles";
-import { THEME_KEYS, THEME_DATA } from "./constants/themeNames.constant";
+import { THEME_DATA } from "./constants/themeNames.constant";
 import { CssBaseline } from "@mui/material";
 import { selectTheme } from "./store/settings/settings.selector";
 
@@ -71,7 +70,6 @@ function App() {
         <Route path="/" element={<Layout />}>
           {isLoggedIn && <Route index element={<Home />} />}
           {isLoggedIn && <Route path="statistics" element={<Stats />} />}
-          {isLoggedIn && <Route path="settings" element={<Settings />} />}
         </Route>
         {!isLoggedIn && <Route path="/auth" element={<Auth />} />}
       </Routes>
