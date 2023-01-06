@@ -17,7 +17,13 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import {
   Edit,
@@ -153,39 +159,58 @@ const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
         </MenuItem>
       </Menu>
       <Divider variant="middle" className="mb-3" />
-
       <div className="row">
-        <div className="col-8">
-          <div className="d-flex align-items-center">
-            <Tooltip title="Category">
-              <Category color="secondary" />
-            </Tooltip>
-            <p className="ms-1">{item.category}</p>
-          </div>
+        <div className="col-12">
+          <TableContainer>
+            <Table size="small">
+              <TableBody>
+                <TableRow hover>
+                  <TableCell>
+                    <div className="d-flex align-items-center">
+                      <Tooltip title="Category">
+                        <Category color="secondary" />
+                      </Tooltip>
+                      <Typography variant="subtitle2" className="ms-1">
+                        {item.category}
+                      </Typography>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="d-flex align-items-center">
+                      <Tooltip title="Goal">
+                        <Timer color="secondary" />
+                      </Tooltip>
+                      <Typography variant="subtitle2" className="ms-1">
+                        {convertMinToReadable(item.goal)}
+                      </Typography>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
-        <div className="col-4">
-          <div className="d-flex align-items-center">
-            <Tooltip title="Goal">
-              <Timer color="secondary" />
-            </Tooltip>
-            <p className="ms-1">{convertMinToReadable(item.goal)}</p>
-          </div>
-        </div>
+      </div>
+      <div className="row">
         <div className="col-12">
           <ListItemButton onClick={() => setOpenExpand((prev) => !prev)}>
             <ListItemText secondary="More" />
-            {openExpand ? <ExpandLess /> : <ExpandMore />}
+            {openExpand ? (
+              <ExpandLess color="secondary" />
+            ) : (
+              <ExpandMore color="secondary" />
+            )}
           </ListItemButton>
         </div>
         <div className="col-12">
           <Collapse in={openExpand} timeout="auto" unmountOnExit>
-            <div className="col-12 mt-3">
-              <div className="d-flex">
-                <Tooltip title="Description">
-                  <Description color="secondary" />
-                </Tooltip>
-                <p className="ms-1">{item.description}</p>
-              </div>
+            <div className="d-flex align-items-center px-2">
+              <Tooltip title="Description">
+                <Description color="secondary" />
+              </Tooltip>
+              <Typography variant="subtitle2" className="ms-1">
+                {item.description}
+              </Typography>
             </div>
           </Collapse>
         </div>

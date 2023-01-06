@@ -1,10 +1,3 @@
-import {
-  SentimentDissatisfied,
-  SentimentNeutral,
-  SentimentSatisfied,
-  SentimentVerySatisfied,
-} from "@mui/icons-material";
-
 import { convertMinToReadable } from "../../../utils/date-utils";
 import {
   Divider,
@@ -30,20 +23,6 @@ const DetailStat: React.FC<Props> = ({ statData, statForm }) => {
   const averageMinPerDay =
     statData.total /
     (numberOfCountedDays - Math.floor(numberOfCountedDays / 7));
-
-  const satisfactionIcon =
-    averageMinPerDay >= 450
-      ? { icon: <SentimentVerySatisfied />, text: "Very satisfied" }
-      : averageMinPerDay >= 420
-      ? { icon: <SentimentSatisfied />, text: "Satisfied" }
-      : averageMinPerDay >= 360
-      ? { icon: <SentimentNeutral />, text: "Neutral" }
-      : averageMinPerDay >= 300
-      ? { icon: <SentimentDissatisfied />, text: "Dissatisfied" }
-      : {
-          icon: <SentimentDissatisfied />,
-          text: "Very dissatisfied",
-        };
 
   return (
     <div className="p-3">
