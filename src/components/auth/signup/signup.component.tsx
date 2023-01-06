@@ -6,7 +6,7 @@ import {
   isEmail,
   isNotEmpty,
   isPassword,
-} from "../../../utils/input-validators-utils";
+} from "../../../utils/inputValidators.utils";
 import classes from "./signup.module.scss";
 
 type Props = {

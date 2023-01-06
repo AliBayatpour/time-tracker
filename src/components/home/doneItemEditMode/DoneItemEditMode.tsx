@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Item } from "../../../interfaces/item-interface";
+import { Item } from "../../../interfaces/item.interface";
 import {
   isNotEmpty,
   isNumWithLimit,
-} from "../../../utils/input-validators-utils";
+} from "../../../utils/inputValidators.utils";
 import { useSelector } from "react-redux";
 import {
   selectIsPaused,
@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { Button, Divider, IconButton, TextField } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import { itemActions } from "../../../store/item/item.slice";
-import { convertDateNumToTime } from "../../../utils/date-utils";
+import { convertDateNumToTime } from "../../../utils/date.utils";
 
 type Props = {
   item: Item;

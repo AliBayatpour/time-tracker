@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Item } from "../../../interfaces/item-interface";
+import { Item } from "../../../interfaces/item.interface";
 import { Card, CardContent } from "@mui/material";
 import TodoItemReadMode from "../todoItemReadMode/TodoItemReadMode";
 import TodoItemEditMode from "../todoItemEditMode/TodoItemEditMode";

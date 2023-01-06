@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Item } from "../../../interfaces/item-interface";
+import { Item } from "../../../interfaces/item.interface";
 import {
   Category,
   Timer,
@@ -12,7 +12,7 @@ import {
 import {
   convertDateNumToTime,
   convertMinToReadable,
-} from "../../../utils/date-utils";
+} from "../../../utils/date.utils";
 import {
   Collapse,
   Divider,

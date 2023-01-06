@@ -1,6 +1,6 @@
-import { LoginReq } from "../../interfaces/login-req-interface";
-import { SignupReq } from "../../interfaces/signup-req-interface";
-import { UserRes } from "../../interfaces/user-res-interface";
+import { LoginReq } from "../../interfaces/loginReq.interface";
+import { SignupReq } from "../../interfaces/signupReqInterface";
+import { UserRes } from "../../interfaces/userResInterface";
 import { saveAuthData } from "../../utils/token-utils";
 
 export const loginAsyncReq = async (

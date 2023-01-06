@@ -1,6 +1,6 @@
-import { ChartData } from "../interfaces/chart-category-interface";
-import { Item } from "../interfaces/item-interface";
-import { ItemsReducerState } from "../interfaces/items-store/items-reducer-state-interface";
+import { ChartData } from "../interfaces/chartCategory.interface";
+import { Item } from "../interfaces/item.interface";
+import { ItemsReducerState } from "../interfaces/itemsStore/itemsReducerState.interface";
 
 export const totalTime = (doneItems: Item[]) => {
   let totalProgress = 0;

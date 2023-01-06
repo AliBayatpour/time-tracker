@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import Countdown, { CountdownTimeDelta } from "react-countdown";
-import classes from "./rest.module.scss";
-import { convertMinToMilliSec } from "../../../utils/date-utils";
-import { TimerStorage } from "../../../interfaces/item-storage-interface";
+import classes from "./restTimer.module.scss";
+import { convertMinToMilliSec } from "../../../utils/date.utils";
+import { TimerStorage } from "../../../interfaces/itemStorage.interface";
 import { useSelector } from "react-redux";
-import { selectRestTime } from "../../../store/rest-timer/rest-timer.selector";
+import { selectRestTime } from "../../../store/restTimer/restTimer.selector";
 import { Button } from "@mui/material";
 
 type Props = {

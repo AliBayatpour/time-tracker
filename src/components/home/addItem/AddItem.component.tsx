@@ -1,4 +1,4 @@
-import { Item } from "../../../interfaces/item-interface";
+import { Item } from "../../../interfaces/item.interface";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
 import React, { Fragment, useState } from "react";
@@ -6,9 +6,9 @@ import { itemActions } from "../../../store/item/item.slice";
 import {
   isNotEmpty,
   isNumWithLimit,
-} from "../../../utils/input-validators-utils";
-import { stringValueGenerator } from "../../../utils/string-value-generator-utils";
-import classes from "./add-item.module.scss";
+} from "../../../utils/inputValidators.utils";
+import { stringValueGenerator } from "../../../utils/stringValueGenerator.utils";
+import classes from "./addItem.module.scss";
 import {
   Button,
   Dialog,
@@ -171,7 +171,12 @@ const AddItem: React.FC = () => {
             </div>
 
             <div className="d-flex mt-4">
-              <Button color="secondary" type="submit" variant="contained" disabled={!formIsValid}>
+              <Button
+                color="secondary"
+                type="submit"
+                variant="contained"
+                disabled={!formIsValid}
+              >
                 Add task
               </Button>
               <Button

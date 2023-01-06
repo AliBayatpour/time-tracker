@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { RestTimerReducerState } from "../../interfaces/rest-timer-store/rest-timer-reducer-state-interface";
+import { RestTimerReducerState } from "../../interfaces/restTimerStore/restTimerReducerState.interface";
 
 const initialState: RestTimerReducerState = {
   restTime: 5,

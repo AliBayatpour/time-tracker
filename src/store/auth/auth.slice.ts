@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { AuthReducerState } from "../../interfaces/auth-store/auth-reducer-state-interface";
+import { AuthReducerState } from "../../interfaces/authStore/authReducerState.interface";
 import { clearAuthData } from "../../utils/token-utils";
 
 const initialState: AuthReducerState = {

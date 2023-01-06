@@ -1,4 +1,4 @@
-import { UserRes } from "../interfaces/user-res-interface";
+import { UserRes } from "../interfaces/userResInterface";
 
 export const calculateRemainingTime = (expirationTime: UserRes["exp"]) => {
   const currentTime = new Date().getTime();

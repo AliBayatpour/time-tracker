@@ -11,9 +11,9 @@ import {
   Legend,
   LegendProps,
 } from "recharts";
-import { convertMinToReadable } from "../../../utils/date-utils";
-import { ItemsReducerState } from "../../../interfaces/items-store/items-reducer-state-interface";
-import { buildChartData } from "../../../utils/stat-utils";
+import { convertMinToReadable } from "../../../utils/date.utils";
+import { ItemsReducerState } from "../../../interfaces/itemsStore/itemsReducerState.interface";
+import { buildChartData } from "../../../utils/stat.utils";
 import { Box, Chip, Divider, Typography } from "@mui/material";
 
 type Props = {

@@ -1,12 +1,12 @@
 import React from "react";
-import { Item } from "../../../interfaces/item-interface";
-import { convertMinToReadable } from "../../../utils/date-utils";
+import { Item } from "../../../interfaces/item.interface";
+import { convertMinToReadable } from "../../../utils/date.utils";
 import { selectDoneItems } from "../../../store/item/item.selector";
 import { useSelector } from "react-redux";
-import { totalTime } from "../../../utils/stat-utils";
-import styles from "./done-items.module.scss";
+import { totalTime } from "../../../utils/stat.utils";
+import styles from "./doneItems.module.scss";
 
-import DoneItem from "../done-item/Done-item";
+import DoneItem from "../doneItem/Done-item";
 import { Box } from "@mui/material";
 
 const DoneItems: React.FC = () => {

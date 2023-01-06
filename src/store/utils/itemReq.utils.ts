@@ -1,4 +1,4 @@
-import { Item } from "../../interfaces/item-interface";
+import { Item } from "../../interfaces/item.interface";
 
 // FETCH ITEMS
 export const getItemsAsyncReq = async (): Promise<Item[] | []> => {

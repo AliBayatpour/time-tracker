@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { THEME_DATA, THEME_KEYS } from "../../constants/themeNames.constant";
-import { SettingsReducerState } from "../../interfaces/settings-store/settings-reducer-state-interface";
+import { SettingsReducerState } from "../../interfaces/settingsStore/settingsReducerState.interface";
 
 const initialState: SettingsReducerState = {
   theme:

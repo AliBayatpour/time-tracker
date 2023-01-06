@@ -1,4 +1,4 @@
-import { Item } from "../../../interfaces/item-interface";
+import { Item } from "../../../interfaces/item.interface";
 import { useState } from "react";
 import { Card, CardContent } from "@mui/material";
 import DoneItemEditMode from "../doneItemEditMode/DoneItemEditMode";

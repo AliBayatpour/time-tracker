@@ -1,4 +1,4 @@
-import { Item } from "../interfaces/item-interface";
+import { Item } from "../interfaces/item.interface";
 
 export const filterTodoItems = (items: Item[]): Item[] => {
   let filteredItems = items.filter((item) => !item.done);

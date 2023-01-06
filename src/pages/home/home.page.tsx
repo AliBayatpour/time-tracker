@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import Items from "../../components/home/items/items.component";
-import RestTimer from "../../components/home/rest-timer/rest-timer";
-import Timer from "../../components/home/timer/timer.components";
-import { TimerStorage } from "../../interfaces/item-storage-interface";
-import { convertMinToMilliSec } from "../../utils/date-utils";
+import Items from "../../components/home/items/Items.component";
+import RestTimer from "../../components/home/restTimer/RestTimer";
+import Timer from "../../components/home/timer/Timer.components";
+import { TimerStorage } from "../../interfaces/itemStorage.interface";
+import { convertMinToMilliSec } from "../../utils/date.utils";
 import ringer from "../../assets/ringtones/win-10.mp3";
-import { selectRestTime } from "../../store/rest-timer/rest-timer.selector";
+import { selectRestTime } from "../../store/restTimer/restTimer.selector";
 import { useDispatch, useSelector } from "react-redux";
-import AddItem from "../../components/home/add-item/add-item.component";
+import AddItem from "../../components/home/addItem/AddItem.component";
 import { itemActions } from "../../store/item/item.slice";
 
 const Home: React.FC = () => {

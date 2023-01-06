@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Login from "../../components/auth/login/login.component";
-import SignUp from "../../components/auth/signup/signup.component";
+import Login from "../../components/auth/login/Login.component";
+import SignUp from "../../components/auth/signup/Signup.component";
 import classes from "./auth.module.scss";
 
 const Auth: React.FC = () => {

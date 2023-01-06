@@ -1,18 +1,22 @@
 import React, { Fragment, useState } from "react";
-import { Item } from "../../../interfaces/item-interface";
-import { totalTodoTime } from "../../../utils/stat-utils";
-import { convertMinToReadable } from "../../../utils/date-utils";
+import { Item } from "../../../interfaces/item.interface";
+import { totalTodoTime } from "../../../utils/stat.utils";
+import { convertMinToReadable } from "../../../utils/date.utils";
 import { useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
-import TodoItem from "../todo-item/Todo-item.component";
-import styles from "./todo-items.module.scss";
+import TodoItem from "../todoItem/TodoItem.component";
+import styles from "./todoItems.module.scss";
 import { Box } from "@mui/material";
 
 const TodoItems: React.FC = () => {
   const todoItems = useSelector(selectTodoItems);
   return (
     <Box
-      sx={{ backgroundColor: "secondary.main", border: 0, borderRadius: "16px" }}
+      sx={{
+        backgroundColor: "secondary.main",
+        border: 0,
+        borderRadius: "16px",
+      }}
       className={`${styles.mainContainer} d-flex justify-content-center mx-3`}
     >
       <div

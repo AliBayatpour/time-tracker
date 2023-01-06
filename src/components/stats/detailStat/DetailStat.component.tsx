@@ -1,4 +1,4 @@
-import { convertMinToReadable } from "../../../utils/date-utils";
+import { convertMinToReadable } from "../../../utils/date.utils";
 import {
   Divider,
   Paper,
@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { StatForm } from "../../../interfaces/statForm";
-import { ItemsReducerState } from "../../../interfaces/items-store/items-reducer-state-interface";
+import { ItemsReducerState } from "../../../interfaces/itemsStore/itemsReducerState.interface";
 
 type Props = {
   statData: ItemsReducerState["statData"];

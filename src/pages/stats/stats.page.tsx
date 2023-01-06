@@ -1,8 +1,8 @@
 import { MenuItem, TextField, Toolbar, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Chart from "../../components/stats/chart/chart.component";
-import DetailStat from "../../components/stats/detail-stat/detail-stat.component";
+import Chart from "../../components/stats/chart/Chart.component";
+import DetailStat from "../../components/stats/detailStat/DetailStat.component";
 import { StatForm } from "../../interfaces/statForm";
 import { selectStatData } from "../../store/item/item.selector";
 import { itemActions } from "../../store/item/item.slice";

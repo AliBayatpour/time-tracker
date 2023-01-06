@@ -8,10 +8,10 @@ import {
 } from "redux-saga/effects";
 import { authActions, authCaseReducers, authSliceName } from "./auth.slice";
 import type { Action } from "@reduxjs/toolkit";
-import { LoginReq } from "../../interfaces/login-req-interface";
-import { UserRes } from "../../interfaces/user-res-interface";
-import { SignupReq } from "../../interfaces/signup-req-interface";
-import { loginAsyncReq, signupAsyncReq } from "../utils/auth-req-utils";
+import { LoginReq } from "../../interfaces/loginReq.interface";
+import { UserRes } from "../../interfaces/userResInterface";
+import { SignupReq } from "../../interfaces/signupReqInterface";
+import { loginAsyncReq, signupAsyncReq } from "../utils/authReq.utils";
 
 export function* signupAsync(props: {
   type: Action;

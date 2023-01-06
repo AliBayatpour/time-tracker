@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { TimerReducerState } from "../../interfaces/timer-store/timer-reducer-state-interface";
+import { TimerReducerState } from "../../interfaces/timerStore/timerReducerState.interface";
 
 const initialState: TimerReducerState = {
   autoStart: false,

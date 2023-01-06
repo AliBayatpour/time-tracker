@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import classes from "./login.module.scss";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../../store/auth/auth.slice";
-import { isEmail, isPassword } from "../../../utils/input-validators-utils";
+import { isEmail, isPassword } from "../../../utils/inputValidators.utils";
 import { Button, TextField } from "@mui/material";
 
 type Props = {

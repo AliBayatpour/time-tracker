@@ -1,5 +1,5 @@
 import { createSelector } from "reselect";
-import { RootState } from "../../interfaces/root-state-interface";
+import { RootState } from "../../interfaces/rootState.interface";
 
 const selectRestTimerReducer = (state: RootState) => state.restTimer;
 

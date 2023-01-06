@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Item } from "../../../interfaces/item-interface";
+import { Item } from "../../../interfaces/item.interface";
 import {
   isNotEmpty,
   isNumWithLimit,
-} from "../../../utils/input-validators-utils";
+} from "../../../utils/inputValidators.utils";
 import { useSelector } from "react-redux";
 import {
   selectIsPaused,

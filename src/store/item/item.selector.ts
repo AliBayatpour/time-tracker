@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
-import { RootState } from "../../interfaces/root-state-interface";
-import { filterDoneItems, filterTodoItems } from "../../utils/items-utils";
+import { RootState } from "../../interfaces/rootState.interface";
+import { filterDoneItems, filterTodoItems } from "../../utils/items.utils";
 
 const selectItemsReducer = (state: RootState) => state.item;
 

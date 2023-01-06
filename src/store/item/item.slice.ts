@@ -1,4 +1,4 @@
-import { ItemsReducerState } from "../../interfaces/items-store/items-reducer-state-interface";
+import { ItemsReducerState } from "../../interfaces/itemsStore/itemsReducerState.interface";
 import { createSlice } from "@reduxjs/toolkit";
 const initialState: ItemsReducerState = {
   items: [],

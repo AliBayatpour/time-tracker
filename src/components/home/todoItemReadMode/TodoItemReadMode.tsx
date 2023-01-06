@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Item } from "../../../interfaces/item-interface";
+import { Item } from "../../../interfaces/item.interface";
 import {
   Category,
   Timer,
@@ -7,7 +7,7 @@ import {
   ExpandLess,
   ExpandMore,
 } from "@mui/icons-material";
-import { convertMinToReadable } from "../../../utils/date-utils";
+import { convertMinToReadable } from "../../../utils/date.utils";
 import {
   Collapse,
   Divider,
@@ -32,7 +32,7 @@ import {
   ContentCopy,
   Done,
 } from "@mui/icons-material";
-import { stringValueGenerator } from "../../../utils/string-value-generator-utils";
+import { stringValueGenerator } from "../../../utils/stringValueGenerator.utils";
 import { useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
 import { useDispatch } from "react-redux";

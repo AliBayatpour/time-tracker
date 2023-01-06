@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import Countdown, { CountdownApi, CountdownTimeDelta } from "react-countdown";
-import { TimerStorage } from "../../../interfaces/item-storage-interface";
+import { TimerStorage } from "../../../interfaces/itemStorage.interface";
 import classes from "./timer.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
-import { convertMinToMilliSec } from "../../../utils/date-utils";
+import { convertMinToMilliSec } from "../../../utils/date.utils";
 import { itemActions } from "../../../store/item/item.slice";
 import { timerActions } from "../../../store/timer/timer.slice";
 import {

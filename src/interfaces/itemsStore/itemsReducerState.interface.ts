@@ -1,4 +1,4 @@
-import { Item } from "../item-interface";
+import { Item } from "../item.interface";
 
 export type ItemsReducerState = {
   items: Item[];

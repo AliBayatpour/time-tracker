@@ -1,6 +1,6 @@
 import React from "react";
-import DoneItems from "../done-items/done-items.component";
-import TodoItems from "../todo-items/todo-items.component";
+import DoneItems from "../doneItems/DoneItems.component";
+import TodoItems from "../todoItems/TodoItems.component";
 
 const Items: React.FC = () => {
   return (
