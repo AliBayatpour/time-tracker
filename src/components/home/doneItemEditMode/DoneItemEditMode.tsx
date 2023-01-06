@@ -108,6 +108,7 @@ const DoneItemEditMode: React.FC<Props> = ({ item, goToReadMode, index }) => {
       done: true,
     };
     dispatch(itemActions.updateItemStart(newItem));
+    backToReadMode();
   };
 
   const backToReadMode = () => {
@@ -177,7 +178,12 @@ const DoneItemEditMode: React.FC<Props> = ({ item, goToReadMode, index }) => {
         </div>
 
         {updateActive && (
-          <Button className="mt-2" variant="contained" type="submit">
+          <Button
+            className="mt-2"
+            variant="contained"
+            type="submit"
+            color="secondary"
+          >
             Update
           </Button>
         )}

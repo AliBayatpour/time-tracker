@@ -183,7 +183,12 @@ const TodoItemEditMode: React.FC<Props> = ({ item, goToReadMode, index }) => {
           </div>
         </div>
         {updateActive && (
-          <Button className="mt-2" variant="contained" type="submit">
+          <Button
+            className="mt-2"
+            variant="contained"
+            type="submit"
+            color="secondary"
+          >
             Update
           </Button>
         )}

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Chart from "../../components/stats/chart/chart.component";
 import DetailStat from "../../components/stats/detail-stat/detail-stat.component";
+import { StatForm } from "../../interfaces/statForm";
 import { selectStatData } from "../../store/item/item.selector";
 import { itemActions } from "../../store/item/item.slice";
 import classes from "./stats.module.scss";
@@ -12,10 +13,6 @@ const tabsKeys = {
   LAST_30_DAYS: "Last 30 days",
   LAST_180_DAYS: "Last 180 days",
   LAST_360_DAYS: "Last 360 days",
-};
-
-type StatForm = {
-  interval: { value: string; isValid: boolean };
 };
 
 const statInitialState = {
@@ -86,7 +83,7 @@ const Stats: React.FC = () => {
         </div>
       </div>
       <Chart statData={statData} />
-      <DetailStat statData={statData} />
+      <DetailStat statData={statData} statForm={statForm} />
     </div>
   );
 };
