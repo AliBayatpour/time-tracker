@@ -10,11 +10,11 @@ export const selectItems = createSelector(
 );
 
 export const selectTodoItems = createSelector([selectItems], (items) =>
-  filterTodoItems(items)
+  filterTodoItems(items).sort()
 );
 
 export const selectDoneItems = createSelector([selectItems], (items) =>
-  filterDoneItems(items)
+  filterDoneItems(items).sort()
 );
 
 export const selectStatData = createSelector(
@@ -22,7 +22,7 @@ export const selectStatData = createSelector(
   (item) => item.statData
 );
 
-export const selectIsLoading = createSelector(
+export const selectItemIsLoading = createSelector(
   [selectItemsReducer],
   (item) => item.isLoading
 );
