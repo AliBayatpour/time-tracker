@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { totalTime } from "../../../utils/stat.utils";
 import styles from "./doneItems.module.scss";
 
-import DoneItem from "../doneItem/Done-item";
+import DoneItem from "../doneItem/DoneItem";
 import { Box } from "@mui/material";
 
 const DoneItems: React.FC = () => {
