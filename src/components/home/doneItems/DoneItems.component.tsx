@@ -15,7 +15,7 @@ const DoneItems: React.FC = () => {
   return (
     <Box
       sx={{ backgroundColor: "info.main", border: 0, borderRadius: "16px" }}
-      className={`${styles.mainContainer} d-flex justify-content-center mx-3`}
+      className={`${styles.mainContainer} h-100 d-flex justify-content-center mx-3`}
     >
       <div
         className={`my-5 p-3 w-100 d-flex flex-column align-items-center ${styles.listBox}`}

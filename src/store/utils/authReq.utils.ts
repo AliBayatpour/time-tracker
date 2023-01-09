@@ -44,6 +44,7 @@ export const signupAsyncReq = async (
           name: signupReq.name,
           email: signupReq.email,
           password: signupReq.password,
+          timezone: signupReq.timezone,
         }),
         headers: {
           "Content-Type": "application/json",

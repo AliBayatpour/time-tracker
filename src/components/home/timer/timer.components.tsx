@@ -4,7 +4,7 @@ import { TimerStorage } from "../../../interfaces/itemStorage.interface";
 import classes from "./timer.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodoItems } from "../../../store/item/item.selector";
-import { convertMinToMilliSec } from "../../../utils/date.utils";
+import { convertMinToMilliSec, momentTz } from "../../../utils/date.utils";
 import { itemActions } from "../../../store/item/item.slice";
 import { timerActions } from "../../../store/timer/timer.slice";
 import {
@@ -46,7 +46,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
       timer &&
       timer.autoStart &&
       timer.endTime &&
-      timer.endTime - new Date().getTime() > 0
+      timer.endTime - momentTz().valueOf() > 0
     ) {
       onSetDate(timer.endTime);
       dispatch(timerActions.setAutoStart(timer.autoStart));
@@ -134,7 +134,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
       itemActions.updateItemStart({
         ...todoItems[0],
         done: true,
-        finishedAt: new Date().getTime(),
+        finishedAt: momentTz().valueOf(),
         progress: todoItems[0].goal,
       })
     );
@@ -149,7 +149,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
   };
 
   const handleFinishClick = () => {
-    if (!countdown?.calcTimeDelta().total) {
+    if (!countdown?.state.timeDelta.total) {
       return;
     }
     localStorage.removeItem("timer");
@@ -158,9 +158,9 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
       itemActions.updateItemStart({
         ...todoItems[0],
         done: true,
-        finishedAt: new Date().getTime(),
+        finishedAt: momentTz().valueOf(),
         progress: Math.ceil(
-          todoItems[0].goal - countdown?.calcTimeDelta().total / 60000
+          todoItems[0].goal - countdown?.state.timeDelta.total / 60000
         ),
       })
     );

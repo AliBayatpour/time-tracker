@@ -1,7 +1,8 @@
 import { UserRes } from "../interfaces/userResInterface";
+import { momentTz } from "./date.utils";
 
 export const calculateRemainingTime = (expirationTime: UserRes["exp"]) => {
-  const currentTime = new Date().getTime();
+  const currentTime = momentTz().valueOf();
   const tokenExpiration = Number(expirationTime);
   const remainingExpTime = tokenExpiration - currentTime;
   return remainingExpTime;
@@ -11,6 +12,14 @@ export const saveAuthData = (userRes: UserRes) => {
   localStorage.setItem("access_token", userRes.access_token);
   localStorage.setItem("exp", userRes.exp.toString());
   localStorage.setItem("sub", userRes.sub);
+  localStorage.setItem("timezone", userRes.timezone);
+};
+
+export const getTimezone = () => {
+  return (
+    localStorage.getItem("timezone") ||
+    Intl.DateTimeFormat().resolvedOptions().timeZone
+  );
 };
 
 export const clearAuthData = () => {

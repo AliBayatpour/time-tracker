@@ -62,43 +62,52 @@ const Login: React.FC<Props> = ({ switchAuthModeHandler }) => {
   };
 
   return (
-    <div className={`${classes.mainContainer} `}>
+    <>
       <h1 className="mb-4">Login</h1>
-      <form onSubmit={login}>
-        <TextField
-          type="text"
-          id="email"
-          label="Email"
-          variant="outlined"
-          value={loginForm.email.value}
-          onChange={(event) => changeFormHandler("email", event?.target.value)}
-          error={!loginForm.email.isValid}
-        />
-        <TextField
-          type="password"
-          id="password"
-          label="Password"
-          value={loginForm.password.value}
-          onChange={(event) =>
-            changeFormHandler("password", event?.target.value)
-          }
-          error={!loginForm.password.isValid}
-        />
-
-        <div className="d-flex my-3">
-          <Button type="submit" variant="contained" disabled={!formIsValid}>
-            Submit
-          </Button>
-          <Button
+      <form className="row" onSubmit={login}>
+        <div className="col-12 my-3">
+          <TextField
+            className="w-100"
+            type="text"
+            id="email"
+            label="Email"
             variant="outlined"
-            onClick={switchAuthModeHandler}
-            className="ms-3"
-          >
-            Switch to sign up
-          </Button>
+            value={loginForm.email.value}
+            onChange={(event) =>
+              changeFormHandler("email", event?.target.value)
+            }
+            error={!loginForm.email.isValid}
+          />
+        </div>
+        <div className="col-12 my-3">
+          <TextField
+            className="w-100"
+            type="password"
+            id="password"
+            label="Password"
+            value={loginForm.password.value}
+            onChange={(event) =>
+              changeFormHandler("password", event?.target.value)
+            }
+            error={!loginForm.password.isValid}
+          />
+        </div>
+        <div className="col-12">
+          <div className="d-flex my-3">
+            <Button type="submit" variant="contained" disabled={!formIsValid}>
+              Submit
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={switchAuthModeHandler}
+              className="ms-3"
+            >
+              Switch to sign up
+            </Button>
+          </div>
         </div>
       </form>
-    </div>
+    </>
   );
 };
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Countdown, { CountdownTimeDelta } from "react-countdown";
 import classes from "./restTimer.module.scss";
-import { convertMinToMilliSec } from "../../../utils/date.utils";
+import { convertMinToMilliSec, momentTz } from "../../../utils/date.utils";
 import { TimerStorage } from "../../../interfaces/itemStorage.interface";
 import { useSelector } from "react-redux";
 import { selectRestTime } from "../../../store/restTimer/restTimer.selector";
@@ -25,7 +25,7 @@ const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
       timer &&
       timer.autoStart &&
       timer.endTime &&
-      timer.endTime - new Date().getTime() > 0
+      timer.endTime - momentTz().valueOf() > 0
     ) {
       setDate(timer.endTime);
     } else {

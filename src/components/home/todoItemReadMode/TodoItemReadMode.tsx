@@ -7,7 +7,7 @@ import {
   ExpandLess,
   ExpandMore,
 } from "@mui/icons-material";
-import { convertMinToReadable } from "../../../utils/date.utils";
+import { convertMinToReadable, momentTz } from "../../../utils/date.utils";
 import {
   Collapse,
   Divider,
@@ -91,7 +91,7 @@ const TodoItemReadMode: React.FC<Props> = ({ item, goToEditMode }) => {
   const handleMarkAsComplete = () => {
     let updatedItem: Item = {
       ...item,
-      finishedAt: new Date().getTime().toString(),
+      finishedAt: momentTz().valueOf().toString(),
       done: true,
       progress: item.goal,
     };

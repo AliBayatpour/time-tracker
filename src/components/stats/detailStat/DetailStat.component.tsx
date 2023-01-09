@@ -60,8 +60,8 @@ const DetailStat: React.FC<Props> = ({ statData, statForm }) => {
                     {convertMinToReadable(averageMinPerDay)}
                   </TableCell>
                 </TableRow>
-                {Object.entries(statData.categories).map((statItem, index) => (
-                  <TableRow hover>
+                {Object.entries(statData.categories).map((statItem) => (
+                  <TableRow hover key={statItem[1].color}>
                     <TableCell
                       key={statItem[0]}
                       sx={{
