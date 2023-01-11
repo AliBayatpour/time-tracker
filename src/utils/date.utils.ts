@@ -4,7 +4,9 @@ import { getTimezone } from "./token-utils";
 export const convertMinToReadable = (min: number) => {
   const floorMin = Math.floor(min);
   const floorHour = Math.floor(floorMin / 60);
-  return `${floorHour} h, ${floorMin % 60} min`;
+  return floorHour
+    ? `${floorHour} h, ${floorMin % 60} min`
+    : `${floorMin % 60} min`;
 };
 
 export const convertMinToMilliSec = (min: number): number => {

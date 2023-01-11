@@ -6,6 +6,7 @@ import { TimerStorage } from "../../../interfaces/itemStorage.interface";
 import { useSelector } from "react-redux";
 import { selectRestTime } from "../../../store/restTimer/restTimer.selector";
 import { Button } from "@mui/material";
+import DelayTimer from "../delayTimer/DelayTimer";
 
 type Props = {
   onChangeShowRestTimer: (val: boolean) => void;
@@ -74,7 +75,7 @@ const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
               autoStart={true}
               className="d-flex justify-content-center"
             />
-            <div className="mt-4 w-100 d-flex justify-content-center">
+            <div className="w-100 d-flex justify-content-center">
               <Button
                 variant="contained"
                 color="secondary"
@@ -87,6 +88,7 @@ const RestTimer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
           </div>
         )}
       </div>
+      <DelayTimer />
     </div>
   );
 };

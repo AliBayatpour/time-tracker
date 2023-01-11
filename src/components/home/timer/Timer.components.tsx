@@ -14,6 +14,7 @@ import {
   selectIsStarted,
 } from "../../../store/timer/timer.selector";
 import { Box, Button, Typography } from "@mui/material";
+import DelayTimer from "../delayTimer/DelayTimer";
 
 type Props = {
   onChangeShowRestTimer: (val: boolean) => void;
@@ -22,7 +23,7 @@ type Props = {
 const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
   const [date, setDate] = useState<number | null>(null);
   const [countdownApi, setCountdownApi] = useState<CountdownApi | null>(null);
-  const [countdown, setcountdown] = useState<Countdown | null>(null);
+  const [countdown, setCountDown] = useState<Countdown | null>(null);
 
   const todoItems = useSelector(selectTodoItems);
   const autoStart = useSelector(selectAutoStart);
@@ -70,7 +71,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
     setCountdownApi(val);
   };
   const onSetCountdown = (val: Countdown) => {
-    setcountdown(val);
+    setCountDown(val);
   };
   const onSetDate = (val: number | null) => {
     setDate(val);
@@ -177,7 +178,6 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
     dispatch(timerActions.setIsCompleted(false));
     onChangeShowRestTimer(true);
   };
-
   return (
     <div className="container">
       <Typography
@@ -251,6 +251,7 @@ const Timer: React.FC<Props> = ({ onChangeShowRestTimer, onPlayAudio }) => {
           </Box>
         )}
       </div>
+      {(!isStarted || !date) && <DelayTimer />}
     </div>
   );
 };
